@@ -81,7 +81,7 @@
                         @foreach($events as $index => $event)
                             @php
                                 $isOpen   = $event->status === 'dibuka';
-                                $daysLeft = now()->diffInDays($event->tanggal, false);
+                                $daysLeft = now()->diffInDays($event->tanggal_mulai, false);
                                 $bgClass  = $isOpen
                                     ? 'bg-green-500/10 border-green-500/20 hover:bg-green-500/20'
                                     : 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20';
@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="min-w-0">
                                         <p class="text-sm font-semibold text-white truncate">{{ $event->judul }}</p>
-                                        <p class="text-xs text-gray-400">{{ $event->tanggal->format('d M Y') }}</p>
+                                        <p class="text-xs text-gray-400">{{ $event->tanggal_mulai?->format('d M Y') }}{{ $event->tanggal_selesai && $event->tanggal_mulai?->format('d M Y') !== $event->tanggal_selesai?->format('d M Y') ? ' – ' . $event->tanggal_selesai->format('d M Y') : '' }}</p>
                                     </div>
                                 </div>
                                 <div class="shrink-0 ml-2 text-right">

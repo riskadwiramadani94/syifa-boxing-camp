@@ -16,7 +16,8 @@ class Event extends Model
     protected $fillable = [
         'judul',
         'slug',
-        'tanggal',
+        'tanggal_mulai',
+        'tanggal_selesai',
         'lokasi',
         'maps_link',
         'status',
@@ -31,7 +32,8 @@ class Event extends Model
     ];
 
     protected $casts = [
-        'tanggal'        => 'date',
+        'tanggal_mulai'  => 'date',
+        'tanggal_selesai'=> 'date',
         'is_active'      => 'boolean',
         'wa_pendaftaran' => 'array',
     ];

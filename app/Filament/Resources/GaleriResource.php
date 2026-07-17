@@ -71,9 +71,9 @@ class GaleriResource extends Resource
                         ->label('Tautkan ke Event')
                         ->placeholder('— Pilih event (opsional) —')
                         ->options(
-                            Event::orderBy('tanggal', 'desc')
+                            Event::orderBy('tanggal_mulai', 'desc')
                                 ->get()
-                                ->mapWithKeys(fn ($e) => [$e->id => $e->judul . ' (' . $e->tanggal->format('Y') . ')'])
+                                ->mapWithKeys(fn ($e) => [$e->id => $e->judul . ' (' . ($e->tanggal_mulai?->format('Y') ?? '-') . ')'])
                         )
                         ->searchable()
                         ->nullable(),

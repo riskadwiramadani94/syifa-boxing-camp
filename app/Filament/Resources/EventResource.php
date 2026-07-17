@@ -64,8 +64,12 @@ class EventResource extends Resource
                         ->maxLength(255)
                         ->unique(Event::class, 'slug', ignoreRecord: true),
 
-                    Forms\Components\DatePicker::make('tanggal')
-                        ->label('Tanggal')
+                    Forms\Components\DatePicker::make('tanggal_mulai')
+                        ->label('Tanggal Mulai')
+                        ->required(),
+
+                    Forms\Components\DatePicker::make('tanggal_selesai')
+                        ->label('Tanggal Selesai')
                         ->required(),
 
                     Forms\Components\TextInput::make('lokasi')
@@ -186,9 +190,14 @@ class EventResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('tanggal')
+                Tables\Columns\TextColumn::make('tanggal_mulai')
                     ->label('Tanggal')
-                    ->date('d M Y')
+                    ->formatStateUsing(function ($record) {
+                        $mulai = $record->tanggal_mulai?->format('d M Y');
+                        $selesai = $record->tanggal_selesai?->format('d M Y');
+                        if ($mulai === $selesai) return $mulai;
+                        return $mulai . ' – ' . $selesai;
+                    })
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('lokasi')
@@ -232,7 +241,7 @@ class EventResource extends Resource
             ->bulkActions([
                 DeleteBulkAction::make(),
             ])
-            ->defaultSort('tanggal', 'desc');
+            ->defaultSort('tanggal_mulai', 'desc');
     }
 
     public static function getPages(): array

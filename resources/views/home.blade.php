@@ -162,7 +162,13 @@
                             {{ $event->status === 'selesai' ? 'Telah Selesai' : ($event->status === 'dibuka' ? 'Pendaftaran Dibuka' : 'Segera Hadir') }}
                         </span>
                         <h5>{{ $event->judul }}</h5>
-                        <p class="event-date-text"><i class="far fa-calendar-alt me-1"></i>{{ \Carbon\Carbon::parse($event->tanggal)->translatedFormat('d F Y') }}</p>
+                        <p class="event-date-text"><i class="far fa-calendar-alt me-1"></i>
+                            @if($event->tanggal_mulai?->format('d M Y') === $event->tanggal_selesai?->format('d M Y'))
+                                {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
+                            @else
+                                {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
+                            @endif
+                        </p>
                         <p class="event-loc-text"><i class="fas fa-trophy me-1"></i>{{ $event->lokasi }}</p>
                     </div>
                     <div class="event-card-footer">
