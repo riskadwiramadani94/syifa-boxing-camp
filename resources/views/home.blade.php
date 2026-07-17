@@ -45,7 +45,7 @@
                         $tahunBerdiri = \App\Models\SiteSettings::get('tahun_berdiri', '1998');
                         $deskripsi    = \App\Models\SiteSettings::get('deskripsi');
                         $statMember2  = \App\Models\PendaftaranMember::where('aktif', true)->count();
-                        $statTahun2   = \App\Models\SiteSettings::get('stat_tahun', '25+');
+                        $statTahun2   = (date('Y') - (int)$tahunBerdiri) . '+';
                         $statPrestasi2= \App\Models\Galeri::where('kategori', 'pertandingan')->count();
                         $statMedali   = \App\Models\Galeri::where('kategori', 'pertandingan')->whereNotNull('juara')->count();
                     @endphp

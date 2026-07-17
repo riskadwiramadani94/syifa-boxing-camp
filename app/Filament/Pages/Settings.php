@@ -2,8 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Models\Galeri;
-use App\Models\PendaftaranMember;
 use App\Models\SiteSettings;
 use BackedEnum;
 use Filament\Notifications\Notification;
@@ -29,38 +27,25 @@ class Settings extends Page
 
     public array $data = [];
 
-    // Dihitung otomatis dari database, tidak bisa diedit manual
-    public int $autoMemberAktif = 0;
-    public int $autoPrestasi    = 0;
-    public int $autoMedali      = 0;
-
+    // Tidak ada lagi auto-count di Settings, cukup di beranda
     public function mount(): void
     {
-        // Hitung otomatis dari DB
-        $this->autoMemberAktif = PendaftaranMember::where('aktif', true)->count();
-        $this->autoPrestasi    = Galeri::where('kategori', 'pertandingan')->count();
-        $this->autoMedali      = Galeri::where('kategori', 'pertandingan')->whereNotNull('juara')->count();
-
         $this->data = [
-            'nama_sasana'   => SiteSettings::get('nama_sasana'),
-            'tagline'       => SiteSettings::get('tagline'),
-            'deskripsi'     => SiteSettings::get('deskripsi'),
-            'tahun_berdiri' => SiteSettings::get('tahun_berdiri'),
-            'foto_beranda'  => SiteSettings::get('foto_beranda'),
-            'foto_tentang'  => json_decode(SiteSettings::get('foto_tentang', '[]'), true) ?? [],
-            'hero_badge'    => SiteSettings::get('hero_badge'),
-            'hero_judul'    => SiteSettings::get('hero_judul'),
-            'hero_desc'     => SiteSettings::get('hero_desc'),
-            'stat_tahun'    => SiteSettings::get('stat_tahun'),
-            'whatsapp'      => SiteSettings::get('whatsapp'),
-            'email'         => SiteSettings::get('email'),
-            'alamat'        => SiteSettings::get('alamat'),
-            'maps_embed'    => SiteSettings::get('maps_embed'),
-            'instagram'          => SiteSettings::get('instagram'),
-            'tiktok'             => SiteSettings::get('tiktok'),
-            'facebook'           => SiteSettings::get('facebook'),
+            'nama_sasana'         => SiteSettings::get('nama_sasana'),
+            'tagline'             => SiteSettings::get('tagline'),
+            'deskripsi'           => SiteSettings::get('deskripsi'),
+            'tahun_berdiri'       => SiteSettings::get('tahun_berdiri'),
+            'foto_beranda'        => SiteSettings::get('foto_beranda'),
+            'foto_tentang'        => json_decode(SiteSettings::get('foto_tentang', '[]'), true) ?? [],
+            'hero_badge'          => SiteSettings::get('hero_badge'),
+            'hero_judul'          => SiteSettings::get('hero_judul'),
+            'hero_desc'           => SiteSettings::get('hero_desc'),
+            'whatsapp'            => SiteSettings::get('whatsapp'),
+            'instagram'           => SiteSettings::get('instagram'),
+            'tiktok'              => SiteSettings::get('tiktok'),
+            'facebook'            => SiteSettings::get('facebook'),
             'nama_tempat_latihan' => SiteSettings::get('nama_tempat_latihan'),
-            'maps_url'           => SiteSettings::get('maps_url'),
+            'maps_url'            => SiteSettings::get('maps_url'),
         ];
 
         $this->form->fill($this->data);
@@ -136,46 +121,6 @@ class Settings extends Page
                         ->label('Deskripsi Hero')
                         ->rows(2)
                         ->columnSpanFull(),
-
-                    \Filament\Forms\Components\Placeholder::make('stat_member_auto')
-                        ->label('Member Aktif')
-                        ->content(fn () => $this->autoMemberAktif . ' anggota')
-                        ->helperText('Dihitung otomatis dari anggota dengan status Aktif = ON'),
-
-                    TextInput::make('stat_tahun')
-                        ->label('Tahun Berdiri')
-                        ->placeholder('25+'),
-
-                    \Filament\Forms\Components\Placeholder::make('stat_prestasi_auto')
-                        ->label('Prestasi')
-                        ->content(fn () => $this->autoPrestasi . ' item')
-                        ->helperText('Dihitung otomatis dari Galeri kategori Prestasi'),
-
-                    \Filament\Forms\Components\Placeholder::make('stat_medali_auto')
-                        ->label('Medali')
-                        ->content(fn () => $this->autoMedali . ' medali')
-                        ->helperText('Dihitung otomatis dari Galeri kategori Pertandingan yang memiliki juara'),
-                ])->columns(2),
-
-            Section::make('Info Kontak')
-                ->description('Ditampilkan di footer kolom kanan dan halaman Kontak')
-                ->icon('heroicon-o-phone')                ->schema([
-                    TextInput::make('email')
-                        ->label('Email Resmi')
-                        ->placeholder('info@syifaboxingcamp.com'),
-
-                    Textarea::make('alamat')
-                        ->label('Alamat Lengkap')
-                        ->rows(2)
-                        ->helperText('Tampil di footer dan kartu kontak')
-                        ->columnSpanFull(),
-
-                    Textarea::make('maps_embed')
-                        ->label('Google Maps Embed URL')
-                        ->rows(3)
-                        ->placeholder('https://www.google.com/maps/embed?...')
-                        ->helperText('Salin dari Google Maps → Bagikan → Sematkan peta → ambil nilai src="..."')
-                        ->columnSpanFull(),
                 ])->columns(2),
 
             Section::make('Tempat Latihan')
@@ -232,10 +177,6 @@ class Settings extends Page
                 SiteSettings::set($key, $value ?? '');
             }
         }
-
-        // Update stat_member dan stat_prestasi otomatis dari DB
-        SiteSettings::set('stat_member', (string) PendaftaranMember::where('aktif', true)->count());
-        SiteSettings::set('stat_prestasi', (string) Galeri::where('kategori', 'prestasi')->count());
 
         SiteSettings::clearCache();
 
