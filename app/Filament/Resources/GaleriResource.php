@@ -76,8 +76,7 @@ class GaleriResource extends Resource
                                 ->mapWithKeys(fn ($e) => [$e->id => $e->judul . ' (' . $e->tanggal->format('Y') . ')'])
                         )
                         ->searchable()
-                        ->nullable()
-                        ->helperText('Pilih event jika foto ini adalah dokumentasi event tertentu'),
+                        ->nullable(),
 
                     Forms\Components\TextInput::make('tahun')
                         ->label('Tahun')
@@ -91,15 +90,8 @@ class GaleriResource extends Resource
                         ->numeric()
                         ->minValue(1)
                         ->placeholder('Contoh: 1 = Juara 1, 2 = Juara 2')
-                        ->helperText('Opsional — isi jika pertandingan ini menghasilkan juara')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
                         ->nullable(),
-
-                    Forms\Components\Textarea::make('keterangan')
-                        ->label('Keterangan')
-                        ->rows(4)
-                        ->nullable()
-                        ->columnSpanFull(),
                 ])->columns(2),
 
             Section::make('Foto & Media')
@@ -172,11 +164,6 @@ class GaleriResource extends Resource
                     ->formatStateUsing(fn ($state) => $state ? 'Juara ' . $state : '-')
                     ->badge()
                     ->color(fn ($state) => $state ? 'success' : 'gray'),
-
-                Tables\Columns\TextColumn::make('keterangan')
-                    ->label('Keterangan')
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->keterangan),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori')

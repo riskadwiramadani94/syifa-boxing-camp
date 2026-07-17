@@ -80,11 +80,17 @@
         {{-- Header modal --}}
         <div class="lb-header">
             <span id="lb-counter" class="lb-counter"></span>
-            <button class="lb-close" onclick="closeLightbox()">&times;</button>
+            <div class="lb-header-actions">
+                <a id="lb-download" href="#" download class="lb-btn-download" title="Unduh foto">
+                    <i class="fas fa-download"></i> Unduh
+                </a>
+                <button class="lb-close" onclick="closeLightbox()">&times;</button>
+            </div>
         </div>
 
         {{-- Area foto --}}
         <div class="lb-foto-wrap">
+            <div class="lb-foto-bg" id="lb-foto-bg"></div>
             <button class="lb-nav lb-nav-prev" id="lb-prev" onclick="lightboxPrev()">
                 <i class="fas fa-chevron-left"></i>
             </button>
@@ -152,6 +158,30 @@
             color: #888;
             font-weight: 500;
         }
+        .lb-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lb-btn-download {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #f1f5f9;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #334155;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .lb-btn-download:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
         .lb-close {
             background: #f1f1f1;
             border: none;
@@ -171,19 +201,29 @@
         /* area foto */
         .lb-foto-wrap {
             position: relative;
-            background: #fff;
+            background: #111;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 280px;
-            max-height: 50vh;
+            height: 55vh;
             overflow: hidden;
         }
+        /* blur background dari foto yang sama */
+        .lb-foto-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) brightness(0.45);
+            transform: scale(1.1);
+            z-index: 0;
+        }
         #lb-img {
+            position: relative;
+            z-index: 1;
             max-width: 100%;
-            max-height: 50vh;
+            max-height: 55vh;
             object-fit: contain;
-            padding: 16px;
             display: block;
         }
         .lb-nav {
@@ -236,14 +276,28 @@
             letter-spacing: 0.5px;
         }
         .lb-juara-badge {
-            background: #fef3c7;
-            color: #92400e;
             font-size: 0.78rem;
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 20px;
             white-space: nowrap;
             flex-shrink: 0;
+        }
+        .lb-juara-badge.medal-1 {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .lb-juara-badge.medal-2 {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .lb-juara-badge.medal-3 {
+            background: #fde8d8;
+            color: #7c3a1a;
+        }
+        .lb-juara-badge.medal-other {
+            background: #f1f5f9;
+            color: #475569;
         }
         .lb-keterangan {
             font-size: 0.85rem;
@@ -281,11 +335,18 @@
         const juara      = currentGaleri.juara;
         const judul      = currentGaleri.judul;
         const tahun      = currentGaleri.tahun;
-        const keterangan = currentGaleri.keterangan || '';
         const total      = fotos.length;
+        const fotoSrc    = fotos[currentFotoIdx];
 
-        // foto
-        document.getElementById('lb-img').src = fotos[currentFotoIdx];
+        // foto + blur background
+        document.getElementById('lb-img').src = fotoSrc;
+        document.getElementById('lb-foto-bg').style.backgroundImage = `url('${fotoSrc}')`;
+
+        // tombol unduh — selalu foto yang sedang tampil
+        const dlBtn = document.getElementById('lb-download');
+        dlBtn.href = fotoSrc;
+        // ambil nama file dari URL untuk nama download
+        dlBtn.download = fotoSrc.split('/').pop() || 'foto-galeri';
 
         // counter
         document.getElementById('lb-counter').textContent =
@@ -300,23 +361,20 @@
         document.getElementById('lb-judul').textContent = judul;
         document.getElementById('lb-tahun').textContent = tahun;
 
-        // badge juara
+        // badge juara — warna medali
         const juaraEl = document.getElementById('lb-juara');
         if (juara) {
-            juaraEl.textContent = '🏆 Juara ' + juara;
+            const medals = { 1: ['🥇', 'medal-1'], 2: ['🥈', 'medal-2'], 3: ['🥉', 'medal-3'] };
+            const [icon, cls] = medals[juara] || ['🏅', 'medal-other'];
+            juaraEl.textContent = icon + ' Juara ' + juara;
+            juaraEl.className = 'lb-juara-badge ' + cls;
             juaraEl.style.display = 'inline-block';
         } else {
             juaraEl.style.display = 'none';
         }
 
-        // keterangan
-        const ketEl = document.getElementById('lb-keterangan');
-        if (keterangan) {
-            ketEl.textContent = keterangan;
-            ketEl.style.display = 'block';
-        } else {
-            ketEl.style.display = 'none';
-        }
+        // keterangan — hidden (field dihapus)
+        document.getElementById('lb-keterangan').style.display = 'none';
     }
 
     function closeLightbox() {
