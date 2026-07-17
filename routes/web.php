@@ -16,14 +16,7 @@ Route::get('/event/{slug}', [EventController::class, 'show'])->name('event.show'
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
 Route::view('/schedule', 'schedule')->name('schedule');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-Route::post('/contact', function (\Illuminate\Http\Request $request) {
-    $request->validate([
-        'nama'  => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'pesan' => 'required|string',
-    ]);
-    return back()->with('success', 'Pesan Anda berhasil dikirim! Kami akan segera menghubungi Anda.');
-})->name('contact.send');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');
 
 Route::get('/register', function () {
     return view('register');
