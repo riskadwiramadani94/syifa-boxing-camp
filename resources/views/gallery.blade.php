@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Galeri - Syifa Boxing Camp')
+@section('meta_description', 'Lihat galeri foto dan dokumentasi latihan, event, serta prestasi atlet Syifa Boxing Camp.')
+@section('og_title', 'Galeri - Syifa Boxing Camp')
+@section('og_description', 'Lihat galeri foto dan dokumentasi latihan, event, serta prestasi atlet Syifa Boxing Camp.')
+@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
 
 @section('content')
 
