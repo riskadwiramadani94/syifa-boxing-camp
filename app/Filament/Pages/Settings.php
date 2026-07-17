@@ -56,9 +56,11 @@ class Settings extends Page
             'email'         => SiteSettings::get('email'),
             'alamat'        => SiteSettings::get('alamat'),
             'maps_embed'    => SiteSettings::get('maps_embed'),
-            'instagram'     => SiteSettings::get('instagram'),
-            'tiktok'        => SiteSettings::get('tiktok'),
-            'facebook'      => SiteSettings::get('facebook'),
+            'instagram'          => SiteSettings::get('instagram'),
+            'tiktok'             => SiteSettings::get('tiktok'),
+            'facebook'           => SiteSettings::get('facebook'),
+            'nama_tempat_latihan' => SiteSettings::get('nama_tempat_latihan'),
+            'maps_url'           => SiteSettings::get('maps_url'),
         ];
 
         $this->form->fill($this->data);
@@ -175,6 +177,24 @@ class Settings extends Page
                         ->helperText('Salin dari Google Maps → Bagikan → Sematkan peta → ambil nilai src="..."')
                         ->columnSpanFull(),
                 ])->columns(2),
+
+            Section::make('Tempat Latihan')
+                ->description('Ditampilkan di halaman Kontak (kartu Lokasi Sasana) dan footer. Perubahan di sini otomatis berlaku di kedua tempat.')
+                ->icon('heroicon-o-map-pin')
+                ->schema([
+                    TextInput::make('nama_tempat_latihan')
+                        ->label('Nama Tempat Latihan')
+                        ->placeholder('GOR Padjadjaran, Kota Bandung, Jawa Barat')
+                        ->helperText('Nama lokasi yang tampil di kartu kontak dan footer')
+                        ->columnSpanFull(),
+
+                    TextInput::make('maps_url')
+                        ->label('Link Google Maps')
+                        ->placeholder('https://maps.google.com/?q=GOR+Padjadjaran+Bandung')
+                        ->helperText('URL Google Maps — pengunjung diarahkan ke sini saat klik teks lokasi. Buka Google Maps → cari lokasi → salin link dari address bar.')
+                        ->url()
+                        ->columnSpanFull(),
+                ])->columns(1),
 
             Section::make('Media Sosial')
                 ->description('Ditampilkan sebagai ikon di footer')

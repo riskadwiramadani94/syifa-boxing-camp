@@ -16,22 +16,14 @@
 
             {{-- Info Kontak --}}
             <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:20px; font-size:0.87rem; color:#64748b; margin-bottom:24px;">
-                @if($siteSettings['whatsapp'])
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <i class="fas fa-phone" style="color:#cc2929;"></i>
-                    <span>+{{ $siteSettings['whatsapp'] }}</span>
-                </div>
-                @endif
-                @if($siteSettings['email'])
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <i class="fas fa-envelope" style="color:#cc2929;"></i>
-                    <span>{{ $siteSettings['email'] }}</span>
-                </div>
-                @endif
-                @if($siteSettings['alamat'])
+                @if($siteSettings['nama_tempat_latihan'])
                 <div style="display:flex; align-items:center; gap:8px;">
                     <i class="fas fa-map-marker-alt" style="color:#cc2929;"></i>
-                    <span>{{ $siteSettings['alamat'] }}</span>
+                    @if($siteSettings['maps_url'])
+                    <a href="{{ $siteSettings['maps_url'] }}" target="_blank" style="color:#64748b; text-decoration:none;">{{ $siteSettings['nama_tempat_latihan'] }}</a>
+                    @else
+                    <span>{{ $siteSettings['nama_tempat_latihan'] }}</span>
+                    @endif
                 </div>
                 @endif
             </div>

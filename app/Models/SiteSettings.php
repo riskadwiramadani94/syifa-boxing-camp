@@ -41,7 +41,8 @@ class SiteSettings extends Model
                  'whatsapp', 'email', 'alamat', 'maps_embed', 'instagram', 'tiktok', 'facebook',
                  'foto_profil', 'foto_tentang', 'foto_beranda',
                  'hero_badge', 'hero_judul', 'hero_desc',
-                 'stat_member', 'stat_tahun', 'stat_prestasi', 'stat_medali'];
+                 'stat_member', 'stat_tahun', 'stat_prestasi', 'stat_medali',
+                 'nama_tempat_latihan', 'maps_url'];
 
         foreach ($keys as $key) {
             Cache::forget("site_settings_{$key}");

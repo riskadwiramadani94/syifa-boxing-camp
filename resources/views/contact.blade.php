@@ -31,23 +31,26 @@
                 </div>
                 <h5 class="contact-info-title">WhatsApp</h5>
                 <p class="contact-info-desc">Hubungi kami via WhatsApp untuk respons cepat seputar latihan dan pendaftaran</p>
-                <a href="https://wa.me/{{ $settings['whatsapp'] }}" class="contact-info-link" style="color:#16a34a;">
-                    <i class="fab fa-whatsapp me-1"></i> +{{ $settings['whatsapp'] }}
-                </a>
                 <a href="https://wa.me/{{ $settings['whatsapp'] }}" target="_blank" class="contact-info-btn" style="background:#dcfce7; color:#16a34a;">Chat WhatsApp</a>
             </div>
 
-            {{-- Email --}}
+            {{-- Lokasi Sasana --}}
             <div class="contact-info-card c-reveal c-fadeup" style="--cd:0.15s">
                 <div class="contact-info-icon" style="background:#fce4e4;">
-                    <i class="fas fa-envelope" style="color:var(--red);"></i>
+                    <i class="fas fa-map-marker-alt" style="color:#cc2929;"></i>
                 </div>
-                <h5 class="contact-info-title">Email Resmi</h5>
-                <p class="contact-info-desc">Hubungi kami melalui email untuk pertanyaan, kerjasama, atau informasi lebih lanjut</p>
-                <a href="mailto:{{ $settings['email'] }}" class="contact-info-link" style="color:var(--red);">
-                    <i class="fas fa-envelope me-1"></i> {{ $settings['email'] }}
+                <h5 class="contact-info-title">Lokasi Sasana</h5>
+                <p class="contact-info-desc">Kunjungi kami langsung di sasana untuk informasi lebih lengkap</p>
+                @if($settings['maps_url'])
+                <a href="{{ $settings['maps_url'] }}" target="_blank" class="contact-info-link" style="color:#cc2929;">
+                    <i class="fas fa-map-marker-alt me-1"></i> {{ $settings['nama_tempat_latihan'] ?: $settings['alamat'] }}
                 </a>
-                <a href="mailto:{{ $settings['email'] }}" class="contact-info-btn" style="background:#fce4e4; color:var(--red);">Kirim Email</a>
+                <a href="{{ $settings['maps_url'] }}" target="_blank" class="contact-info-btn" style="background:#fce4e4; color:#cc2929;">Buka Google Maps</a>
+                @else
+                <p class="contact-info-link" style="color:#cc2929;">
+                    <i class="fas fa-map-marker-alt me-1"></i> {{ $settings['nama_tempat_latihan'] ?: $settings['alamat'] }}
+                </p>
+                @endif
             </div>
 
             {{-- Instagram --}}
@@ -62,17 +65,6 @@
                     <i class="fab fa-instagram me-1"></i> {{ $settings['instagram'] }}
                 </a>
                 <a href="{{ $settings['instagram'] }}" target="_blank" class="contact-info-btn" style="background:#e0e7ff; color:#4f46e5;">Follow Instagram</a>
-            </div>
-            @else
-            <div class="contact-info-card c-reveal c-faderight" style="--cd:0.3s">
-                <div class="contact-info-icon" style="background:#f1f5f9;">
-                    <i class="fas fa-map-marker-alt" style="color:#64748b;"></i>
-                </div>
-                <h5 class="contact-info-title">Lokasi Sasana</h5>
-                <p class="contact-info-desc">Kunjungi kami langsung di sasana untuk informasi lebih lengkap</p>
-                <p class="contact-info-link" style="color:#64748b;">
-                    <i class="fas fa-map-marker-alt me-1"></i> {{ $settings['alamat'] }}
-                </p>
             </div>
             @endif
 
