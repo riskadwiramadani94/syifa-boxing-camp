@@ -15,7 +15,8 @@ class ListEvents extends ListRecords
         return [
             CreateAction::make()
                 ->label('Tambah Event')
-                ->icon('heroicon-o-plus'),
+                ->icon('heroicon-o-plus')
+                ->color('info'),
         ];
     }
 }

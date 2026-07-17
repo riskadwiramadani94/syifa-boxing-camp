@@ -13,7 +13,10 @@ class ListJadwalLatihans extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Tambah Jadwal')
+                ->icon('heroicon-o-plus')
+                ->color('info'),
         ];
     }
 }

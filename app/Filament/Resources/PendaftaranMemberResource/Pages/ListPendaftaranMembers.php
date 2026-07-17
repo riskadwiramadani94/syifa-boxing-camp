@@ -14,8 +14,9 @@ class ListPendaftaranMembers extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Tambah Member')
-                ->icon('heroicon-o-plus'),
+                ->label('Tambah Anggota')
+                ->icon('heroicon-o-plus')
+                ->color('info'),
         ];
     }
 }

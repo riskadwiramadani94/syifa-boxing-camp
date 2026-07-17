@@ -13,7 +13,10 @@ class ListPelatih extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Tambah Pelatih')
+                ->icon('heroicon-o-plus')
+                ->color('info'),
         ];
     }
 }
