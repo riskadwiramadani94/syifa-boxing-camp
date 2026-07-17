@@ -10,7 +10,7 @@
 
             {{-- Deskripsi --}}
             <p style="font-size:0.87rem; color:#64748b; line-height:1.75; max-width:540px; margin:0 auto 20px;">
-                {{ \Illuminate\Support\Str::limit($siteSettings['deskripsi'] ?: 'Sasana tinju profesional yang membina dan mengembangkan atlet berprestasi sejak 1998, dari tingkat daerah hingga nasional.', 120) }}
+                {{ \Illuminate\Support\Str::limit($siteSettings['deskripsi_tentang'] ?: ($siteSettings['deskripsi'] ?: 'Sasana tinju profesional yang membina dan mengembangkan atlet berprestasi sejak 1998, dari tingkat daerah hingga nasional.'), 150) }}
                 <a href="/about" style="color:#cc2929; font-weight:600; text-decoration:none; white-space:nowrap;">Baca Selengkapnya →</a>
             </p>
 
