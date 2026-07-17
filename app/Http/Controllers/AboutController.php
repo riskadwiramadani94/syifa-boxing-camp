@@ -15,12 +15,13 @@ class AboutController extends Controller
             ->get();
 
         $settings = [
-            'nama_sasana'   => SiteSettings::get('nama_sasana', 'Syifa Boxing Camp'),
-            'tagline'       => SiteSettings::get('tagline', 'Sasana Tinju Profesional'),
-            'deskripsi'     => SiteSettings::get('deskripsi'),
-            'tahun_berdiri' => SiteSettings::get('tahun_berdiri', '1998'),
-            'whatsapp'      => SiteSettings::get('whatsapp', '6281234567890'),
-            'alamat'        => SiteSettings::get('alamat'),
+            'nama_sasana'       => SiteSettings::get('nama_sasana', 'Syifa Boxing Camp'),
+            'tagline'           => SiteSettings::get('tagline', 'Sasana Tinju Profesional'),
+            'deskripsi'         => SiteSettings::get('deskripsi'),
+            'deskripsi_tentang' => SiteSettings::get('deskripsi_tentang'),
+            'tahun_berdiri'     => SiteSettings::get('tahun_berdiri', '1998'),
+            'whatsapp'          => SiteSettings::get('whatsapp', '6281234567890'),
+            'alamat'            => SiteSettings::get('alamat'),
         ];
 
         $totalPrestasi = Galeri::where('kategori', 'pertandingan')->count();

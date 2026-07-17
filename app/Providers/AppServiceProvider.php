@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
                     'nama_sasana'         => SiteSettings::get('nama_sasana', 'Syifa Boxing Camp'),
                     'tagline'             => SiteSettings::get('tagline', 'Sasana Tinju Profesional'),
                     'deskripsi'           => SiteSettings::get('deskripsi'),
+                    'deskripsi_tentang'   => SiteSettings::get('deskripsi_tentang'),
                     'tahun_berdiri'       => SiteSettings::get('tahun_berdiri', '1998'),
                     'whatsapp'            => SiteSettings::get('whatsapp', '6281234567890'),
                     'email'               => SiteSettings::get('email', 'info@syifaboxingcamp.com'),

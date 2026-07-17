@@ -37,6 +37,7 @@ class Settings extends Page
             'tahun_berdiri'       => SiteSettings::get('tahun_berdiri'),
             'foto_beranda'        => SiteSettings::get('foto_beranda'),
             'foto_tentang'        => json_decode(SiteSettings::get('foto_tentang', '[]'), true) ?? [],
+            'deskripsi_tentang'   => SiteSettings::get('deskripsi_tentang'),
             'hero_badge'          => SiteSettings::get('hero_badge'),
             'hero_judul'          => SiteSettings::get('hero_judul'),
             'hero_desc'           => SiteSettings::get('hero_desc'),
@@ -89,6 +90,13 @@ class Settings extends Page
                 ->description('Foto pertama tampil besar, sisanya tampil kecil di bawahnya. Maks 5 foto.')
                 ->icon('heroicon-o-photo')
                 ->schema([
+                    Textarea::make('deskripsi_tentang')
+                        ->label('Deskripsi Tentang Syifa')
+                        ->rows(5)
+                        ->helperText('Tampil di halaman Tentang Kami — bisa lebih panjang dan detail dari deskripsi footer')
+                        ->placeholder('Syifa Boxing Camp adalah sasana tinju profesional yang berdiri sejak 1998...')
+                        ->columnSpanFull(),
+
                     FileUpload::make('foto_tentang')
                         ->label('Upload Foto')
                         ->multiple()

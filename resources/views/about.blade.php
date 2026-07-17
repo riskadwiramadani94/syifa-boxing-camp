@@ -22,7 +22,7 @@
                 <div class="divider-elegant"></div>
 
                 <p class="hero-desc-premium">
-                    {{ $settings['deskripsi'] ?: 'Syifa Boxing Camp merupakan sebuah sasana tinju yang berlokasi di GOR Padjadjaran, Kota Bandung, Jawa Barat.' }}
+                    {{ $settings['deskripsi_tentang'] ?: ($settings['deskripsi'] ?: 'Syifa Boxing Camp merupakan sebuah sasana tinju yang berlokasi di GOR Padjadjaran, Kota Bandung, Jawa Barat.') }}
                 </p>
 
                 {{-- Tombol --}}
