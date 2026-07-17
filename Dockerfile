@@ -43,14 +43,20 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Apache config - point to Laravel's public folder
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && a2enmod rewrite
+# Configure Apache - point DocumentRoot to Laravel public folder
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' \
+        /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|<Directory /var/www/>|<Directory /var/www/html/public/>|g' \
+        /etc/apache2/apache2.conf \
+    && sed -i 's|AllowOverride None|AllowOverride All|g' \
+        /etc/apache2/apache2.conf
 
-# Apache .htaccess support
-RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+# Enable mod_rewrite, disable conflicting MPMs
+RUN a2enmod rewrite \
+    && a2dismod mpm_event || true \
+    && a2enmod mpm_prefork
 
-# Expose port
+# Expose port 80
 EXPOSE 80
 
 # Start script
