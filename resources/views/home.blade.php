@@ -288,8 +288,8 @@
         {{-- CTA bawah jadwal --}}
         <div class="jadwal-cta-bar">
             <div>
-                <p style="font-weight:800; font-size:1rem; margin-bottom:2px;">Tertarik bergabung?</p>
-                <p style="font-size:0.85rem; color:#64748b; margin:0;">Daftarkan diri sekarang dan dapatkan <strong style="color:var(--red);">sesi pertama GRATIS!</strong></p>
+                <p style="font-weight:800; font-size:1rem; margin-bottom:2px;">Tertarik Gabung?</p>
+                <p style="font-size:0.85rem; color:#64748b; margin:0;">Daftar sekarang dan mulai perjalanan tinju kamu bersama kami.</p>
             </div>
             <a href="https://wa.me/{{ \App\Models\SiteSettings::get('whatsapp') }}?text={{ urlencode('Halo Admin Syifa Boxing Camp 👋
 
