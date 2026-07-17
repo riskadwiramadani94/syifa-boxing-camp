@@ -12,12 +12,14 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libsqlite3-dev \
+    libpq-dev \
     zip \
     unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         pdo \
         pdo_mysql \
+        pdo_pgsql \
         pdo_sqlite \
         mbstring \
         exif \
@@ -49,11 +51,9 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Install Node dependencies dan build assets
 RUN npm ci && npm run build && rm -rf node_modules
 
-# Buat folder database dan siapkan file SQLite
-RUN mkdir -p /var/www/html/database \
-    && touch /var/www/html/database/database.sqlite \
-    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+# Set permissions untuk storage dan cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Configure Apache VirtualHost for Laravel
 RUN echo '<VirtualHost *:80>\n\
