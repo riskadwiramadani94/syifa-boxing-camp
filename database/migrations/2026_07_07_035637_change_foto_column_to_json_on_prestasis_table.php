@@ -12,10 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // First convert existing strings to valid JSON arrays
+        // Convert existing string values to valid JSON arrays first
         DB::table('prestasis')->whereNotNull('foto')->get()->each(function ($row) {
             $foto = $row->foto;
-            // If it's already a JSON array, leave it alone
             if (!str_starts_with($foto, '[')) {
                 DB::table('prestasis')->where('id', $row->id)->update([
                     'foto' => json_encode([$foto])
@@ -23,9 +22,14 @@ return new class extends Migration
             }
         });
 
-        Schema::table('prestasis', function (Blueprint $table) {
-            $table->json('foto')->nullable()->change();
-        });
+        // PostgreSQL requires explicit USING clause to cast text -> json
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE prestasis ALTER COLUMN foto TYPE json USING foto::json');
+        } else {
+            Schema::table('prestasis', function (Blueprint $table) {
+                $table->json('foto')->nullable()->change();
+            });
+        }
     }
 
     /**
@@ -33,8 +37,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('prestasis', function (Blueprint $table) {
-            $table->string('foto')->nullable()->change();
-        });
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE prestasis ALTER COLUMN foto TYPE text USING foto::text');
+        } else {
+            Schema::table('prestasis', function (Blueprint $table) {
+                $table->string('foto')->nullable()->change();
+            });
+        }
     }
 };
