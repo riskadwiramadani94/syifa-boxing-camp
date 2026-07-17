@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\SiteSettings;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Force HTTPS di production (Render pakai reverse proxy)
+        if (config('app.env') === 'production') {
+            URL::forceScheme('https');
+        }
+
         // Share settings ke semua view (footer, navbar, dll)
         View::composer('*', function ($view) {
             // Hanya untuk view frontend, bukan filament
