@@ -27,13 +27,45 @@ Route::post('/register', function (Request $request) {
 })->name('register.store');
 
 Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => url('/'),          'priority' => '1.0', 'changefreq' => 'weekly'],
+        ['loc' => url('/about'),     'priority' => '0.8', 'changefreq' => 'monthly'],
+        ['loc' => url('/event'),     'priority' => '0.9', 'changefreq' => 'weekly'],
+        ['loc' => url('/gallery'),   'priority' => '0.8', 'changefreq' => 'weekly'],
+        ['loc' => url('/schedule'),  'priority' => '0.7', 'changefreq' => 'monthly'],
+        ['loc' => url('/contact'),   'priority' => '0.7', 'changefreq' => 'monthly'],
+        ['loc' => url('/register'),  'priority' => '0.6', 'changefreq' => 'monthly'],
+    ];
+
     try {
         $events = \App\Models\Event::where('is_active', true)->get();
+        foreach ($events as $event) {
+            $urls[] = [
+                'loc'        => url('/event/' . $event->uuid),
+                'priority'   => '0.8',
+                'changefreq' => 'monthly',
+                'lastmod'    => $event->updated_at ? $event->updated_at->toAtomString() : null,
+            ];
+        }
     } catch (\Exception $e) {
-        $events = collect();
+        // lanjut tanpa event
     }
 
-    $content = view('sitemap', compact('events'))->render();
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
-    return response($content, 200)->header('Content-Type', 'application/xml');
+    foreach ($urls as $url) {
+        $xml .= "  <url>\n";
+        $xml .= "    <loc>" . e($url['loc']) . "</loc>\n";
+        $xml .= "    <changefreq>" . $url['changefreq'] . "</changefreq>\n";
+        $xml .= "    <priority>" . $url['priority'] . "</priority>\n";
+        if (!empty($url['lastmod'])) {
+            $xml .= "    <lastmod>" . $url['lastmod'] . "</lastmod>\n";
+        }
+        $xml .= "  </url>\n";
+    }
+
+    $xml .= '</urlset>';
+
+    return response($xml, 200)->header('Content-Type', 'application/xml');
 })->name('sitemap');
