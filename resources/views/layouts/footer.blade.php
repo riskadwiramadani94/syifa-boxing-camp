@@ -20,7 +20,7 @@
                 <div style="display:flex; align-items:center; gap:8px;">
                     <i class="fas fa-map-marker-alt" style="color:#cc2929;"></i>
                     @if($siteSettings['maps_url'])
-                    <a href="{{ $siteSettings['maps_url'] }}" target="_blank" style="color:#64748b; text-decoration:none;">{{ $siteSettings['nama_tempat_latihan'] }}</a>
+                    <a href="{{ $siteSettings['maps_url'] }}" target="_blank" class="footer-location-link">{{ $siteSettings['nama_tempat_latihan'] }}</a>
                     @else
                     <span>{{ $siteSettings['nama_tempat_latihan'] }}</span>
                     @endif
@@ -61,6 +61,20 @@
         </div>
     </div>
 </footer>
+
+<style>
+    .footer-location-link,
+    .footer-location-link:link,
+    .footer-location-link:visited,
+    .footer-location-link:active {
+        color: #64748b !important;
+        text-decoration: none !important;
+    }
+    .footer-location-link:hover {
+        color: #cc2929 !important;
+        text-decoration: underline !important;
+    }
+</style>
 
 <script>
     const footerCols = document.querySelectorAll('.footer-col');
