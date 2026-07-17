@@ -301,6 +301,18 @@
         background-color: #3b82f6 !important;
     }
 
+    /* ============================================
+       TOMBOL SIMPAN — Warna biru
+    ============================================ */
+    /* Override warna tombol primary (save/create) di form Filament jadi biru */
+    .fi-form-actions .fi-btn-color-primary,
+    .fi-ac-btn-action.fi-btn-color-primary,
+    .fi-btn.fi-btn-color-primary {
+        --c-400: 96 165 250 !important;
+        --c-500: 59 130 246 !important;
+        --c-600: 37 99 235 !important;
+    }
+
 </style>
 
 <script>

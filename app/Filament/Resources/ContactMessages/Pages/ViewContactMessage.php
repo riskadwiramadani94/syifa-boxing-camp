@@ -9,11 +9,13 @@ class ViewContactMessage extends ViewRecord
 {
     protected static string $resource = ContactMessageResource::class;
 
-    protected function mutateFormDataBeforeFill(array $data): array
+    public function mount(int|string $record): void
     {
-        // Mark as read when admin opens the message
-        $this->record->update(['is_read' => true]);
+        parent::mount($record);
 
-        return $data;
+        // Mark as read saat admin buka pesan
+        if (!$this->record->is_read) {
+            $this->record->update(['is_read' => true]);
+        }
     }
 }
