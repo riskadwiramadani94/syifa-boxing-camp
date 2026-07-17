@@ -1,0 +1,306 @@
+/* ===========================
+   SYIFA BOXING CAMP — LAYOUT
+   Navbar & Footer
+=========================== */
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background: var(--white) !important;
+    padding: 16px 0;
+    transition: all 0.3s;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 2px 20px rgba(26, 42, 74, 0.08);
+    padding: 12px 0;
+}
+
+.navbar-brand { margin-right: 0; }
+
+.navbar-brand:hover { opacity: 0.8; }
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.navbar-brand-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #718096;
+    margin-bottom: 2px;
+}
+
+.navbar-brand-main {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+}
+
+.nav-link {
+    color: var(--gray-dark) !important;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 18px !important;
+    transition: color 0.2s;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 16px;
+    width: 0; height: 2px;
+    background: var(--red);
+    transition: width 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--red) !important;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: calc(100% - 32px);
+}
+
+.btn-daftar {
+    background: var(--red);
+    color: var(--white) !important;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 9px 22px !important;
+    transition: all 0.3s;
+    border: 2px solid var(--red);
+}
+
+.btn-daftar:hover {
+    background: transparent;
+    color: var(--red) !important;
+    transform: translateY(-1px);
+}
+
+.btn-daftar::after { display: none; }
+
+.navbar-toggler { border-color: var(--border); }
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(26, 42, 74, 0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: var(--white);
+        padding: 16px;
+        border-top: 1px solid var(--border);
+        margin-top: 10px;
+    }
+
+    .nav-link {
+        padding: 10px 8px !important;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+
+    .nav-link::after { display: none; }
+
+    .navbar-brand img { height: 60px !important; }
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: #ffffff;
+    border-top: none;
+    padding: 60px 0 30px;
+    color: var(--gray);
+}
+
+.footer-brand img {
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    margin-bottom: 15px;
+}
+
+.footer-brand h4 {
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-bottom: 10px;
+}
+
+.footer-brand p {
+    color: var(--gray);
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.footer-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 18px;
+    display: block;
+}
+
+.footer-links { list-style: none; padding: 0; }
+.footer-links li { margin-bottom: 10px; }
+
+.footer-links a {
+    color: var(--gray-dark);
+    font-size: 0.88rem;
+    transition: all 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--red);
+    padding-left: 5px;
+}
+
+/* Footer nav link — efek garis merah seperti navbar */
+.footer-nav-link {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    position: relative;
+    display: inline-block;
+    transition: color 0.2s;
+}
+
+.footer-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.3s;
+}
+
+.footer-nav-link:hover {
+    color: var(--red);
+}
+
+.footer-nav-link:hover::after {
+    width: 100%;
+}
+
+/* Footer animasi fadeUp saat scroll */
+@keyframes footerFadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.footer-col {
+    opacity: 0;
+}
+
+.footer-col.animated {
+    animation: footerFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.footer-col.animated:nth-child(1) { animation-delay: 0s; }
+.footer-col.animated:nth-child(2) { animation-delay: 0.15s; }
+.footer-col.animated:nth-child(3) { animation-delay: 0.3s; }
+
+.footer-contact p {
+    color: var(--gray-dark);
+    font-size: 0.88rem;
+    margin-bottom: 10px;
+}
+
+.footer-contact strong { color: var(--navy); }
+
+.social-links { display: flex; gap: 10px; margin-top: 16px; }
+
+.social-link {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-dark);
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.social-link:hover { transform: translateY(-2px); }
+
+.social-link[title="Instagram"] {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-color: transparent;
+    color: #fff;
+}
+.social-link[title="Instagram"]:hover { opacity: 0.85; color: #fff; }
+
+.social-link[title="TikTok"] {
+    background: #010101;
+    border-color: transparent;
+    color: #fff;
+}
+.social-link[title="TikTok"]:hover { background: #333; color: #fff; }
+
+.social-link[title="WhatsApp"] {
+    background: #25D366;
+    border-color: transparent;
+    color: #fff;
+}
+.social-link[title="WhatsApp"]:hover { background: #1ebe5d; color: #fff; }
+
+.footer-bottom {
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+    padding-top: 24px;
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.82rem;
+}
+
+/* Responsive footer mobile */
+@media (max-width: 768px) {
+    footer .col-lg-2,
+    footer .col-lg-3 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        min-width: 0;
+    }
+
+    footer .col-lg-4,
+    footer .col-lg-5 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    footer .col-lg-2,
+    footer .col-lg-3,
+    footer .col-lg-4,
+    footer .col-lg-5,
+    footer .col-md-3,
+    footer .col-md-4,
+    footer .col-md-5,
+    footer .col-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    footer {
+        padding: 40px 0 0;
+    }
+}

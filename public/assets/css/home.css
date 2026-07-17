@@ -1,0 +1,932 @@
+/* ===========================
+   SYIFA BOXING CAMP — HOME
+   Khusus halaman Beranda
+   Sections: Hero, About Singkat, Jadwal, Pelatih, Event, GALERI
+=========================== */
+
+/* ===== HERO ===== */
+#hero {
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+#hero::before { display: none; }
+
+#hero .container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-content {
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Animasi hero langsung saat halaman dibuka */
+@keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#hero .hero-badge  { animation: heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s  both; }
+#hero .hero-title  { animation: heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+#hero .hero-desc   { animation: heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.4s  both; }
+#hero .hero-btns   { animation: heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.52s both; }
+#hero .hero-stats  { animation: heroFadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.64s both; }
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 20px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    border: 1px solid rgba(204,41,41,0.2);
+}
+
+.hero-badge i { font-size: 0.7rem; }
+
+.hero-title {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.hero-title .highlight { color: var(--red); }
+
+.hero-desc {
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 36px;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 52px;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.stat-item { text-align: left; }
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+/* Logo pojok kanan (opsional) */
+.hero-logo-polosan {
+    position: absolute;
+    bottom: 32px;
+    right: 40px;
+    width: 180px;
+    z-index: 2;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.22));
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+    #hero {
+        background: #ffffff !important;
+        min-height: auto;
+    }
+    .hero-title { font-size: 2.6rem; }
+    .hero-stats { gap: 24px; }
+    .hero-logo-polosan { width: 110px; bottom: 16px; right: 16px; }
+}
+
+/* ===== TENTANG SINGKAT ===== */
+#about-singkat {
+    background: var(--white);
+    padding-top: 15px;
+}
+
+.about-section-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 2px 24px rgba(26,42,74,0.08);
+}
+
+.about-img-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.about-img-main {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(26,42,74,0.15);
+    transition: box-shadow 0.4s ease;
+    background: #111;
+}
+
+.about-img-main:hover {
+    box-shadow: 0 20px 55px rgba(26,42,74,0.28);
+}
+
+.about-img-main img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+    opacity: 0.5;
+}
+
+.about-img-main:hover img {
+    transform: scale(1.07);
+    opacity: 0.95;
+}
+
+.about-float-card {
+    position: absolute;
+    top: -16px;
+    left: -16px;
+    background: var(--white);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 24px rgba(26,42,74,0.14);
+    min-width: 110px;
+    z-index: 2;
+    animation: floatCard 3s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+}
+
+.about-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: all 0.3s;
+    height: 100%;
+    box-shadow: 0 2px 12px rgba(26,42,74,0.06);
+}
+
+.about-card:hover {
+    border-color: var(--red);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(204,41,41,0.1);
+}
+
+.about-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    transition: all 0.3s;
+}
+
+.about-card:hover .about-icon {
+    background: var(--red);
+    color: var(--white);
+}
+
+.about-card h4 {
+    font-size: 1.1rem;
+    color: var(--navy);
+    margin-bottom: 10px;
+}
+
+.about-card p {
+    color: var(--gray);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .about-section-card { padding: 30px 20px; }
+    .about-float-card { display: none !important; }
+    .d-flex.gap-5 { gap: 1.5rem !important; }
+    .d-flex.gap-5 > div > div:first-child { font-size: 1.4rem !important; }
+}
+
+/* ===== JADWAL ===== */
+#jadwal {
+    background: #ffffff;
+    padding: 50px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+#jadwal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 80px;
+    width: 300px;
+    height: 100%;
+    background: url('/assets/images/glove-hitam.png') no-repeat right top / contain;
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#jadwal .container {
+    position: relative;
+    z-index: 1;
+}
+
+.jadwal-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.jadwal-card-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s, transform 0.2s;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.jadwal-card-item:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.jadwal-card-rest { opacity: 0.6; }
+
+.jadwal-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.jadwal-card-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+}
+
+.jadwal-card-icon.icon-teknik   { background: #eef0fb; color: var(--navy); }
+.jadwal-card-icon.icon-sparring { background: #fde8e8; color: var(--red); }
+.jadwal-card-icon.icon-interval { background: #ede9fe; color: #7c3aed; }
+.jadwal-card-icon.icon-rest     { background: #f1f5f9; color: #64748b; }
+
+.jadwal-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    color: #fff;
+}
+
+.badge-teknik   { background: var(--navy); }
+.badge-sparring { background: var(--red); }
+.badge-interval { background: #7c3aed; }
+.badge-rest     { background: #94a3b8; color: #fff; }
+
+.jadwal-card-day {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 0;
+}
+
+.jadwal-card-time {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.jadwal-card-time i { color: var(--red); font-size: 0.72rem; }
+
+.jadwal-card-level {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.jadwal-card-level i { font-size: 0.72rem; color: #94a3b8; }
+
+.jadwal-card-rest .jadwal-card-time { font-style: italic; }
+
+.badge-kelas {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-pemula       { background: #d4edda; color: #155724; }
+.badge-intermediate { background: #fff3cd; color: #856404; }
+.badge-sparring-old { background: #f8d7d7; color: #7a1010; }
+.badge-advanced     { background: #e2d9f3; color: #4a2080; }
+
+/* CTA bawah jadwal */
+.btn-daftar-jadwal {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.btn-daftar-jadwal:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.jadwal-cta-bar {
+    margin-top: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px 10px 160px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    overflow: visible;
+    min-height: 80px;
+}
+
+.jadwal-cta-bar::before {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 160px;
+    height: 130%;
+    background: url('/assets/images/glove-merah.png') no-repeat left bottom / contain;
+    pointer-events: none;
+}
+
+.jadwal-cta-bar p { margin: 0; font-size: 0.9rem; color: #1e293b; }
+.jadwal-cta-bar p strong { color: var(--red); }
+
+/* Modal Daftar */
+.modal-daftar {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-daftar.active { display: flex; }
+
+.modal-daftar-inner {
+    background: #fff;
+    border-radius: 8px;
+    padding: 32px 36px;
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.modal-daftar-close {
+    position: absolute;
+    top: 16px; right: 18px;
+    background: none;
+    border: none;
+    width: 28px; height: 28px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+
+.modal-daftar-close:hover { color: #111; }
+
+/* Form daftar */
+.cta-form-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 32px 36px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.cta-form-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 24px;
+}
+
+.cta-form-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.cta-form-label span { color: #ef4444; }
+
+.cta-form-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #111827;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.cta-form-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+}
+
+.cta-form-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 24px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 8px;
+    float: right;
+}
+
+.cta-form-btn:hover { background: #1d4ed8; }
+.cta-form-btn-wrapper { overflow: hidden; }
+
+@media (max-width: 768px) {
+    .jadwal-cards-grid { grid-template-columns: repeat(2, 1fr); }
+    #jadwal::after { display: none; }
+    .jadwal-cta-bar {
+        padding: 16px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+    .jadwal-cta-bar::before { display: none !important; }
+    .btn-daftar-jadwal { width: 100%; text-align: center; }
+    #jadwal .col-12.col-md-3 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+/* ===== PELATIH ===== */
+#pelatih {
+    background: #fff;
+    padding: 60px 0 70px;
+}
+
+#pelatih .section-label { color: var(--red); }
+
+.pelatih-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    transition: box-shadow 0.3s ease;
+    background: #e4e8ee;
+    display: flex;
+    flex-direction: column;
+}
+
+.pelatih-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+}
+
+.pelatih-card-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    background: #e4e8ee;
+}
+
+.pelatih-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+
+.pelatih-card-footer {
+    padding: 14px 16px 16px;
+    background: var(--red);
+}
+
+.pelatih-name {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 3px;
+    letter-spacing: 0.2px;
+    line-height: 1.3;
+}
+
+.pelatih-role {
+    font-size: 0.73rem;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* ===== EVENT (di Beranda) ===== */
+#event {
+    background: var(--white);
+    padding: 40px 0 50px;
+}
+
+#event .section-label {
+    font-size: 1rem;
+    letter-spacing: 2.5px;
+}
+
+.event-section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.3;
+}
+
+.event-section-title span:last-child { color: var(--red); }
+.event-emoji { font-size: 1.8rem; }
+.event-bullet { color: var(--navy); font-size: 1rem; }
+
+.event-lihat-semua {
+    color: #2563eb;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-top: 8px;
+}
+
+.event-lihat-semua:hover { text-decoration: underline; color: #1d4ed8; }
+
+.event-card-new {
+    background: var(--white);
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.event-card-img-wrap {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: #ffffff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px 12px 0 0;
+}
+
+.event-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+}
+
+.event-card-body {
+    padding: 10px 14px 6px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-label-status {
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+.event-label-status.closed { color: var(--red); }
+.event-label-status.open   { color: #16a34a; }
+.event-label-status.soon   { color: #d97706; }
+
+.event-card-body h5 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.event-date-text,
+.event-loc-text {
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-bottom: 3px;
+}
+
+.event-card-footer {
+    padding: 10px 16px 14px;
+}
+
+.event-btn-lihat {
+    display: block;
+    text-align: center;
+    padding: 9px;
+    border-radius: 8px;
+    border: 1.5px solid #e91e8c;
+    color: #e91e8c;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #fff0f8;
+    transition: background 0.2s, color 0.2s;
+}
+
+.event-btn-lihat:hover {
+    background: #e91e8c;
+    color: #ffffff;
+}
+
+@media (max-width: 767px) {
+    .gallery-list {
+        columns: 2;
+        column-gap: 10px;
+    }
+    .gallery-list-card {
+        margin-bottom: 10px;
+    }
+    .gallery-list-title {
+        font-size: 0.72rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .gallery-list {
+        columns: 1;
+    }
+}
+
+@media (max-width: 767px) {
+    .event-card-new {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 100%;
+        width: 100%;
+    }
+    .event-card-img-wrap {
+        width: 100% !important;
+        height: 200px !important;
+        border-radius: 12px 12px 0 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #ffffff !important;
+    }
+    .event-card-img-wrap img {
+        display: block !important;
+        object-fit: contain !important;
+        padding: 16px !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .event-card-body { padding: 12px 14px 6px; }
+    .event-card-footer { padding: 0 14px 14px; }
+    .event-btn-lihat {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .event-section-title {
+        font-size: 1.2rem !important;
+        flex-wrap: wrap;
+        gap: 4px;
+        line-height: 1.4;
+    }
+    .event-emoji { font-size: 1.1rem; }
+    #event .col-12.col-md-4 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ===== GALERI (di Beranda) ===== */
+#galeri {
+    background: var(--white);
+    padding: 50px 0;
+}
+
+.gallery-list {
+    columns: 3;
+    column-gap: 20px;
+}
+
+@media (max-width: 991px) {
+    .gallery-list {
+        columns: 2;
+        column-gap: 15px;
+    }
+}
+
+.gallery-list-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    break-inside: avoid;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    background: #111;
+}
+
+.gallery-list-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.2);
+    text-decoration: none;
+}
+
+.gallery-list-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.85;
+    transition: transform 0.4s ease, opacity 0.3s;
+}
+
+.gallery-list-card:hover img {
+    transform: scale(1.03);
+    opacity: 1;
+}
+
+.gallery-list-bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-list-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.75) 0%,
+        rgba(0,0,0,0.35) 50%,
+        rgba(0,0,0,0.08) 100%
+    );
+}
+
+.gallery-list-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 12px 14px;
+    color: #fff;
+    z-index: 2;
+}
+
+.gallery-list-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    display: block;
+    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+}
+
+.gallery-list-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0;
+    line-height: 1.3;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.gallery-list-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.gallery-list-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+    line-height: 1.35;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.gallery-list-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.72);
+    margin: 0;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .gallery-list-desc { display: none; }
+    #galeri .col-12.col-md-4 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+/* CTA section (hidden) */
+#cta { display: none; }

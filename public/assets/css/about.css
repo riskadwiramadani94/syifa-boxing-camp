@@ -1,0 +1,331 @@
+/* ==========================================================================
+   SYIFA BOXING CAMP — ABOUT PAGE (PREMIUM WHITE WITH INTERNAL IMAGE SLIDER)
+   ========================================================================== */
+
+/* ===== LAYOUT BASE (MUTLAK PUTIH) ===== */
+.tentang-page-section {
+    padding: 50px 0;
+    background: #ffffff !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Section pelatih background putih */
+.pelatih-gray-section {
+    background: #ffffff !important;
+}
+
+.border-bottom-subtle {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* ===== TIPOGRAFI & AKSEN ===== */
+.section-label-premium {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--red, #cc2929);
+    display: inline-block;
+}
+
+.hero-title-premium {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--navy, #1a2a4a);
+    letter-spacing: -1px;
+}
+
+.hero-title-premium .highlight-accent {
+    color: var(--red, #cc2929);
+    position: relative;
+}
+
+.divider-elegant {
+    width: 60px;
+    height: 4px;
+    background: var(--navy, #1a2a4a);
+    margin: 24px 0;
+    border-radius: 2px;
+}
+
+.divider-center {
+    margin: 24px auto 0 auto !important;
+}
+
+.hero-desc-premium {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: #4b5563;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+/* ===== STATISTIK PRESTASI ===== */
+.hero-stats-premium {
+    display: flex;
+    gap: 56px;
+    margin-top: 32px;
+    padding-top: 0;
+}
+
+.stat-number-premium {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--navy, #1a2a4a);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.stat-label-premium {
+    font-size: 0.88rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+/* ===== TOMBOL LIHAT EVENT ===== */
+.btn-event-premium {
+    display: inline-flex;
+    align-items: center;
+    background: var(--red, #cc2929);
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 13px 30px;
+    border-radius: 8px;
+    border: 2px solid var(--red, #cc2929);
+    text-decoration: none;
+    gap: 8px;
+    transition: all 0.3s;
+    box-shadow: 0 6px 28px rgba(204, 41, 41, 0.55);
+}
+
+.btn-event-premium:hover {
+    background: #a81f1f;
+    border-color: #a81f1f;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba(204, 41, 41, 0.75);
+}
+
+.btn-event-premium .arrow-icon {
+    transition: transform 0.3s ease;
+}
+
+.btn-event-premium:hover .arrow-icon {
+    transform: translateX(4px);
+}
+
+/* ===== GRID FOTO INTERAKTIF ===== */
+.foto-grid-premium {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grid-box {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #1a2a4a;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.grid-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.01);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Foto 1: besar penuh di atas */
+.item-top {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+
+/* Baris tengah & bawah: grid 2 kolom zigzag */
+.grid-box-bottom {
+    display: grid;
+    gap: 8px;
+}
+
+/* Baris 1 bawah (foto 2 & 3): kiri lebar, kanan kecil */
+.grid-row-1 {
+    grid-template-columns: 58% 1fr;
+    height: 200px;
+}
+
+/* Baris 2 bawah (foto 4 & 5): kiri kecil, kanan lebar */
+.grid-row-2 {
+    grid-template-columns: 1fr 58%;
+    height: 200px;
+}
+
+.grid-box-bottom .grid-box {
+    height: 100%;
+}
+
+.subtle-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 42, 74, 0) 50%, rgba(26, 42, 74, 0.1));
+}
+
+.grid-box:hover img {
+    transform: scale(1.05) translateY(-2px);
+}
+
+/* ===== INDIVIDUAL TIM PELATIH CONTEXT ===== */
+.pelatih-row-max {
+    max-width: 1020px;
+    margin: 0 auto;
+}
+
+.pelatih-card-luxury {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== MINI CAROUSEL DI DALAM CARD ===== */
+.pelatih-avatar-carousel {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f9fafb;
+    position: relative;
+}
+
+.pelatih-avatar-carousel .carousel-inner,
+.pelatih-avatar-carousel .carousel-item {
+    width: 100%;
+    height: 100%;
+}
+
+.pelatih-avatar-carousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tombol Navigasi Mini Internal (Hanya muncul jelas saat card di-hover) */
+.mini-nav-btn {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 10px;
+    opacity: 0; /* Tersembunyi saat normal */
+    transition: all 0.3s ease;
+}
+
+.mini-nav-btn i {
+    color: var(--navy, #1a2a4a);
+    font-size: 0.85rem;
+}
+
+.mini-nav-btn:hover {
+    background: #ffffff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Munculkan tombol navigasi mini saat card disentuh/hover */
+.pelatih-card-luxury:hover .mini-nav-btn {
+    opacity: 1;
+}
+
+/* Bagian Keterangan Teks */
+.pelatih-meta-box {
+    padding: 28px 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.pelatih-meta-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 4px;
+    background: var(--red, #cc2929);
+    border-radius: 2px 2px 0 0;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover Effect Pada Card */
+.pelatih-card-luxury:hover {
+    transform: translateY(-8px);
+    border-color: #ffffff;
+    box-shadow: 0 24px 48px rgba(26, 42, 74, 0.18), 0 8px 16px rgba(0, 0, 0, 0.10);
+}
+
+.pelatih-card-luxury:hover .pelatih-meta-box::after {
+    width: 60px;
+}
+
+.pelatih-name-luxury {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy, #1a2a4a);
+    margin-bottom: 6px;
+}
+
+.pelatih-role-luxury {
+    font-size: 0.8rem;
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+/* ===== ANIMASI REVEAL ===== */
+@keyframes luxuryFadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero about: animasi langsung saat halaman dibuka */
+.content-slide-up .section-label-premium { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s  both; }
+.content-slide-up .hero-title-premium    { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+.content-slide-up .divider-elegant       { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s both; }
+.content-slide-up .hero-desc-premium     { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.45s both; }
+.content-slide-up .hero-action-wrapper   { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.55s both; }
+.content-slide-up .hero-stats-premium    { animation: luxuryFadeInUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.65s both; }
+
+/* Foto grid kanan: masuk dari kanan */
+@keyframes slideFromRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.visual-slide-up { animation: slideFromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.3s both; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+    .tentang-page-section { padding: 40px 0; }
+    .hero-title-premium { font-size: 2.5rem; }
+}
+
+@media (max-width: 767px) {
+    .mini-nav-btn { opacity: 1; } /* Di HP langsung tampil tanpa nunggu hover */
+}

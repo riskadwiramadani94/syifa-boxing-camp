@@ -1,0 +1,219 @@
+/* ===========================
+   SYIFA BOXING CAMP — GALLERY PAGE
+   Gaya KONI
+=========================== */
+
+/* ===== KEYFRAMES ===== */
+@keyframes gFadeUp {
+    from { opacity: 0; transform: translateY(36px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gFadeLeft {
+    from { opacity: 0; transform: translateX(-48px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes gFadeRight {
+    from { opacity: 0; transform: translateX(48px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes gZoomIn {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes gFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ===== SCROLL REVEAL BASE ===== */
+.g-reveal {
+    opacity: 0;
+}
+.g-reveal.g-visible {
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-duration: 0.7s;
+    animation-delay: var(--gd, 0s);
+}
+.g-reveal.g-fadeup.g-visible    { animation-name: gFadeUp; }
+.g-reveal.g-fadeleft.g-visible  { animation-name: gFadeLeft; }
+.g-reveal.g-faderight.g-visible { animation-name: gFadeRight; }
+.g-reveal.g-zoom.g-visible      { animation-name: gZoomIn; }
+.g-reveal.g-fade.g-visible      { animation-name: gFadeIn; animation-duration: 0.9s; }
+
+/* ===== HERO ===== */
+.gallery-hero-section {
+    padding: 80px 0 60px;
+    background: #fff;
+    text-align: center;
+}
+
+.gallery-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.gallery-hero-title {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.gallery-hero-accent {
+    color: var(--red);
+}
+
+.gallery-hero-desc {
+    font-size: 1rem;
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+
+/* ===== FILTER TABS ===== */
+.gallery-filter-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.gallery-filter-btn {
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: none;
+    background: #fce4e4;
+    color: #b91c1c;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.gallery-filter-btn:hover {
+    background: #fbb6b6;
+    color: #991b1b;
+}
+
+.gallery-filter-btn.active {
+    background: var(--red);
+    color: #fff;
+}
+
+/* ===== GRID MASONRY ===== */
+.gallery-grid-section {
+    padding: 0 0 80px;
+    background: #fff;
+}
+
+.gallery-grid {
+    columns: 3;
+    column-gap: 16px;
+}
+
+.gallery-grid-item {
+    break-inside: avoid;
+    margin-bottom: 16px;
+}
+
+.gallery-grid-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #111;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-grid-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+}
+
+.gallery-grid-card img,
+.gallery-grid-card video {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.85;
+    transition: transform 0.4s ease, opacity 0.3s;
+}
+
+.gallery-grid-card:hover img,
+.gallery-grid-card:hover video {
+    transform: scale(1.03);
+    opacity: 1;
+}
+
+.gallery-grid-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 18px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    color: #fff;
+}
+
+.gallery-grid-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.gallery-grid-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 6px;
+    line-height: 1.3;
+}
+
+.gallery-grid-cat {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ===== EMPTY STATE ===== */
+.gallery-empty {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 0;
+    color: #94a3b8;
+    gap: 12px;
+}
+
+.gallery-empty i {
+    font-size: 3rem;
+}
+
+.gallery-empty p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+    .gallery-grid {
+        columns: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-hero-title {
+        font-size: 2rem;
+    }
+    .gallery-grid {
+        columns: 1;
+    }
+}

@@ -1,0 +1,21 @@
+/*
+ * ============================================================
+ * style.css — FILE INI SUDAH TIDAK DIGUNAKAN
+ * ============================================================
+ *
+ * CSS telah dipecah menjadi file-file terpisah:
+ *
+ *   global.css   → variabel, reset, tipografi, tombol, utility
+ *   layout.css   → navbar, footer
+ *   home.css     → khusus halaman Beranda (hero, jadwal, pelatih, event, prestasi)
+ *   event.css    → khusus halaman Event
+ *   prestasi.css → khusus halaman Prestasi
+ *
+ * Cara load di view masing-masing:
+ *
+ *   @push('styles')
+ *       <link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
+ *   @endpush
+ *
+ * ============================================================
+ */

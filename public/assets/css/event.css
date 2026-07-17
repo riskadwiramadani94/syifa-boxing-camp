@@ -1,0 +1,190 @@
+/* ===========================
+   SYIFA BOXING CAMP — EVENT PAGE
+   Gaya KONI: hero putih besar + card elegan
+=========================== */
+
+/* ===== ANIMASI ===== */
+@keyframes eventFadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero — langsung muncul saat halaman dibuka */
+.event-hero-inner .event-hero-title {
+    animation: eventFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.event-hero-inner .event-hero-desc {
+    animation: eventFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+/* Card — fadeUp saat scroll */
+.event-animate {
+    opacity: 0;
+}
+
+.event-animate.animated {
+    animation: eventFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay, 0s);
+}
+
+/* ===== HERO SECTION ===== */
+.event-hero-section {
+    padding: 50px 0 40px;
+    background: #ffffff;
+    text-align: center;
+}
+
+.event-hero-inner {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.event-hero-title {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.event-hero-accent {
+    color: var(--red);
+    display: block;
+}
+
+.event-hero-desc {
+    font-size: 0.95rem;
+    color: var(--gray-dark);
+    line-height: 1.7;
+    margin: 0 auto;
+    max-width: 680px;
+}
+
+/* ===== DAFTAR EVENT ===== */
+.event-list-section {
+    padding: 40px 0 80px;
+    background: #ffffff;
+}
+
+/* ===== CARD KONI-STYLE ===== */
+.event-koni-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 2px 16px rgba(26,42,74,0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0 16px;
+}
+
+/* Gambar — background krem seperti KONI */
+.event-koni-img {
+    width: calc(100% - 24px);
+    height: 150px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 12px;
+    margin: 12px auto 0;
+    border-radius: 8px;
+}
+
+.event-koni-img img {
+    max-width: 100%;
+    max-height: 126px;
+    object-fit: contain;
+}
+
+/* Body teks */
+.event-koni-body {
+    padding: 14px 16px 8px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Status badge */
+.event-koni-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.event-koni-status.closed { color: var(--red); }
+.event-koni-status.open   { color: #16a34a; }
+.event-koni-status.soon   { color: #d97706; }
+
+/* Judul event */
+.event-koni-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.45;
+    margin: 0 0 4px;
+}
+
+/* Meta: tanggal & lokasi */
+.event-koni-meta {
+    font-size: 0.83rem;
+    color: var(--gray-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.event-koni-meta i {
+    font-size: 0.75rem;
+    color: var(--red);
+    flex-shrink: 0;
+}
+
+/* Deskripsi singkat */
+.event-koni-desc {
+    font-size: 0.83rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 4px 0 0;
+}
+
+/* Footer tombol */
+.event-koni-footer {
+    padding: 0 16px 16px;
+}
+
+/* Tombol pink seperti beranda */
+.event-koni-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #fff0f8;
+    color: #e91e8c;
+    border: 1.5px solid #e91e8c;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+}
+
+.event-koni-btn:hover {
+    background: #e91e8c;
+    color: #ffffff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .event-hero-section { padding: 50px 0 40px; }
+    .event-hero-title   { font-size: 2.4rem; letter-spacing: -0.5px; }
+    .event-hero-desc    { font-size: 0.9rem; }
+}
