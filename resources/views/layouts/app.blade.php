@@ -35,6 +35,9 @@
     <meta name="twitter:description" content="@yield('og_description', $metaDesc)">
     <meta name="twitter:image" content="@yield('og_image', $defaultImg)">
 
+    {{-- Google Search Console Verification --}}
+    <meta name="google-site-verification" content="DtAALwNmuenakYeQ895Jrk-pI4IWQ4YAzSzsup7IHhI" />
+
     {{-- Canonical URL --}}
     <link rel="canonical" href="{{ url()->current() }}">
 
