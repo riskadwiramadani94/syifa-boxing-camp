@@ -12,9 +12,5 @@ php artisan migrate --force
 # Create storage link
 php artisan storage:link || true
 
-# Cache config dan route saja (tidak cache view karena ada query DB)
-php artisan config:cache
-php artisan route:cache
-
 # Start Apache in foreground
 exec apache2ctl -D FOREGROUND
