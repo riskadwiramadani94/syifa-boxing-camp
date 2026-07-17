@@ -261,18 +261,7 @@
     overflow: hidden;
 }
 
-#jadwal::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 80px;
-    width: 300px;
-    height: 100%;
-    background: url('/assets/images/glove-hitam.png') no-repeat right top / contain;
-    opacity: 0.18;
-    pointer-events: none;
-    z-index: 0;
-}
+
 
 #jadwal .container {
     position: relative;
@@ -421,15 +410,7 @@
     min-height: 80px;
 }
 
-.jadwal-cta-bar::before {
-    content: '';
-    position: absolute;
-    left: 0; bottom: 0;
-    width: 160px;
-    height: 130%;
-    background: url('/assets/images/glove-merah.png') no-repeat left bottom / contain;
-    pointer-events: none;
-}
+
 
 .jadwal-cta-bar p { margin: 0; font-size: 0.9rem; color: #1e293b; }
 .jadwal-cta-bar p strong { color: var(--red); }
