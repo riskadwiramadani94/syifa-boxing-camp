@@ -81,5 +81,48 @@
 
     @stack('scripts')
 
+    {{-- WhatsApp Floating Button --}}
+    @if($siteSettings['whatsapp'])
+    <a href="https://wa.me/{{ $siteSettings['whatsapp'] }}?text={{ urlencode('Halo Admin Syifa Boxing Camp 👋, saya ingin bertanya lebih lanjut.') }}"
+       target="_blank"
+       class="wa-float"
+       title="Chat WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <style>
+        .wa-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            width: 56px;
+            height: 56px;
+            background: #25d366;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.45);
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: waPulse 2.5s infinite;
+        }
+        .wa-float:hover {
+            transform: scale(1.12);
+            box-shadow: 0 8px 24px rgba(37,211,102,0.6);
+            color: #fff;
+        }
+        @keyframes waPulse {
+            0%, 100% { box-shadow: 0 4px 16px rgba(37,211,102,0.45); }
+            50%       { box-shadow: 0 4px 28px rgba(37,211,102,0.75); }
+        }
+        @media (max-width: 576px) {
+            .wa-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+        }
+    </style>
+    @endif
+
 </body>
 </html>
