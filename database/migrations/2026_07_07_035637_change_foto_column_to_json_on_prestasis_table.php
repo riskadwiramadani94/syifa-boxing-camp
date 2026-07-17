@@ -13,17 +13,17 @@ return new class extends Migration
     public function up(): void
     {
         // First convert existing strings to valid JSON arrays
-        DB::table('galeris')->whereNotNull('foto')->get()->each(function ($row) {
+        DB::table('prestasis')->whereNotNull('foto')->get()->each(function ($row) {
             $foto = $row->foto;
             // If it's already a JSON array, leave it alone
             if (!str_starts_with($foto, '[')) {
-                DB::table('galeris')->where('id', $row->id)->update([
+                DB::table('prestasis')->where('id', $row->id)->update([
                     'foto' => json_encode([$foto])
                 ]);
             }
         });
 
-        Schema::table('galeris', function (Blueprint $table) {
+        Schema::table('prestasis', function (Blueprint $table) {
             $table->json('foto')->nullable()->change();
         });
     }
@@ -33,7 +33,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('galeris', function (Blueprint $table) {
+        Schema::table('prestasis', function (Blueprint $table) {
             $table->string('foto')->nullable()->change();
         });
     }
