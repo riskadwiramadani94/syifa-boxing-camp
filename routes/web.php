@@ -25,3 +25,11 @@ Route::get('/register', function () {
 Route::post('/register', function (Request $request) {
     return back()->with('success', 'Pendaftaran berhasil! Kami akan segera menghubungi Anda.');
 })->name('register.store');
+
+Route::get('/sitemap.xml', function () {
+    $events = \App\Models\Event::whereNotNull('slug')->get();
+
+    $content = view('sitemap', compact('events'))->render();
+
+    return response($content, 200)->header('Content-Type', 'application/xml');
+})->name('sitemap');
