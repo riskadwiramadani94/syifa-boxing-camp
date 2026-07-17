@@ -27,7 +27,11 @@ Route::post('/register', function (Request $request) {
 })->name('register.store');
 
 Route::get('/sitemap.xml', function () {
-    $events = \App\Models\Event::whereNotNull('slug')->get();
+    try {
+        $events = \App\Models\Event::where('is_active', true)->get();
+    } catch (\Exception $e) {
+        $events = collect();
+    }
 
     $content = view('sitemap', compact('events'))->render();
 

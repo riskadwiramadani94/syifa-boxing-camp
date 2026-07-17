@@ -48,7 +48,7 @@
     {{-- Halaman Detail Event --}}
     @foreach($events as $event)
     <url>
-        <loc>{{ url('/event/' . $event->slug) }}</loc>
+        <loc>{{ url('/event/' . $event->uuid) }}</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         @if($event->updated_at)
