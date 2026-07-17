@@ -9,16 +9,12 @@ chmod 664 /var/www/html/database/database.sqlite
 # Run migrations
 php artisan migrate --force
 
-# Jalankan seeder jika tabel masih kosong
-php artisan db:seed --force || true
-
 # Create storage link
 php artisan storage:link || true
 
-# Cache untuk production
+# Cache config dan route saja (tidak cache view karena ada query DB)
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
 
 # Start Apache in foreground
 exec apache2ctl -D FOREGROUND
