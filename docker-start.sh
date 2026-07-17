@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Run migrations
 php artisan migrate --force
@@ -6,10 +7,10 @@ php artisan migrate --force
 # Create storage link
 php artisan storage:link || true
 
-# Cache config for production
+# Cache for production
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Start Apache
-apache2-foreground
+# Start Apache in foreground
+exec apache2ctl -D FOREGROUND
