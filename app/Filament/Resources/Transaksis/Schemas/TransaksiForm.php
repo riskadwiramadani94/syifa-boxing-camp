@@ -87,6 +87,7 @@ class TransaksiForm
                     FileUpload::make('bukti_foto')
                         ->label('Bukti Foto / Struk / Nota')
                         ->image()
+                        ->disk('cloudinary')
                         ->directory('keuangan/transaksi')
                         ->columnSpanFull(),
 
