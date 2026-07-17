@@ -425,6 +425,23 @@
         if (e.key === 'Escape')     closeLightbox();
     });
 
+    // ===== TOUCH SWIPE — galeri lightbox =====
+    let touchStartX = 0;
+    let touchEndX   = 0;
+
+    document.getElementById('lightbox').addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.getElementById('lightbox').addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) { // minimal 50px swipe
+            if (diff > 0) lightboxNext(); // swipe kiri → next
+            else          lightboxPrev(); // swipe kanan → prev
+        }
+    }, { passive: true });
+
     // ===== FILTER =====
     const filterBtns = document.querySelectorAll('.gallery-filter-btn');
     const gridItems  = document.querySelectorAll('.gallery-grid-item');

@@ -61,6 +61,16 @@
 
 <body>
 
+    {{-- Loading Screen --}}
+    <div id="loading-screen">
+        <div class="loading-inner">
+            <img src="{{ asset('assets/images/polosan_logo_syifa.png') }}" alt="Syifa Boxing Camp" class="loading-logo">
+            <div class="loading-bar-wrap">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="site-wrapper">
 
         @include('layouts.navbar')
@@ -81,6 +91,11 @@
 
     @stack('scripts')
 
+    {{-- Back to Top Button --}}
+    <button id="back-to-top" title="Kembali ke atas" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
     {{-- WhatsApp Floating Button --}}
     @if($siteSettings['whatsapp'])
     <a href="https://wa.me/{{ $siteSettings['whatsapp'] }}?text={{ urlencode('Halo Admin Syifa Boxing Camp 👋, saya ingin bertanya lebih lanjut.') }}"
@@ -90,6 +105,86 @@
         <i class="fab fa-whatsapp"></i>
     </a>
     <style>
+        /* ===== LOADING SCREEN ===== */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #loading-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loading-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .loading-logo {
+            width: 90px;
+            animation: loadingPulse 1s ease-in-out infinite alternate;
+        }
+        @keyframes loadingPulse {
+            from { transform: scale(0.92); opacity: 0.7; }
+            to   { transform: scale(1.05); opacity: 1; }
+        }
+        .loading-bar-wrap {
+            width: 120px;
+            height: 3px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-bar {
+            height: 100%;
+            background: #cc2929;
+            border-radius: 2px;
+            animation: loadingBar 0.9s ease forwards;
+        }
+        @keyframes loadingBar {
+            from { width: 0; }
+            to   { width: 100%; }
+        }
+
+        /* ===== BACK TO TOP ===== */
+        #back-to-top {
+            position: fixed;
+            bottom: 96px;
+            right: 28px;
+            z-index: 9998;
+            width: 44px;
+            height: 44px;
+            background: #1a2a4a;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s, background 0.2s;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        #back-to-top:hover {
+            background: #cc2929;
+        }
+
+        /* ===== WA FLOAT ===== */
         .wa-float {
             position: fixed;
             bottom: 28px;
@@ -120,8 +215,37 @@
         }
         @media (max-width: 576px) {
             .wa-float { width: 50px; height: 50px; font-size: 1.5rem; bottom: 20px; right: 20px; }
+            #back-to-top { bottom: 82px; right: 20px; width: 40px; height: 40px; }
         }
     </style>
+
+    <script>
+        // ===== LOADING SCREEN =====
+        // Hanya tampil saat fresh load / refresh, tidak saat navigasi antar halaman
+        const loadingEl = document.getElementById('loading-screen');
+        if (sessionStorage.getItem('syifa_loaded')) {
+            // Sudah pernah load di sesi ini — langsung sembunyikan
+            loadingEl.style.display = 'none';
+        } else {
+            // Pertama kali / refresh — tampilkan loading
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    loadingEl.classList.add('hide');
+                    sessionStorage.setItem('syifa_loaded', '1');
+                }, 900);
+            });
+        }
+
+        // ===== BACK TO TOP =====
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        }, { passive: true });
+    </script>
     @endif
 
 </body>
