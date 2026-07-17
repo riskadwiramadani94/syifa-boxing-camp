@@ -4,7 +4,7 @@
 @section('meta_description', 'Hubungi Syifa Boxing Camp untuk informasi pendaftaran, jadwal latihan, dan kerjasama. Kami siap membantu kamu!')
 @section('og_title', 'Hubungi Kami - Syifa Boxing Camp')
 @section('og_description', 'Hubungi Syifa Boxing Camp untuk informasi pendaftaran, jadwal latihan, dan kerjasama. Kami siap membantu kamu!')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 

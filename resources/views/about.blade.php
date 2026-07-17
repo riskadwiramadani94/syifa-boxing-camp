@@ -4,7 +4,7 @@
 @section('meta_description', 'Kenali lebih dekat Syifa Boxing Camp — sejarah, visi misi, pelatih berpengalaman, dan prestasi kami dalam dunia tinju Indonesia.')
 @section('og_title', 'Tentang Kami - SYIFA Boxing Camp')
 @section('og_description', 'Kenali lebih dekat Syifa Boxing Camp — sejarah, visi misi, dan prestasi kami dalam dunia tinju Indonesia sejak 1998.')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 

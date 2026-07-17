@@ -4,7 +4,7 @@
 @section('meta_description', 'Cek jadwal latihan rutin di Syifa Boxing Camp. Tersedia berbagai kelas tinju untuk pemula hingga atlet profesional.')
 @section('og_title', 'Jadwal Latihan - Syifa Boxing Camp')
 @section('og_description', 'Cek jadwal latihan rutin di Syifa Boxing Camp. Tersedia berbagai kelas tinju untuk pemula hingga atlet profesional.')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 

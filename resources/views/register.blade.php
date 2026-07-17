@@ -4,7 +4,7 @@
 @section('meta_description', 'Daftarkan dirimu sebagai member Syifa Boxing Camp dan mulai perjalanan tinju profesionalmu bersama pelatih berpengalaman.')
 @section('og_title', 'Daftar Member - Syifa Boxing Camp')
 @section('og_description', 'Daftarkan dirimu sebagai member Syifa Boxing Camp dan mulai perjalanan tinju profesionalmu bersama pelatih berpengalaman.')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 

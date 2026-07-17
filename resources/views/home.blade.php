@@ -4,7 +4,7 @@
 @section('meta_description', 'Syifa Boxing Camp — sasana tinju profesional yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
 @section('og_title', 'Syifa Boxing Camp — Sasana Tinju Profesional')
 @section('og_description', 'Syifa Boxing Camp — sasana tinju profesional yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 

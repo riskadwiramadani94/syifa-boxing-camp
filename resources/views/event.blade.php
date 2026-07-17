@@ -4,7 +4,7 @@
 @section('meta_description', 'Ikuti berbagai event dan pertandingan tinju yang diselenggarakan oleh Syifa Boxing Camp. Cek jadwal dan daftarkan dirimu sekarang!')
 @section('og_title', 'Event Tinju - Syifa Boxing Camp')
 @section('og_description', 'Ikuti berbagai event dan pertandingan tinju yang diselenggarakan oleh Syifa Boxing Camp. Cek jadwal dan daftarkan dirimu sekarang!')
-@section('og_image', asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')
 
