@@ -214,6 +214,16 @@
         font-size: 2rem;
     }
     .gallery-grid {
-        columns: 1;
+        columns: 2;
+        column-gap: 10px;
+    }
+    .gallery-grid-item {
+        margin-bottom: 10px;
+    }
+    .gallery-grid-title {
+        font-size: 0.78rem;
+    }
+    .gallery-grid-cat {
+        font-size: 0.65rem;
     }
 }
