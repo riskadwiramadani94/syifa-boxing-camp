@@ -42,3 +42,32 @@
 
     </div>
 </nav>
+
+<script>
+    (function () {
+        const navbarEl = document.getElementById('navbarNav');
+        if (!navbarEl) return;
+
+        function closeNavbar() {
+            if (navbarEl.classList.contains('show')) {
+                // pakai Bootstrap collapse API
+                const bsCollapse = bootstrap.Collapse.getInstance(navbarEl);
+                if (bsCollapse) bsCollapse.hide();
+                else navbarEl.classList.remove('show');
+            }
+        }
+
+        // 1. Tutup saat klik di luar navbar
+        document.addEventListener('click', function (e) {
+            const navbar = document.querySelector('.navbar');
+            if (!navbar.contains(e.target)) {
+                closeNavbar();
+            }
+        });
+
+        // 2. Tutup saat scroll
+        window.addEventListener('scroll', function () {
+            closeNavbar();
+        }, { passive: true });
+    })();
+</script>
