@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\SiteSettings;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -20,6 +21,23 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+
+        // Daftarkan Cloudinary sebagai filesystem driver
+        Storage::extend('cloudinary', function ($app, $config) {
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => $config['cloud_name'],
+                    'api_key'    => $config['api_key'],
+                    'api_secret' => $config['api_secret'],
+                ],
+                'url' => [
+                    'secure' => true,
+                ],
+            ]);
+            return new \League\Flysystem\Filesystem(
+                new \CloudinaryLabs\CloudinaryLaravel\CloudinaryStorageAdapter($cloudinary)
+            );
+        });
 
         // Share settings ke semua view (footer, navbar, dll)
         View::composer('*', function ($view) {
