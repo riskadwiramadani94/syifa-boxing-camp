@@ -53,7 +53,7 @@
             @php
                 $fotoProfil = json_decode(\App\Models\SiteSettings::get('foto_tentang', '[]'), true) ?? [];
                 $fotoUrls   = array_values(array_filter(
-                    array_map(fn($f) => trim($f) !== '' ? asset('storage/' . $f) : null, $fotoProfil)
+                    array_map(fn($f) => trim($f) !== '' ? foto_url($f) : null, $fotoProfil)
                 ));
             @endphp
             <div class="col-lg-6 visual-slide-up">
@@ -133,7 +133,7 @@
                             @if(count($fotos) > 0)
                                 @foreach($fotos as $i => $foto)
                                 <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
-                                    <img src="{{ asset('storage/' . $foto) }}" alt="Foto {{ $p->nama_lengkap }}">
+                                    <img src="{{ foto_url($foto) }}" alt="Foto {{ $p->nama_lengkap }}">
                                 </div>
                                 @endforeach
                             @else

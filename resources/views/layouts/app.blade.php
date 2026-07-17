@@ -10,8 +10,8 @@
         $fotoBeranda = \App\Models\SiteSettings::get('foto_beranda');
         $fotoProfil  = \App\Models\SiteSettings::get('foto_profil');
         $defaultImg  = $fotoProfil
-            ? asset('storage/' . $fotoProfil)
-            : ($fotoBeranda ? asset('storage/' . $fotoBeranda) : asset('assets/images/polosan_logo_syifa.png'));
+            ? foto_url($fotoProfil)
+            : ($fotoBeranda ? foto_url($fotoBeranda) : asset('assets/images/polosan_logo_syifa.png'));
         $defaultOgTitle = ($siteSettings['nama_sasana'] ?? 'Syifa Boxing Camp') . ' — ' . ($siteSettings['tagline'] ?? 'Sasana Tinju Profesional');
     @endphp
 

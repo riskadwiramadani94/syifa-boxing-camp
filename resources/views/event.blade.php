@@ -34,7 +34,7 @@
 
                     {{-- Gambar --}}
                     <div class="event-koni-img">
-                        <img src="{{ $event->foto ? asset('storage/' . $event->foto) : asset('assets/logo/logo.jpg') }}"
+                        <img src="{{ foto_url($event->foto, asset('assets/logo/logo.jpg')) }}"
                              alt="{{ $event->judul }}">
                     </div>
 

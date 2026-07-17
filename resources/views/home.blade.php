@@ -96,7 +96,7 @@
                         @php $fotoBeranda = \App\Models\SiteSettings::get('foto_beranda'); @endphp
                         @if($fotoBeranda)
                         <div class="about-img-main">
-                            <img src="{{ asset('storage/' . $fotoBeranda) }}" alt="Syifa Boxing Camp">
+                            <img src="{{ foto_url($fotoBeranda) }}" alt="Syifa Boxing Camp">
                         </div>
                         @endif
 
@@ -154,7 +154,7 @@
                 <div class="event-card-new">
                     {{-- Gambar di atas (vertikal di desktop, kiri di mobile) --}}
                     <div class="event-card-img-wrap">
-                        <img src="{{ $event->foto ? asset('storage/' . $event->foto) : asset('assets/logo/logo.jpg') }}" alt="{{ $event->judul }}">
+                        <img src="{{ foto_url($event->foto, asset('assets/logo/logo.jpg')) }}" alt="{{ $event->judul }}">
                     </div>
                     {{-- Konten di bawah --}}
                     <div class="event-card-body">
@@ -210,7 +210,7 @@
             @php
                 $fotos = is_array($item->foto) ? $item->foto : [];
                 $fotoUrl = count($fotos) > 0
-                    ? asset('storage/' . $fotos[0])
+                    ? foto_url($fotos[0])
                     : asset('assets/logo/logo.jpg');
             @endphp
             <div class="gallery-list-card" style="cursor:pointer;" onclick="openHomeGaleri({{ $i }})">

@@ -3,7 +3,7 @@
 @section('title', $event->judul . ' - Syifa Boxing Camp')
 @section('og_title', $event->judul . ' - ' . ($siteSettings['nama_sasana'] ?? 'Syifa Boxing Camp'))
 @section('og_description', $event->deskripsi ? \Illuminate\Support\Str::limit(strip_tags($event->deskripsi), 160) : 'Informasi lengkap event tinju ' . $event->judul . ' yang diselenggarakan oleh Syifa Boxing Camp.')
-@section('og_image', $event->foto ? asset('storage/' . $event->foto) : asset('assets/images/polosan_logo_syifa.png'))
+@section('og_image', foto_url($event->foto, asset('assets/images/polosan_logo_syifa.png')))
 
 @section('content')
 
@@ -29,7 +29,7 @@
                 {{-- Kiri: Poster --}}
                 <div class="col-md-4 col-lg-3 text-center">
                     <div class="ed-poster-wrap">
-                        <img src="{{ $event->foto ? asset('storage/' . $event->foto) : asset('assets/logo/logo.jpg') }}"
+                        <img src="{{ foto_url($event->foto, asset('assets/logo/logo.jpg')) }}"
                              alt="{{ $event->judul }}" class="ed-poster-img">
                     </div>
                 </div>
@@ -232,7 +232,7 @@
                     foreach ($galeri->foto as $file) {
                         if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
                             $allFotos->push([
-                                'url'        => asset('storage/' . $file),
+                                'url'        => foto_url($file),
                                 'judul'      => $galeri->judul,
                                 'keterangan' => $galeri->keterangan,
                                 'tahun'      => $galeri->tahun,
