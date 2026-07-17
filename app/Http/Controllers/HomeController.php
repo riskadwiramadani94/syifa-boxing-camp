@@ -24,7 +24,7 @@ class HomeController extends Controller
         $galeriData = $galeris->map(function ($item) {
             $fotos = is_array($item->foto) ? $item->foto : [];
             $fotoUrls = count($fotos) > 0
-                ? array_map(fn($f) => asset('storage/' . $f), $fotos)
+                ? array_map(fn($f) => foto_url($f), $fotos)
                 : [asset('assets/logo/logo.jpg')];
             return [
                 'fotos'      => array_values($fotoUrls),

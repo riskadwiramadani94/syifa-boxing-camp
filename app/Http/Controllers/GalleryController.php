@@ -14,7 +14,7 @@ class GalleryController extends Controller
             $fotos = is_array($item->foto) ? $item->foto : [];
             // kirim semua foto dalam galeri ini
             $fotoUrls = count($fotos) > 0
-                ? array_map(fn($f) => asset('storage/' . $f), $fotos)
+                ? array_map(fn($f) => foto_url($f), $fotos)
                 : [asset('assets/logo/logo.jpg')];
 
             return [

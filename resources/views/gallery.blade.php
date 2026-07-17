@@ -40,7 +40,7 @@
             @php
                 $fotos = is_array($item->foto) ? $item->foto : [];
                 $fotoUrl = count($fotos) > 0
-                    ? asset('storage/' . $fotos[0])
+                    ? foto_url($fotos[0])
                     : asset('assets/logo/logo.jpg');
                 $animTypes = ['g-fadeleft', 'g-fadeup', 'g-faderight'];
                 $anim  = $animTypes[$i % 3];
