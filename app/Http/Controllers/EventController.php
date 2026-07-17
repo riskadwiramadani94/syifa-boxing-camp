@@ -10,7 +10,7 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::where('is_active', true)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('tanggal_mulai', 'desc')
             ->get();
 
         return view('event', compact('events'));

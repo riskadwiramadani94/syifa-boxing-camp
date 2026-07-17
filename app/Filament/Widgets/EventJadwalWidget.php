@@ -39,7 +39,7 @@ class EventJadwalWidget extends Widget
 
         $events = Event::whereIn('status', ['dibuka', 'segera'])
             ->where('is_active', true)
-            ->orderBy('tanggal')
+            ->orderBy('tanggal_mulai')
             ->take(3)
             ->get();
 

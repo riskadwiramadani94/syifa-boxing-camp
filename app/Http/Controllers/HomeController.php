@@ -11,7 +11,7 @@ class HomeController extends Controller
     public function index()
     {
         $events = Event::where('is_active', true)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('tanggal_mulai', 'desc')
             ->limit(3)
             ->get();
 
