@@ -1,8 +1,7 @@
-FROM php:8.2-cli
+FROM php:8.2-apache-bookworm
 
-# Install Apache and system dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    apache2 \
     git \
     curl \
     libpng-dev \
@@ -14,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     zip \
     unzip \
-    libapache2-mod-php8.2 \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install \
         pdo \
@@ -45,7 +43,7 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Configure Apache VirtualHost
+# Configure Apache VirtualHost for Laravel
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
     <Directory /var/www/html/public>\n\
@@ -54,8 +52,8 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
-# Enable required modules only
-RUN a2enmod rewrite php8.2
+# Fix MPM conflict: disable event, enable prefork + rewrite
+RUN a2dismod mpm_event && a2enmod mpm_prefork rewrite
 
 EXPOSE 80
 
