@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContactMessage;
 use App\Models\SiteSettings;
+use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
@@ -18,5 +20,22 @@ class ContactController extends Controller
         ];
 
         return view('contact', compact('settings'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'pesan' => 'required|string',
+        ]);
+
+        ContactMessage::create([
+            'nama'  => $request->nama,
+            'email' => $request->email,
+            'pesan' => $request->pesan,
+        ]);
+
+        return redirect()->route('contact')->with('success', 'Pesan berhasil dikirim! Kami akan segera menghubungi Anda.');
     }
 }
