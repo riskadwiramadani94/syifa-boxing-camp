@@ -38,8 +38,16 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Install Node.js untuk build Vite assets
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Install Node dependencies dan build assets
+RUN npm ci && npm run build && rm -rf node_modules
 
 # Buat folder database dan siapkan file SQLite
 RUN mkdir -p /var/www/html/database \
