@@ -14,6 +14,8 @@ nixPkgs = [
   "php83Extensions.zip",
   "php83Extensions.gd",
   "php83Extensions.intl",
+  "php83Extensions.opcache",
+  "php83Extensions.sodium",
   "composer"
 ]
 
