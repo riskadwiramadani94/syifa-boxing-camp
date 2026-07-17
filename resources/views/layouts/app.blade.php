@@ -38,6 +38,10 @@
     {{-- Canonical URL --}}
     <link rel="canonical" href="{{ url()->current() }}">
 
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/polosan_logo_syifa.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/polosan_logo_syifa.png') }}">
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
