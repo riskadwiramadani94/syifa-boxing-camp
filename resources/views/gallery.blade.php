@@ -81,7 +81,7 @@
         <div class="lb-header">
             <span id="lb-counter" class="lb-counter"></span>
             <div class="lb-header-actions">
-                <a id="lb-download" href="#" download class="lb-btn-download" title="Unduh foto">
+                <a id="lb-download" href="#" class="lb-btn-download" title="Unduh foto" onclick="downloadFoto(event)">
                     <i class="fas fa-download"></i> Unduh
                 </a>
                 <button class="lb-close" onclick="closeLightbox()">&times;</button>
@@ -315,6 +315,30 @@
 
 @push('scripts')
 <script>
+    function downloadFoto(e) {
+        e.preventDefault();
+        const fotoSrc = document.getElementById('lb-img').src;
+        const namaFile = fotoSrc.split('/').pop() || 'foto-galeri.jpg';
+
+        // fetch as blob lalu force download
+        fetch(fotoSrc)
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = namaFile;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            })
+            .catch(() => {
+                // fallback: buka di tab baru kalau fetch gagal
+                window.open(fotoSrc, '_blank');
+            });
+    }
+
     // ===== DATA GALERI =====
     const galeriData = @json($galeriData);
 
@@ -342,11 +366,8 @@
         document.getElementById('lb-img').src = fotoSrc;
         document.getElementById('lb-foto-bg').style.backgroundImage = `url('${fotoSrc}')`;
 
-        // tombol unduh — selalu foto yang sedang tampil
-        const dlBtn = document.getElementById('lb-download');
-        dlBtn.href = fotoSrc;
-        // ambil nama file dari URL untuk nama download
-        dlBtn.download = fotoSrc.split('/').pop() || 'foto-galeri';
+        // tombol unduh — href tidak dipakai, foto diambil dari lb-img.src saat klik
+        document.getElementById('lb-download').dataset.src = fotoSrc;
 
         // counter
         document.getElementById('lb-counter').textContent =
