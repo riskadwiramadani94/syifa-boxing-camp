@@ -100,7 +100,7 @@ class EventResource extends Resource
                     Forms\Components\FileUpload::make('foto')
                         ->label('Foto Event')
                         ->image()
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('media/events')
                         ->imagePreviewHeight('200')
                         ->nullable(),
@@ -177,7 +177,7 @@ class EventResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Foto')
-                    ->disk('public')
+                    ->disk('cloudinary')
                     ->width(60)
                     ->height(60),
 

@@ -69,7 +69,7 @@ class PelatihResource extends Resource
                         ->reorderable()
                         ->appendFiles()
                         ->image()
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('media/pelatih')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
@@ -85,7 +85,7 @@ class PelatihResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Foto')
-                    ->disk('public')
+                    ->disk('cloudinary')
                     ->getStateUsing(fn ($record) => is_array($record->foto) && count($record->foto) > 0
                         ? $record->foto[0]
                         : null

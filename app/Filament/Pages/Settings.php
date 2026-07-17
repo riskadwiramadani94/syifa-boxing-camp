@@ -80,7 +80,7 @@ class Settings extends Page
                         ->label('Foto Tentang (Beranda)')
                         ->helperText('1 foto — tampil di section Tentang Kami di halaman Beranda')
                         ->image()
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('settings/beranda')
                         ->imagePreviewHeight('200')
                         ->columnSpanFull(),
@@ -104,7 +104,7 @@ class Settings extends Page
                         ->appendFiles()
                         ->maxFiles(5)
                         ->image()
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('settings/tentang')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')

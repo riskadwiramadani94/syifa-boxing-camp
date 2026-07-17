@@ -134,7 +134,7 @@ class PendaftaranMemberResource extends Resource
                     Forms\Components\FileUpload::make('bukti_pembayaran')
                         ->label('Upload Bukti Pembayaran')
                         ->image()
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('keuangan/bukti-pembayaran')
                         ->imagePreviewHeight('250')
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
@@ -180,7 +180,7 @@ class PendaftaranMemberResource extends Resource
                     Infolists\Components\TextEntry::make('catatan_admin')->label('Catatan Admin')->columnSpanFull(),
                     Infolists\Components\ImageEntry::make('bukti_pembayaran')
                         ->label('Bukti Pembayaran')
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->height(250)
                         ->columnSpanFull(),
                 ])->columns(2),
@@ -210,7 +210,7 @@ class PendaftaranMemberResource extends Resource
 
                 Tables\Columns\ImageColumn::make('bukti_pembayaran')
                     ->label('Bukti Bayar')
-                    ->disk('public')
+                    ->disk('cloudinary')
                     ->width(60)
                     ->height(60),
 

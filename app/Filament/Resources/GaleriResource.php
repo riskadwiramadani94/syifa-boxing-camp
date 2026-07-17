@@ -102,7 +102,7 @@ class GaleriResource extends Resource
                         ->reorderable()
                         ->appendFiles()
                         ->acceptedFileTypes(['image/*', 'video/*'])
-                        ->disk('public')
+                        ->disk('cloudinary')
                         ->directory('media/galeri')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
@@ -117,7 +117,7 @@ class GaleriResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Media')
-                    ->disk('public')
+                    ->disk('cloudinary')
                     ->getStateUsing(function ($record) {
                         if (is_array($record->foto)) {
                             foreach ($record->foto as $file) {
