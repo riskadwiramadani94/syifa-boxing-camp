@@ -111,6 +111,9 @@
                 </div>
             </div>
             <div class="vl-info-actions">
+                <button class="vl-btn vl-btn-unduh" onclick="downloadCurrentVideo()">
+                    <i class="fas fa-download"></i> Unduh
+                </button>
                 <button class="vl-btn vl-btn-batal" onclick="closeVideoModal()">
                     Tutup
                 </button>
@@ -301,7 +304,7 @@
         .vl-juara-badge.medal-3 { background: #fde8d8; color: #7c3a1a; }
         .vl-juara-badge.medal-other { background: #f1f5f9; color: #475569; }
 
-        .vl-info-actions { flex-shrink: 0; }
+        .vl-info-actions { flex-shrink: 0; display: flex; gap: 8px; }
         .vl-btn {
             border: none;
             padding: 7px 16px;
@@ -311,6 +314,8 @@
             cursor: pointer;
             transition: background 0.18s;
         }
+        .vl-btn-unduh { background: #3f3f3f; color: #f1f5f9; display: flex; align-items: center; gap: 5px; }
+        .vl-btn-unduh:hover { background: #555; }
         .vl-btn-batal { background: #3f3f3f; color: #94a3b8; }
         .vl-btn-batal:hover { background: #555; color: #f1f5f9; }
 
@@ -397,6 +402,21 @@
             juaraEl.className = 'vl-juara-badge ' + cls;
             juaraEl.style.display = 'inline-block';
         } else { juaraEl.style.display = 'none'; }
+    }
+
+    function downloadCurrentVideo() {
+        const src  = currentVideo.videos[currentVideoIdx];
+        const name = src.split('/').pop() || 'video.mp4';
+        fetch(src)
+            .then(r => r.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a   = document.createElement('a');
+                a.href = url; a.download = name;
+                document.body.appendChild(a); a.click();
+                document.body.removeChild(a); URL.revokeObjectURL(url);
+            })
+            .catch(() => window.open(src, '_blank'));
     }
 
     function closeVideoModal() {
