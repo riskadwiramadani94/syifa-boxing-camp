@@ -217,81 +217,72 @@
 @endif
 
 {{-- ===== DOKUMENTASI FOTO ===== --}}
+@if($allFotos->count() > 0)
 <section class="ed-gallery-section">
     <div class="container">
-
         <div class="ed-section-header">
-            <span class="ed-section-label">DOKUMENTASI</span>
+            <span class="ed-section-label">{{ strtoupper($event->judul) }}</span>
             <h2 class="ed-section-title">Foto Event</h2>
         </div>
-
-        @php
-            $allFotos = collect();
-            foreach ($event->galeris as $galeri) {
-                if (is_array($galeri->foto)) {
-                    foreach ($galeri->foto as $file) {
-                        if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file)) {
-                            $allFotos->push([
-                                'url'        => foto_url($file),
-                                'judul'      => $galeri->judul,
-                                'keterangan' => $galeri->keterangan,
-                                'tahun'      => $galeri->tahun,
-                            ]);
-                        }
-                    }
-                }
-            }
-        @endphp
-
-        @if($allFotos->count() > 0)
         <div class="ed-doc-grid">
             @foreach($allFotos as $i => $foto)
             <div class="ed-doc-item" onclick="openDocLightbox({{ $i }})">
-                <img src="{{ $foto['url'] }}" alt="{{ $foto['judul'] }}" loading="lazy">
-                <div class="ed-doc-overlay">
-                    <i class="fas fa-expand-alt"></i>
+                <img src="{{ $foto['url'] }}" alt="Foto event" loading="lazy">
+                <div class="ed-doc-overlay"><i class="fas fa-expand-alt"></i></div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+{{-- ===== DOKUMENTASI VIDEO ===== --}}
+@if($allVideos->count() > 0)
+<section class="ed-gallery-section" style="padding-top:0;">
+    <div class="container">
+        <div class="ed-section-header">
+            <span class="ed-section-label">{{ strtoupper($event->judul) }}</span>
+            <h2 class="ed-section-title">Video Event</h2>
+        </div>
+        <div class="ed-doc-grid">
+            @foreach($allVideos as $i => $vid)
+            <div class="ed-doc-item ed-vid-item" onclick="openVideoModal({{ $i }})">
+                <img src="{{ $vid['thumb'] }}" alt="Video event" loading="lazy"
+                     onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
+                <div class="ed-doc-overlay ed-vid-overlay">
+                    <div class="ed-vid-play-btn"><i class="fas fa-play"></i></div>
                 </div>
             </div>
             @endforeach
         </div>
-        @else
-        <div class="ed-gallery-empty">
-            <i class="far fa-images"></i>
-            <p>Belum ada dokumentasi foto untuk event ini.</p>
-        </div>
-        @endif
-
     </div>
 </section>
+@endif
 
-
-
-{{-- ===== LIGHTBOX DOKUMENTASI (gaya galeri) ===== --}}
+{{-- ===== LIGHTBOX FOTO — fullscreen gelap gaya KONI ===== --}}
 <div id="doc-lightbox" onclick="if(event.target===this) closeDocLightbox()">
-    <div class="lb-modal">
-        <div class="lb-header">
-            <span id="doc-lb-counter" class="lb-counter"></span>
-            <button class="lb-close" onclick="closeDocLightbox()">&times;</button>
-        </div>
-        <div class="lb-foto-wrap">
-            <button class="lb-nav lb-nav-prev" id="doc-lb-prev" onclick="docLightboxPrev()">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <img id="doc-lb-img" src="" alt="Dokumentasi">
-            <button class="lb-nav lb-nav-next" id="doc-lb-next" onclick="docLightboxNext()">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-        <div class="lb-info">
-            <div class="lb-info-top">
-                <div>
-                    <h5 id="doc-lb-judul" class="lb-judul"></h5>
-                    <span id="doc-lb-tahun" class="lb-tahun"></span>
-                </div>
-            </div>
-            <p id="doc-lb-keterangan" class="lb-keterangan" style="display:none;"></p>
-        </div>
+    <div class="dlb-counter-wrap">
+        <span id="dlb-counter"></span>
+        <button class="dlb-close" onclick="closeDocLightbox()"><i class="fas fa-times"></i></button>
     </div>
+    <button class="dlb-nav dlb-prev" id="dlb-prev" onclick="docLightboxPrev()"><i class="fas fa-chevron-left"></i></button>
+    <img id="dlb-img" src="" alt="Foto event">
+    <button class="dlb-nav dlb-next" id="dlb-next" onclick="docLightboxNext()"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+{{-- ===== MODAL VIDEO PLAYER ===== --}}
+<div id="vid-modal" onclick="if(event.target===this) closeVideoModal()">
+    <div class="dlb-counter-wrap">
+        <span id="vml-counter"></span>
+        <button class="dlb-close" onclick="closeVideoModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <button class="dlb-nav dlb-prev" id="vml-prev" onclick="videoModalPrev()"><i class="fas fa-chevron-left"></i></button>
+    <div class="vml-wrap">
+        <video id="vml-video" controls playsinline preload="metadata">
+            <source id="vml-source" src="" type="video/mp4">
+        </video>
+    </div>
+    <button class="dlb-nav dlb-next" id="vml-next" onclick="videoModalNext()"><i class="fas fa-chevron-right"></i></button>
 </div>
 
 @endsection
@@ -489,10 +480,10 @@
     color: #1a2a4a;
 }
 
-/* Grid Foto — natural size masonry */
+/* Grid Foto — natural size masonry 2 kolom di mobile */
 .ed-doc-grid {
     columns: 3;
-    column-gap: 12px;
+    column-gap: 10px;
 }
 
 .ed-doc-item {
@@ -500,7 +491,7 @@
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     break-inside: avoid;
     display: block;
 }
@@ -513,27 +504,42 @@
     transition: transform 0.35s ease;
 }
 
-.ed-doc-item:hover img {
-    transform: scale(1.03);
-}
+.ed-doc-item:hover img { transform: scale(1.03); }
 
 .ed-doc-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.25);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.25s;
     color: #fff;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     border-radius: 10px;
 }
+.ed-doc-item:hover .ed-doc-overlay { opacity: 1; }
 
-.ed-doc-item:hover .ed-doc-overlay {
-    opacity: 1;
+/* Video item — play button overlay */
+.ed-vid-overlay {
+    background: rgba(0,0,0,0.3);
+    opacity: 1 !important;
 }
+.ed-vid-play-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #1e293b;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.ed-vid-item:hover .ed-vid-play-btn { transform: scale(1.12); background: #fff; }
 
 /* Empty state */
 .ed-gallery-empty {
@@ -541,153 +547,130 @@
     padding: 60px 20px;
     color: #94a3b8;
 }
+.ed-gallery-empty i { font-size: 3rem; display: block; margin-bottom: 12px; }
 
-.ed-gallery-empty i {
-    font-size: 3rem;
-    display: block;
-    margin-bottom: 12px;
-}
-
-
-
-/* ===== LIGHTBOX ===== */
-.ed-lightbox {
+/* ===== LIGHTBOX FOTO — fullscreen gelap gaya KONI ===== */
+#doc-lightbox {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.92);
+    background: rgba(0,0,0,0.95);
     z-index: 9999;
     align-items: center;
     justify-content: center;
 }
+#doc-lightbox.dlb-active { display: flex; }
 
-.ed-lightbox.active {
-    display: flex;
-}
-
-.ed-lightbox-content {
-    max-width: 90vw;
-    max-height: 90vh;
-    text-align: center;
-}
-
-.ed-lightbox-content img {
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 8px;
+#dlb-img {
+    max-width: calc(100vw - 120px);
+    max-height: calc(100vh - 80px);
     object-fit: contain;
+    border-radius: 4px;
+    display: block;
+    user-select: none;
 }
 
-.ed-lightbox-content p {
-    color: #e2e8f0;
+/* ===== MODAL VIDEO ===== */
+#vid-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+#vid-modal.vml-active { display: flex; }
+
+.vml-wrap {
+    width: calc(100vw - 120px);
+    max-width: 720px;
+}
+#vml-video {
+    width: 100%;
+    max-height: calc(100vh - 100px);
+    border-radius: 8px;
+    display: block;
+    background: #000;
+}
+
+/* ===== SHARED: counter, close, nav ===== */
+.dlb-counter-wrap {
+    position: fixed;
+    top: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10001;
+    pointer-events: none;
+}
+.dlb-counter-wrap > * { pointer-events: auto; }
+
+#dlb-counter, #vml-counter {
     font-size: 0.88rem;
-    margin-top: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(0,0,0,0.45);
+    padding: 4px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
 }
 
-.ed-lightbox-close,
-.ed-lightbox-prev,
-.ed-lightbox-next {
-    position: absolute;
-    background: rgba(255,255,255,0.1);
+.dlb-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
     border: none;
     color: #fff;
-    font-size: 1.2rem;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background 0.2s;
 }
+.dlb-close:hover { background: rgba(255,255,255,0.3); }
 
-.ed-lightbox-close { top: 20px; right: 20px; }
-.ed-lightbox-prev  { left: 20px; top: 50%; transform: translateY(-50%); }
-.ed-lightbox-next  { right: 20px; top: 50%; transform: translateY(-50%); }
-
-.ed-lightbox-close:hover,
-.ed-lightbox-prev:hover,
-.ed-lightbox-next:hover {
-    background: rgba(255,255,255,0.25);
-}
-
-@media (max-width: 768px) {
-    .ed-doc-grid { columns: 2; }
-    .ed-lightbox-prev { left: 8px; }
-    .ed-lightbox-next { right: 8px; }
-}
-
-@media (max-width: 480px) {
-    .ed-doc-grid { columns: 1; }
-}
-
-/* ===== LIGHTBOX MODAL (gaya galeri) ===== */
-#doc-lightbox {
-    display: none;
+.dlb-nav {
     position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    z-index: 9999;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    font-size: 1rem;
+    transition: background 0.2s;
+    z-index: 10001;
 }
-#doc-lightbox.active { display: flex; }
+.dlb-nav:hover { background: rgba(255,255,255,0.28); }
+.dlb-prev { left: 16px; }
+.dlb-next { right: 16px; }
 
-.lb-modal {
-    background: #fff;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 520px;
-    max-height: 92vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+@media (max-width: 768px) {
+    .ed-doc-grid { columns: 2; column-gap: 8px; }
+    .ed-doc-item { margin-bottom: 8px; }
+    #dlb-img { max-width: calc(100vw - 90px); max-height: calc(100vh - 90px); }
+    .vml-wrap { width: calc(100vw - 90px); }
+    .dlb-nav { width: 38px; height: 38px; font-size: 0.85rem; }
+    .dlb-prev { left: 8px; }
+    .dlb-next { right: 8px; }
+    .ed-vid-play-btn { width: 42px; height: 42px; font-size: 0.95rem; }
 }
-.lb-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 16px 8px;
-    border-bottom: 1px solid #f0f0f0;
+
+@media (max-width: 420px) {
+    .ed-doc-grid { columns: 2; column-gap: 6px; }
 }
-.lb-counter { font-size: 0.82rem; color: #888; font-weight: 500; }
-.lb-close {
-    background: #f1f1f1; border: none; width: 32px; height: 32px;
-    border-radius: 50%; font-size: 1.2rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: #555; transition: background 0.2s;
-}
-.lb-close:hover { background: #e0e0e0; }
-.lb-foto-wrap {
-    position: relative; background: #fff;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 280px; max-height: 50vh; overflow: hidden;
-}
-#doc-lb-img {
-    max-width: 100%; max-height: 50vh;
-    object-fit: contain; padding: 16px; display: block;
-}
-.lb-nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(0,0,0,0.35); border: none; color: #fff;
-    width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.85rem; transition: background 0.2s; z-index: 2;
-}
-.lb-nav:hover { background: rgba(0,0,0,0.6); }
-.lb-nav-prev { left: 10px; }
-.lb-nav-next { right: 10px; }
-.lb-info {
-    padding: 16px 20px 20px; border-top: 1px solid #f0f0f0;
-    background: #fff; overflow-y: auto; max-height: 180px;
-}
-.lb-info-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.lb-judul { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0 0 4px; line-height: 1.4; }
-.lb-tahun { font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-.lb-keterangan { font-size: 0.85rem; color: #64748b; margin: 10px 0 0; line-height: 1.6; }
 
 /* ===== PRICING CARDS ===== */
 .ed-pricing-section {
@@ -973,41 +956,31 @@
 
 @push('scripts')
 <script>
-    const docPhotos = @json($allFotos->values());
+    // ===== DATA =====
+    const docPhotos = @json($allFotos->values()->pluck('url'));
+    const docVideos = @json($allVideos->values());
+
+    // ===== FOTO LIGHTBOX =====
     let docCurrent = 0;
 
     function openDocLightbox(index) {
         docCurrent = index;
         updateDocLightbox();
-        document.getElementById('doc-lightbox').classList.add('active');
+        document.getElementById('doc-lightbox').classList.add('dlb-active');
         document.body.style.overflow = 'hidden';
     }
 
     function closeDocLightbox() {
-        document.getElementById('doc-lightbox').classList.remove('active');
+        document.getElementById('doc-lightbox').classList.remove('dlb-active');
         document.body.style.overflow = '';
     }
 
     function updateDocLightbox() {
-        const photo = docPhotos[docCurrent];
         const total = docPhotos.length;
-
-        document.getElementById('doc-lb-img').src = photo.url;
-        document.getElementById('doc-lb-counter').textContent = total > 1 ? (docCurrent + 1) + ' / ' + total : '';
-        document.getElementById('doc-lb-judul').textContent = photo.judul || '';
-        document.getElementById('doc-lb-tahun').textContent = photo.tahun ? photo.tahun : '';
-
-        const showNav = total > 1;
-        document.getElementById('doc-lb-prev').style.display = showNav ? 'flex' : 'none';
-        document.getElementById('doc-lb-next').style.display = showNav ? 'flex' : 'none';
-
-        const ketEl = document.getElementById('doc-lb-keterangan');
-        if (photo.keterangan) {
-            ketEl.textContent = photo.keterangan;
-            ketEl.style.display = 'block';
-        } else {
-            ketEl.style.display = 'none';
-        }
+        document.getElementById('dlb-img').src = docPhotos[docCurrent];
+        document.getElementById('dlb-counter').textContent = total > 1 ? (docCurrent + 1) + ' / ' + total : '';
+        document.getElementById('dlb-prev').style.visibility = total > 1 ? 'visible' : 'hidden';
+        document.getElementById('dlb-next').style.visibility = total > 1 ? 'visible' : 'hidden';
     }
 
     function docLightboxPrev() {
@@ -1020,11 +993,82 @@
         updateDocLightbox();
     }
 
+    // ===== VIDEO MODAL =====
+    let vidCurrent = 0;
+
+    function openVideoModal(index) {
+        vidCurrent = index;
+        updateVideoModal();
+        document.getElementById('vid-modal').classList.add('vml-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+        document.getElementById('vml-video').pause();
+        document.getElementById('vid-modal').classList.remove('vml-active');
+        document.body.style.overflow = '';
+    }
+
+    function updateVideoModal() {
+        const total = docVideos.length;
+        const src   = docVideos[vidCurrent].url;
+        const sourceEl = document.getElementById('vml-source');
+        const videoEl  = document.getElementById('vml-video');
+        sourceEl.src = src;
+        videoEl.load();
+        document.getElementById('vml-counter').textContent = total > 1 ? (vidCurrent + 1) + ' / ' + total : '';
+        document.getElementById('vml-prev').style.visibility = total > 1 ? 'visible' : 'hidden';
+        document.getElementById('vml-next').style.visibility = total > 1 ? 'visible' : 'hidden';
+    }
+
+    function videoModalPrev() {
+        vidCurrent = (vidCurrent - 1 + docVideos.length) % docVideos.length;
+        updateVideoModal();
+    }
+
+    function videoModalNext() {
+        vidCurrent = (vidCurrent + 1) % docVideos.length;
+        updateVideoModal();
+    }
+
+    // ===== KEYBOARD =====
     document.addEventListener('keydown', function(e) {
-        if (!document.getElementById('doc-lightbox').classList.contains('active')) return;
-        if (e.key === 'ArrowLeft')  docLightboxPrev();
-        if (e.key === 'ArrowRight') docLightboxNext();
-        if (e.key === 'Escape')     closeDocLightbox();
+        if (document.getElementById('doc-lightbox').classList.contains('dlb-active')) {
+            if (e.key === 'ArrowLeft')  docLightboxPrev();
+            if (e.key === 'ArrowRight') docLightboxNext();
+            if (e.key === 'Escape')     closeDocLightbox();
+        }
+        if (document.getElementById('vid-modal').classList.contains('vml-active')) {
+            if (e.key === 'ArrowLeft')  videoModalPrev();
+            if (e.key === 'ArrowRight') videoModalNext();
+            if (e.key === 'Escape')     closeVideoModal();
+        }
     });
+
+    // ===== SWIPE (foto) =====
+    let swipeFotoStartX = 0;
+    document.getElementById('doc-lightbox').addEventListener('touchstart', function(e) {
+        swipeFotoStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    document.getElementById('doc-lightbox').addEventListener('touchend', function(e) {
+        const diff = swipeFotoStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) docLightboxNext();
+            else          docLightboxPrev();
+        }
+    }, { passive: true });
+
+    // ===== SWIPE (video) =====
+    let swipeVidStartX = 0;
+    document.getElementById('vid-modal').addEventListener('touchstart', function(e) {
+        swipeVidStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    document.getElementById('vid-modal').addEventListener('touchend', function(e) {
+        const diff = swipeVidStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) videoModalNext();
+            else          videoModalPrev();
+        }
+    }, { passive: true });
 </script>
 @endpush
