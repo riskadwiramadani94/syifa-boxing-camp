@@ -35,3 +35,38 @@ if (! function_exists('foto_url')) {
         return asset('storage/' . $foto);
     }
 }
+
+if (! function_exists('video_thumb_url')) {
+    /**
+     * Ambil thumbnail (gambar) dari frame pertama video Cloudinary.
+     * Cloudinary otomatis generate thumbnail dengan mengubah tipe ke image + transformasi so_0.
+     * Contoh: media/galeri/abc.mp4 → https://res.cloudinary.com/{cloud}/video/upload/so_0,f_jpg/media/galeri/abc.mp4
+     */
+    function video_thumb_url(?string $video, string $fallback = ''): string
+    {
+        if (! $video) {
+            return $fallback ?: asset('assets/logo/logo.jpg');
+        }
+
+        if (config('filesystems.default') === 'cloudinary') {
+            $cloudinaryUrl = config('filesystems.disks.cloudinary.url', '');
+            $cloudName     = parse_url($cloudinaryUrl, PHP_URL_HOST) ?: '';
+
+            if ($cloudName) {
+                // Kalau sudah full URL Cloudinary, inject transformasi
+                if (str_contains($video, 'res.cloudinary.com')) {
+                    return preg_replace(
+                        '#/video/upload/#',
+                        '/video/upload/so_0,f_jpg/',
+                        $video
+                    );
+                }
+                // Kalau path relatif
+                $path = ltrim($video, '/');
+                return "https://res.cloudinary.com/{$cloudName}/video/upload/so_0,f_jpg/{$path}";
+            }
+        }
+
+        return $fallback ?: asset('assets/logo/logo.jpg');
+    }
+}

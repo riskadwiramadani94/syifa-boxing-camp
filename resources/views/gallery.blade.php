@@ -53,6 +53,10 @@
                     $coverIsVid = true;
                 }
                 $fotoUrl = $coverFile ? foto_url($coverFile) : asset('assets/logo/logo.jpg');
+                // Kalau cover adalah video, ambil thumbnail frame pertama dari Cloudinary
+                if ($coverIsVid && $coverFile) {
+                    $fotoUrl = video_thumb_url($coverFile);
+                }
                 $hasVideo = collect($fotos)->contains(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
                 $animTypes = ['g-fadeleft', 'g-fadeup', 'g-faderight'];
                 $anim  = $animTypes[$i % 3];
@@ -68,9 +72,9 @@
             <div class="gallery-grid-item g-reveal {{ $anim }}" data-kategori="{{ $item->kategori }}" data-juara="{{ $item->juara ? '1' : '0' }}" style="--gd:{{ $delay }}">
                 <div class="gallery-grid-card" style="cursor:pointer;position:relative;" onclick="openLightbox({{ $i }})">
                     @if($coverIsVid)
-                        <video src="{{ $fotoUrl }}" muted playsinline preload="metadata"
-                               style="object-fit:cover; width:100%; height:100%; pointer-events:none;"
-                               onerror="this.style.display='none'"></video>
+                        <img src="{{ $fotoUrl }}" alt="{{ $item->judul }}"
+                             style="object-fit:cover; width:100%;"
+                             onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
                     @else
                         <img src="{{ $fotoUrl }}" alt="{{ $item->judul }}" style="object-fit: cover; width:100%;">
                     @endif

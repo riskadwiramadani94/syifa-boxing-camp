@@ -235,6 +235,10 @@
                     $coverIsVid = true;
                 }
                 $coverUrl = $coverFile ? foto_url($coverFile) : asset('assets/logo/logo.jpg');
+                // Kalau cover adalah video, ambil thumbnail frame pertama dari Cloudinary
+                if ($coverIsVid && $coverFile) {
+                    $coverUrl = video_thumb_url($coverFile);
+                }
 
                 // Cek apakah koleksi ini punya video
                 $hasVideo = collect($files)->contains(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
