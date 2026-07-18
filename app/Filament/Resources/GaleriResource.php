@@ -88,20 +88,17 @@ class GaleriResource extends Resource
                     Forms\Components\TextInput::make('juara')
                         ->label('Medali (pisah koma)')
                         ->placeholder('Contoh: 1,1,3,3,3  →  2 emas + 3 perunggu')
-                        ->helperText('Isi angka posisi juara tiap atlet, pisah koma. 1=Emas, 2=Perak, 3=Perunggu.')
                         ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
                         ->nullable(),
 
                     Forms\Components\Toggle::make('juara_umum')
                         ->label('Juara Umum')
-                        ->helperText('+1 prestasi, tidak hitung medali')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
                         ->default(false),
 
                     Forms\Components\Toggle::make('petinju_terbaik')
                         ->label('Petinju Terbaik')
-                        ->helperText('+1 prestasi, tidak hitung medali')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
                         ->default(false),
                 ])->columns(2),
