@@ -18,6 +18,8 @@ class Galeri extends Model
         'judul',
         'kategori',
         'juara',
+        'juara_umum',
+        'petinju_terbaik',
         'foto',
         'tahun',
         'keterangan',
@@ -25,10 +27,42 @@ class Galeri extends Model
     ];
 
     protected $casts = [
-        'tahun' => 'integer',
-        'juara' => 'integer',
-        'foto'  => 'array',
+        'tahun'           => 'integer',
+        'juara'           => 'string',
+        'juara_umum'      => 'boolean',
+        'petinju_terbaik' => 'boolean',
+        'foto'            => 'array',
     ];
+
+    /**
+     * Kembalikan array angka juara dari string "1,1,3,3" → [1,1,3,3]
+     */
+    public function juaraArray(): array
+    {
+        if (! $this->juara) return [];
+        return array_values(array_filter(
+            array_map('intval', array_map('trim', explode(',', $this->juara))),
+            fn ($v) => $v > 0
+        ));
+    }
+
+    /**
+     * Jumlah medali = jumlah angka di field juara
+     */
+    public function jumlahMedali(): int
+    {
+        return count($this->juaraArray());
+    }
+
+    /**
+     * Jumlah prestasi = medali + juara_umum (1) + petinju_terbaik (1)
+     */
+    public function jumlahPrestasi(): int
+    {
+        return $this->jumlahMedali()
+            + ($this->juara_umum      ? 1 : 0)
+            + ($this->petinju_terbaik ? 1 : 0);
+    }
 
     public function event()
     {

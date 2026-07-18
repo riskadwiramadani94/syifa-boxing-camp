@@ -86,12 +86,24 @@ class GaleriResource extends Resource
                         ->maxValue(now()->year),
 
                     Forms\Components\TextInput::make('juara')
-                        ->label('Juara ke-')
-                        ->numeric()
-                        ->minValue(1)
-                        ->placeholder('Contoh: 1 = Juara 1, 2 = Juara 2')
+                        ->label('Medali (pisah koma)')
+                        ->placeholder('Contoh: 1,1,3,3,3  →  2 emas + 3 perunggu')
+                        ->helperText('Isi angka posisi juara tiap atlet, pisah koma. 1=Emas, 2=Perak, 3=Perunggu.')
+                        ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
                         ->nullable(),
+
+                    Forms\Components\Toggle::make('juara_umum')
+                        ->label('Juara Umum')
+                        ->helperText('+1 prestasi, tidak hitung medali')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
+                        ->default(false),
+
+                    Forms\Components\Toggle::make('petinju_terbaik')
+                        ->label('Petinju Terbaik')
+                        ->helperText('+1 prestasi, tidak hitung medali')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
+                        ->default(false),
                 ])->columns(2),
 
             Section::make('Foto & Media')
@@ -174,10 +186,17 @@ class GaleriResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('juara')
-                    ->label('Juara')
-                    ->formatStateUsing(fn ($state) => $state ? 'Juara ' . $state : '-')
+                    ->label('Prestasi')
+                    ->getStateUsing(function ($record) {
+                        $parts = [];
+                        $medali = $record->jumlahMedali();
+                        if ($medali > 0) $parts[] = $medali . ' medali';
+                        if ($record->juara_umum)      $parts[] = 'Juara Umum';
+                        if ($record->petinju_terbaik) $parts[] = 'Petinju Terbaik';
+                        return count($parts) ? implode(' | ', $parts) : '-';
+                    })
                     ->badge()
-                    ->color(fn ($state) => $state ? 'success' : 'gray'),
+                    ->color(fn ($state) => $state === '-' ? 'gray' : 'success'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('kategori')

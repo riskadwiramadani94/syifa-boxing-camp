@@ -41,14 +41,16 @@ class HomeController extends Controller
             $coverItem = collect($items)->firstWhere('isVideo', false) ?? $items[0];
 
             return [
-                'items'      => array_values($items),
-                'cover'      => $coverItem['url'],
-                'coverVideo' => $coverItem['isVideo'],
-                'judul'      => $item->judul,
-                'tahun'      => $item->tahun,
-                'juara'      => $item->juara,
-                'kategori'   => $item->kategori,
-                'keterangan' => $item->keterangan,
+                'items'           => array_values($items),
+                'cover'           => $coverItem['url'],
+                'coverVideo'      => $coverItem['isVideo'],
+                'judul'           => $item->judul,
+                'tahun'           => $item->tahun,
+                'juara'           => $item->juara,           // string "1,1,3,3"
+                'juara_umum'      => (bool) $item->juara_umum,
+                'petinju_terbaik' => (bool) $item->petinju_terbaik,
+                'kategori'        => $item->kategori,
+                'keterangan'      => $item->keterangan,
             ];
         })->values();
 

@@ -50,8 +50,10 @@
                         $deskripsi    = \App\Models\SiteSettings::get('deskripsi');
                         $statMember2  = \App\Models\PendaftaranMember::where('aktif', true)->count();
                         $statTahun2   = (date('Y') - (int)$tahunBerdiri) . '+';
-                        $statPrestasi2= \App\Models\Galeri::where('kategori', 'pertandingan')->count();
-                        $statMedali   = \App\Models\Galeri::where('kategori', 'pertandingan')->whereNotNull('juara')->count();
+                        $statPrestasi2= \App\Models\Galeri::where('kategori', 'pertandingan')->get()
+                            ->sum(fn($g) => $g->jumlahPrestasi());
+                        $statMedali   = \App\Models\Galeri::where('kategori', 'pertandingan')->get()
+                            ->sum(fn($g) => $g->jumlahMedali());
                     @endphp
                     <div class="hero-badge mb-3">
                         <i class="fas fa-circle" style="font-size:7px;"></i>
@@ -379,7 +381,7 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
                 <h5 id="hg-judul" class="hg-judul"></h5>
                 <div class="hg-info-meta">
                     <span id="hg-tahun" class="hg-tahun"></span>
-                    <span id="hg-juara" class="hg-juara-badge" style="display:none;"></span>
+                    <span id="hg-juara-badges"></span>
                 </div>
             </div>
             <div class="hg-info-actions">
@@ -547,6 +549,9 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 .hg-juara-badge.medal-2 { background: #e2e8f0; color: #334155; }
 .hg-juara-badge.medal-3 { background: #fde8d8; color: #7c3a1a; }
 .hg-juara-badge.medal-other { background: #f1f5f9; color: #475569; }
+.hg-juara-badge.medal-umum { background: #fef9c3; color: #78350f; }
+.hg-juara-badge.medal-petinju { background: #fee2e2; color: #991b1b; }
+#hg-juara-badges { display: flex; flex-wrap: wrap; gap: 4px; }
 
 .hg-info-actions { display: flex; gap: 8px; flex-shrink: 0; }
 .hg-btn {
@@ -687,15 +692,33 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
         document.getElementById('hg-judul').textContent = hgCurrent.judul;
         document.getElementById('hg-tahun').textContent = hgCurrent.tahun;
 
-        const juaraEl = document.getElementById('hg-juara');
-        const juara   = hgCurrent.juara;
-        if (juara) {
-            const medals = { 1: ['🥇', 'medal-1'], 2: ['🥈', 'medal-2'], 3: ['🥉', 'medal-3'] };
-            const [icon, cls] = medals[juara] || ['🏅', 'medal-other'];
-            juaraEl.textContent = icon + ' Juara ' + juara;
-            juaraEl.className = 'hg-juara-badge ' + cls;
-            juaraEl.style.display = 'inline-block';
-        } else { juaraEl.style.display = 'none'; }
+        const badgesEl = document.getElementById('hg-juara-badges');
+        badgesEl.innerHTML = '';
+        const juaraStr       = hgCurrent.juara        || '';
+        const juaraUmum      = hgCurrent.juara_umum      || false;
+        const petinjuTerbaik = hgCurrent.petinju_terbaik || false;
+        const medals = { 1: ['🥇', 'medal-1'], 2: ['🥈', 'medal-2'], 3: ['🥉', 'medal-3'] };
+        if (juaraStr) {
+            juaraStr.split(',').map(s => parseInt(s.trim())).filter(n => n > 0).forEach(n => {
+                const [icon, cls] = medals[n] || ['🏅', 'medal-other'];
+                const span = document.createElement('span');
+                span.className = 'hg-juara-badge ' + cls;
+                span.textContent = icon + ' Juara ' + n;
+                badgesEl.appendChild(span);
+            });
+        }
+        if (juaraUmum) {
+            const span = document.createElement('span');
+            span.className = 'hg-juara-badge medal-umum';
+            span.textContent = '🏆 Juara Umum';
+            badgesEl.appendChild(span);
+        }
+        if (petinjuTerbaik) {
+            const span = document.createElement('span');
+            span.className = 'hg-juara-badge medal-petinju';
+            span.textContent = '🥊 Petinju Terbaik';
+            badgesEl.appendChild(span);
+        }
     }
 
     function downloadHomeGaleri() {
