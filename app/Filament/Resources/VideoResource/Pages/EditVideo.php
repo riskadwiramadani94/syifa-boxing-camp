@@ -26,12 +26,6 @@ class EditVideo extends EditRecord
     {
         $fotos = is_array($data['foto'] ?? null) ? $data['foto'] : [];
 
-        $videosJson = request()->input('cloudinary_videos', '[]');
-        $videos     = json_decode($videosJson, true) ?: [];
-        foreach ($videos as $v) {
-            if (! empty($v['url'])) $fotos[] = $v['url'];
-        }
-
         $links = $data['video_links'] ?? [];
         foreach ($links as $link) {
             if (! empty($link['url'])) $fotos[] = $link['url'];

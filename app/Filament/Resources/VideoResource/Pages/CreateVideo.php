@@ -18,14 +18,7 @@ class CreateVideo extends CreateRecord
     {
         $fotos = is_array($data['foto'] ?? null) ? $data['foto'] : [];
 
-        // Dari widget direct upload Cloudinary
-        $videosJson = request()->input('cloudinary_videos', '[]');
-        $videos     = json_decode($videosJson, true) ?: [];
-        foreach ($videos as $v) {
-            if (! empty($v['url'])) $fotos[] = $v['url'];
-        }
-
-        // Dari repeater link video
+        // Dari repeater link video — gabungkan ke array foto
         $links = $data['video_links'] ?? [];
         foreach ($links as $link) {
             if (! empty($link['url'])) $fotos[] = $link['url'];

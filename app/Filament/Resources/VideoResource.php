@@ -111,10 +111,17 @@ class VideoResource extends Resource
                 ])->columns(2),
 
             Section::make('Upload File Video')
-                ->description('Upload video langsung ke Cloudinary dari browser — tidak lewat server, tidak ada batasan ukuran. Format: MP4, MOV, AVI, WEBM.')
+                ->description('Upload file video. Format: MP4, MOV, AVI, WEBM.')
                 ->schema([
-                    Forms\Components\View::make('filament.cloudinary-video-upload')
-                        ->viewData(['directory' => 'media/video']),
+                    Forms\Components\FileUpload::make('foto')
+                        ->label('Upload Video')
+                        ->multiple()
+                        ->reorderable()
+                        ->appendFiles()
+                        ->acceptedFileTypes(['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/*'])
+                        ->disk('cloudinary')
+                        ->directory('media/video')
+                        ->nullable(),
                 ]),
 
             Section::make('Link Video (YouTube / Instagram / lainnya)')
