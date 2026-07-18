@@ -20,14 +20,30 @@ class HomeController extends Controller
             ->limit(8)
             ->get();
 
-        // Data untuk modal lightbox di beranda
-        $galeriData = $galeris->map(function ($item) {
-            $fotos = is_array($item->foto) ? $item->foto : [];
-            $fotoUrls = count($fotos) > 0
-                ? array_map(fn($f) => foto_url($f), $fotos)
-                : [asset('assets/logo/logo.jpg')];
+        // Data untuk modal lightbox di beranda (foto + video)
+        $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+        $galeriData = $galeris->map(function ($item) use ($videoExts) {
+            $files = is_array($item->foto) ? $item->foto : [];
+            if (count($files) === 0) {
+                $files = [''];
+            }
+            $items = array_map(function ($f) use ($videoExts) {
+                $ext     = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                $isVideo = in_array($ext, $videoExts);
+                $url     = $f ? foto_url($f) : asset('assets/logo/logo.jpg');
+                return [
+                    'url'     => $url,
+                    'isVideo' => $isVideo,
+                ];
+            }, $files);
+
+            // Cover = file pertama (foto lebih diutamakan, kalau semua video pakai video pertama)
+            $coverItem = collect($items)->firstWhere('isVideo', false) ?? $items[0];
+
             return [
-                'fotos'      => array_values($fotoUrls),
+                'items'      => array_values($items),
+                'cover'      => $coverItem['url'],
+                'coverVideo' => $coverItem['isVideo'],
                 'judul'      => $item->judul,
                 'tahun'      => $item->tahun,
                 'juara'      => $item->juara,

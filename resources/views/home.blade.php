@@ -192,21 +192,26 @@
     </div>
 </section>
 
-{{-- ===== GALERI ===== --}}
+{{-- ===== GALERI & VIDEO ===== --}}
 <section id="galeri">
     <div class="container">
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
-                <span class="section-label">Galeri Foto</span>
+                <span class="section-label">Galeri &amp; Video</span>
                 <h2 class="event-section-title">
-                    <span class="event-emoji">📸</span>
+                    <span class="event-emoji">🎬</span>
                     <span class="event-bullet">●</span>
-                    Galeri Kami
+                    Galeri &amp; Video Kami
                 </h2>
             </div>
-            <a href="/gallery" class="event-lihat-semua">
-                Lihat semua <i class="fas fa-arrow-right ms-1"></i>
-            </a>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="/gallery" class="event-lihat-semua">
+                    Galeri <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+                <a href="/video" class="event-lihat-semua" style="margin-left:4px;">
+                    Video <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
         </div>
 
         {{-- Grid Galeri --}}
@@ -214,14 +219,37 @@
 
             @forelse($galeris->take(8) as $i => $item)
             @php
-                $fotos = is_array($item->foto) ? $item->foto : [];
-                $fotoUrl = count($fotos) > 0
-                    ? foto_url($fotos[0])
-                    : asset('assets/logo/logo.jpg');
+                $files      = is_array($item->foto) ? $item->foto : [];
+                $videoExts  = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                // Cover: foto pertama diutamakan, fallback video pertama
+                $coverFile  = null;
+                $coverIsVid = false;
+                foreach ($files as $f) {
+                    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                    if (!in_array($ext, $videoExts)) { $coverFile = $f; break; }
+                }
+                if (!$coverFile && count($files) > 0) {
+                    $coverFile  = $files[0];
+                    $coverIsVid = true;
+                }
+                $coverUrl = $coverFile ? foto_url($coverFile) : asset('assets/logo/logo.jpg');
+
+                // Cek apakah koleksi ini punya video
+                $hasVideo = collect($files)->contains(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
             @endphp
-            <div class="gallery-list-card" style="cursor:pointer;" onclick="openHomeGaleri({{ $i }})">
-                <img src="{{ $fotoUrl }}" alt="{{ $item->judul }}">
+            <div class="gallery-list-card" style="cursor:pointer;position:relative;" onclick="openHomeGaleri({{ $i }})">
+                @if($coverIsVid)
+                    {{-- Cover dari video: pakai video poster frame via Cloudinary --}}
+                    <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
+                @else
+                    <img src="{{ $coverUrl }}" alt="{{ $item->judul }}">
+                @endif
                 <div class="gallery-list-overlay"></div>
+                @if($hasVideo)
+                <div style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);color:#fff;border-radius:20px;padding:3px 9px;font-size:0.72rem;font-weight:700;display:flex;align-items:center;gap:5px;z-index:2;">
+                    <i class="fas fa-play" style="font-size:0.6rem;"></i> Video
+                </div>
+                @endif
                 <div class="gallery-list-content">
                     <span class="gallery-list-badge">● {{ $item->tahun }}</span>
                     <h5 class="gallery-list-title">{{ $item->judul }}</h5>
@@ -324,7 +352,7 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     </div>
 </section>
 
-{{-- ===== MODAL GALERI BERANDA ===== --}}
+{{-- ===== MODAL GALERI & VIDEO BERANDA ===== --}}
 <div id="home-lightbox" onclick="if(event.target===this) closeHomeGaleri()">
 
     {{-- Tombol nav LUAR card --}}
@@ -334,10 +362,11 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 
     <div class="hg-modal">
 
-        {{-- Area foto --}}
+        {{-- Area foto/video --}}
         <div class="hg-foto-wrap">
             <div class="hg-foto-bg" id="hg-foto-bg"></div>
-            <img id="hg-img" src="" alt="Galeri">
+            <img id="hg-img" src="" alt="Galeri" style="display:block;">
+            <video id="hg-video" controls style="display:none;position:relative;z-index:1;max-width:100%;max-height:52vh;object-fit:contain;display:none;border-radius:2px;background:#000;"></video>
             <span id="hg-counter" class="hg-counter-overlay"></span>
         </div>
 
@@ -354,7 +383,7 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
                 </div>
             </div>
             <div class="hg-info-actions">
-                <button class="hg-btn hg-btn-unduh" onclick="downloadHomeGaleri()">
+                <button class="hg-btn hg-btn-unduh" id="hg-unduh-btn" onclick="downloadHomeGaleri()">
                     <i class="fas fa-download"></i> Unduh
                 </button>
                 <button class="hg-btn hg-btn-batal" onclick="closeHomeGaleri()">
@@ -561,7 +590,7 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 
 @push('scripts')
 <script>
-    // ===== MODAL GALERI BERANDA =====
+    // ===== MODAL GALERI & VIDEO BERANDA =====
     const homeGaleriData = @json($galeriData);
     let hgCurrent = null;
     let hgFotoIdx = 0;
@@ -578,17 +607,26 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 
     function renderHgThumbnails() {
         const strip = document.getElementById('hg-thumb-strip');
-        const fotos = hgCurrent.fotos;
+        const items = hgCurrent.items;
         strip.innerHTML = '';
-        if (fotos.length <= 1) { strip.classList.add('hidden'); return; }
+        if (items.length <= 1) { strip.classList.add('hidden'); return; }
         strip.classList.remove('hidden');
-        fotos.forEach((src, i) => {
+        items.forEach((item, i) => {
             const div = document.createElement('div');
             div.className = 'hg-thumb' + (i === hgFotoIdx ? ' active' : '');
             div.onclick = () => { hgFotoIdx = i; showHomeGaleri(); };
-            const img = document.createElement('img');
-            img.src = src; img.alt = '';
-            div.appendChild(img);
+            if (item.isVideo) {
+                // Thumbnail video: icon play di tengah kotak gelap
+                div.style.background = '#111';
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.justifyContent = 'center';
+                div.innerHTML = '<i class="fas fa-play" style="color:#fff;font-size:1rem;opacity:0.85;"></i>';
+            } else {
+                const img = document.createElement('img');
+                img.src = item.url; img.alt = '';
+                div.appendChild(img);
+            }
             strip.appendChild(div);
         });
     }
@@ -605,15 +643,39 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     }
 
     function showHomeGaleri() {
-        const fotos = hgCurrent.fotos;
-        const total = fotos.length;
-        const src   = fotos[hgFotoIdx];
+        const items   = hgCurrent.items;
+        const total   = items.length;
+        const current = items[hgFotoIdx];
+        const src     = current.url;
+        const isVideo = current.isVideo;
 
-        document.getElementById('hg-img').src = src;
-        document.getElementById('hg-foto-bg').style.backgroundImage = `url('${src}')`;
+        const imgEl   = document.getElementById('hg-img');
+        const vidEl   = document.getElementById('hg-video');
+        const bgEl    = document.getElementById('hg-foto-bg');
+        const unduhBtn = document.getElementById('hg-unduh-btn');
+
+        if (isVideo) {
+            // Tampilkan video player, sembunyikan img
+            imgEl.style.display = 'none';
+            vidEl.style.display = 'block';
+            vidEl.src = src;
+            vidEl.load();
+            bgEl.style.backgroundImage = '';
+            // Unduh tetap bisa
+            unduhBtn.style.display = 'flex';
+        } else {
+            // Tampilkan foto, sembunyikan video (stop dulu)
+            vidEl.pause();
+            vidEl.src = '';
+            vidEl.style.display = 'none';
+            imgEl.style.display = 'block';
+            imgEl.src = src;
+            bgEl.style.backgroundImage = `url('${src}')`;
+            unduhBtn.style.display = 'flex';
+        }
 
         const counter = document.getElementById('hg-counter');
-        if (total > 1) { counter.textContent = (hgFotoIdx + 1) + ' dari ' + total + ' foto'; counter.style.display = 'inline-block'; }
+        if (total > 1) { counter.textContent = (hgFotoIdx + 1) + ' dari ' + total + (isVideo ? ' (video)' : ' foto'); counter.style.display = 'inline-block'; }
         else { counter.style.display = 'none'; }
 
         const showNav = total > 1;
@@ -637,11 +699,13 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     }
 
     function downloadHomeGaleri() {
-        const src = document.getElementById('hg-img').src;
-        const name = src.split('/').pop() || 'foto-galeri.jpg';
+        const items   = hgCurrent.items;
+        const current = items[hgFotoIdx];
+        const src     = current.url;
+        const name    = src.split('/').pop() || 'galeri';
         fetch(src).then(r => r.blob()).then(blob => {
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const a   = document.createElement('a');
             a.href = url; a.download = name;
             document.body.appendChild(a); a.click();
             document.body.removeChild(a); URL.revokeObjectURL(url);
@@ -649,18 +713,20 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     }
 
     function closeHomeGaleri() {
+        const vidEl = document.getElementById('hg-video');
+        vidEl.pause(); vidEl.src = '';
         document.getElementById('home-lightbox').classList.remove('hg-active');
         document.body.style.overflow = '';
         hgCurrent = null; hgFotoIdx = 0;
     }
 
     function homeGaleriPrev() {
-        hgFotoIdx = (hgFotoIdx - 1 + hgCurrent.fotos.length) % hgCurrent.fotos.length;
+        hgFotoIdx = (hgFotoIdx - 1 + hgCurrent.items.length) % hgCurrent.items.length;
         showHomeGaleri();
     }
 
     function homeGaleriNext() {
-        hgFotoIdx = (hgFotoIdx + 1) % hgCurrent.fotos.length;
+        hgFotoIdx = (hgFotoIdx + 1) % hgCurrent.items.length;
         showHomeGaleri();
     }
 

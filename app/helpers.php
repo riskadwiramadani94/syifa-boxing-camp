@@ -24,7 +24,11 @@ if (! function_exists('foto_url')) {
             $cloudName = parse_url($cloudinaryUrl, PHP_URL_HOST) ?: '';
 
             if ($cloudName) {
-                return "https://res.cloudinary.com/{$cloudName}/image/upload/{$foto}";
+                // Video pakai /video/upload/, foto/gambar pakai /image/upload/
+                $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                $ext       = strtolower(pathinfo($foto, PATHINFO_EXTENSION));
+                $type      = in_array($ext, $videoExts) ? 'video' : 'image';
+                return "https://res.cloudinary.com/{$cloudName}/{$type}/upload/{$foto}";
             }
         }
 
