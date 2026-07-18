@@ -62,11 +62,9 @@ class JadwalLatihanResource extends Resource
                         ])
                         ->required(),
 
-                    Forms\Components\TextInput::make('kelas')
-                        ->label('Nama Kelas')
-                        ->required()
-                        ->maxLength(255)
-                        ->placeholder('contoh: Kelas Pemula, Kelas Sparring'),
+                    Forms\Components\Toggle::make('aktif')
+                        ->label('Aktif')
+                        ->default(true),
 
                     Forms\Components\TimePicker::make('jam_mulai')
                         ->label('Jam Mulai')
@@ -77,26 +75,15 @@ class JadwalLatihanResource extends Resource
                         ->label('Jam Selesai')
                         ->required()
                         ->seconds(false),
-
-                    Forms\Components\TextInput::make('pelatih')
-                        ->label('Pelatih')
-                        ->maxLength(255)
-                        ->nullable()
-                        ->placeholder('Nama pelatih'),
-
-                    Forms\Components\Toggle::make('aktif')
-                        ->label('Aktif')
-                        ->default(true)
-                        ->helperText('Nonaktifkan jika jadwal ini sedang tidak berjalan'),
                 ])->columns(2),
 
-            Section::make('Keterangan Tambahan')
+            Section::make('Keterangan')
                 ->schema([
                     Forms\Components\Textarea::make('keterangan')
                         ->label('Keterangan')
                         ->rows(3)
                         ->nullable()
-                        ->placeholder('Informasi tambahan tentang kelas ini'),
+                        ->placeholder('Informasi tambahan tentang jadwal ini'),
                 ]),
         ]);
     }
@@ -111,11 +98,6 @@ class JadwalLatihanResource extends Resource
                     ->badge()
                     ->color('primary'),
 
-                Tables\Columns\TextColumn::make('kelas')
-                    ->label('Kelas')
-                    ->searchable()
-                    ->sortable(),
-
                 Tables\Columns\TextColumn::make('jam_mulai')
                     ->label('Jam Mulai')
                     ->time('H:i'),
@@ -123,11 +105,6 @@ class JadwalLatihanResource extends Resource
                 Tables\Columns\TextColumn::make('jam_selesai')
                     ->label('Jam Selesai')
                     ->time('H:i'),
-
-                Tables\Columns\TextColumn::make('pelatih')
-                    ->label('Pelatih')
-                    ->searchable()
-                    ->default('-'),
 
                 Tables\Columns\ToggleColumn::make('aktif')
                     ->label('Aktif'),
