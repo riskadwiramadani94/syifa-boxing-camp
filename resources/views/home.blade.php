@@ -163,10 +163,16 @@
                         </span>
                         <h5>{{ $event->judul }}</h5>
                         <p class="event-date-text"><i class="far fa-calendar-alt me-1"></i>
-                            @if($event->tanggal_mulai?->format('d M Y') === $event->tanggal_selesai?->format('d M Y'))
+                            @if($event->tanggal_mulai && $event->tanggal_selesai)
+                                @if($event->tanggal_mulai->format('d M Y') === $event->tanggal_selesai->format('d M Y'))
+                                    {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
+                                @else
+                                    {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
+                                @endif
+                            @elseif($event->tanggal_mulai)
                                 {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
                             @else
-                                {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
+                                <span class="text-muted">Tanggal belum ditentukan</span>
                             @endif
                         </p>
                         <p class="event-loc-text"><i class="fas fa-trophy me-1"></i>{{ $event->lokasi }}</p>
@@ -319,40 +325,233 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 </section>
 
 {{-- ===== MODAL GALERI BERANDA ===== --}}
-<div id="home-lightbox" onclick="if(event.target===this) closeHomeGaleri()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:16px;">
-    <div style="background:#fff; border-radius:16px; width:100%; max-width:520px; max-height:92vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+<div id="home-lightbox" onclick="if(event.target===this) closeHomeGaleri()">
 
-        {{-- Header --}}
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px 8px; border-bottom:1px solid #f0f0f0;">
-            <span id="hg-counter" style="font-size:0.82rem; color:#888; font-weight:500;"></span>
-            <button onclick="closeHomeGaleri()" style="background:#f1f1f1; border:none; width:32px; height:32px; border-radius:50%; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#555;">&times;</button>
+    {{-- Tombol nav LUAR card --}}
+    <button class="hg-nav-outer hg-nav-outer-prev" id="hg-prev" onclick="homeGaleriPrev()">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div class="hg-modal">
+
+        {{-- Area foto --}}
+        <div class="hg-foto-wrap">
+            <div class="hg-foto-bg" id="hg-foto-bg"></div>
+            <img id="hg-img" src="" alt="Galeri">
+            <span id="hg-counter" class="hg-counter-overlay"></span>
         </div>
 
-        {{-- Foto --}}
-        <div style="position:relative; background:#fff; display:flex; align-items:center; justify-content:center; min-height:280px; max-height:50vh; overflow:hidden;">
-            <button id="hg-prev" onclick="homeGaleriPrev()" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.35); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <img id="hg-img" src="" alt="Galeri" style="max-width:100%; max-height:50vh; object-fit:contain; padding:16px; display:block;">
-            <button id="hg-next" onclick="homeGaleriNext()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.35); border:none; color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
+        {{-- Thumbnail strip --}}
+        <div class="hg-thumb-strip" id="hg-thumb-strip"></div>
 
-        {{-- Info card --}}
-        <div style="padding:16px 20px 20px; border-top:1px solid #f0f0f0; overflow-y:auto; max-height:180px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-                <div>
-                    <h5 id="hg-judul" style="font-size:1rem; font-weight:700; color:#1e293b; margin:0 0 4px; line-height:1.4;"></h5>
-                    <span id="hg-tahun" style="font-size:0.78rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;"></span>
+        {{-- Info + tombol bawah --}}
+        <div class="hg-info">
+            <div class="hg-info-left">
+                <h5 id="hg-judul" class="hg-judul"></h5>
+                <div class="hg-info-meta">
+                    <span id="hg-tahun" class="hg-tahun"></span>
+                    <span id="hg-juara" class="hg-juara-badge" style="display:none;"></span>
                 </div>
-                <span id="hg-juara" style="display:none; background:#fef3c7; color:#92400e; font-size:0.78rem; font-weight:700; padding:4px 12px; border-radius:20px; white-space:nowrap; flex-shrink:0;"></span>
             </div>
-            <p id="hg-keterangan" style="display:none; font-size:0.85rem; color:#64748b; margin:10px 0 0; line-height:1.6;"></p>
+            <div class="hg-info-actions">
+                <button class="hg-btn hg-btn-unduh" onclick="downloadHomeGaleri()">
+                    <i class="fas fa-download"></i> Unduh
+                </button>
+                <button class="hg-btn hg-btn-batal" onclick="closeHomeGaleri()">
+                    Batal
+                </button>
+            </div>
         </div>
 
     </div>
+
+    <button class="hg-nav-outer hg-nav-outer-next" id="hg-next" onclick="homeGaleriNext()">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
 </div>
+
+@push('styles')
+<style>
+/* ===== MODAL GALERI BERANDA ===== */
+#home-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 8px;
+}
+#home-lightbox.hg-active { display: flex; }
+
+.hg-nav-outer {
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.12);
+    border: none;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: background 0.2s;
+    z-index: 2;
+}
+.hg-nav-outer:hover { background: rgba(255,255,255,0.28); }
+
+.hg-modal {
+    background: #2a2a2a;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+
+.hg-foto-wrap {
+    position: relative;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    max-height: 52vh;
+    overflow: hidden;
+}
+.hg-foto-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(24px) brightness(0.35);
+    transform: scale(1.12);
+    z-index: 0;
+}
+#hg-img {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+    max-height: 52vh;
+    object-fit: contain;
+    display: block;
+    border-radius: 2px;
+}
+.hg-counter-overlay {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    z-index: 2;
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.hg-thumb-strip {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #222;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.hg-thumb-strip::-webkit-scrollbar { display: none; }
+.hg-thumb-strip.hidden { display: none; }
+
+.hg-thumb {
+    flex-shrink: 0;
+    width: 52px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.18s, opacity 0.18s;
+    opacity: 0.55;
+}
+.hg-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hg-thumb.active { border-color: #fff; opacity: 1; }
+.hg-thumb:hover { opacity: 0.85; }
+
+.hg-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px 16px;
+    background: #2a2a2a;
+}
+.hg-info-left { flex: 1; min-width: 0; }
+.hg-judul {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin: 0 0 4px;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hg-info-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hg-tahun { font-size: 0.78rem; color: #94a3b8; }
+.hg-juara-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.hg-juara-badge.medal-1 { background: #fef3c7; color: #92400e; }
+.hg-juara-badge.medal-2 { background: #e2e8f0; color: #334155; }
+.hg-juara-badge.medal-3 { background: #fde8d8; color: #7c3a1a; }
+.hg-juara-badge.medal-other { background: #f1f5f9; color: #475569; }
+
+.hg-info-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.hg-btn {
+    border: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+.hg-btn-unduh {
+    background: #3f3f3f;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.hg-btn-unduh:hover { background: #555; }
+.hg-btn-batal { background: #3f3f3f; color: #94a3b8; }
+.hg-btn-batal:hover { background: #555; color: #f1f5f9; }
+
+@media (max-width: 600px) {
+    #home-lightbox { padding: 12px 4px; gap: 6px; }
+    .hg-nav-outer { width: 36px; height: 36px; font-size: 0.85rem; }
+    .hg-modal { border-radius: 12px; }
+    .hg-foto-wrap { max-height: 44vh; min-height: 220px; }
+    #hg-img { max-height: 44vh; }
+    .hg-thumb { width: 44px; height: 34px; }
+    .hg-judul { font-size: 0.88rem; }
+    .hg-btn { padding: 6px 12px; font-size: 0.78rem; }
+}
+</style>
+@endpush
 
 @endsection
 
@@ -370,38 +569,87 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     function openHomeGaleri(index) {
         hgCurrent = homeGaleriData[index];
         hgFotoIdx = 0;
+        renderHgThumbnails();
         showHomeGaleri();
         const lb = document.getElementById('home-lightbox');
-        lb.style.display = 'flex';
+        lb.classList.add('hg-active');
         document.body.style.overflow = 'hidden';
     }
 
-    function showHomeGaleri() {
-        const fotos      = hgCurrent.fotos;
-        const total      = fotos.length;
-        const juara      = hgCurrent.juara;
-        const keterangan = hgCurrent.keterangan || '';
+    function renderHgThumbnails() {
+        const strip = document.getElementById('hg-thumb-strip');
+        const fotos = hgCurrent.fotos;
+        strip.innerHTML = '';
+        if (fotos.length <= 1) { strip.classList.add('hidden'); return; }
+        strip.classList.remove('hidden');
+        fotos.forEach((src, i) => {
+            const div = document.createElement('div');
+            div.className = 'hg-thumb' + (i === hgFotoIdx ? ' active' : '');
+            div.onclick = () => { hgFotoIdx = i; showHomeGaleri(); };
+            const img = document.createElement('img');
+            img.src = src; img.alt = '';
+            div.appendChild(img);
+            strip.appendChild(div);
+        });
+    }
 
-        document.getElementById('hg-img').src        = fotos[hgFotoIdx];
-        document.getElementById('hg-judul').textContent = hgCurrent.judul;
-        document.getElementById('hg-tahun').textContent = hgCurrent.tahun;
-        document.getElementById('hg-counter').textContent = total > 1 ? (hgFotoIdx + 1) + ' / ' + total + ' foto' : '';
+    function updateHgThumbActive() {
+        const thumbs = document.querySelectorAll('.hg-thumb');
+        thumbs.forEach((t, i) => t.classList.toggle('active', i === hgFotoIdx));
+        const strip = document.getElementById('hg-thumb-strip');
+        const active = strip.querySelector('.hg-thumb.active');
+        if (active) {
+            strip.scrollLeft += active.getBoundingClientRect().left - strip.getBoundingClientRect().left
+                - (strip.offsetWidth / 2) + (active.offsetWidth / 2);
+        }
+    }
+
+    function showHomeGaleri() {
+        const fotos = hgCurrent.fotos;
+        const total = fotos.length;
+        const src   = fotos[hgFotoIdx];
+
+        document.getElementById('hg-img').src = src;
+        document.getElementById('hg-foto-bg').style.backgroundImage = `url('${src}')`;
+
+        const counter = document.getElementById('hg-counter');
+        if (total > 1) { counter.textContent = (hgFotoIdx + 1) + ' dari ' + total + ' foto'; counter.style.display = 'inline-block'; }
+        else { counter.style.display = 'none'; }
 
         const showNav = total > 1;
-        document.getElementById('hg-prev').style.display = showNav ? 'flex' : 'none';
-        document.getElementById('hg-next').style.display = showNav ? 'flex' : 'none';
+        document.getElementById('hg-prev').style.visibility = showNav ? 'visible' : 'hidden';
+        document.getElementById('hg-next').style.visibility = showNav ? 'visible' : 'hidden';
+
+        updateHgThumbActive();
+
+        document.getElementById('hg-judul').textContent = hgCurrent.judul;
+        document.getElementById('hg-tahun').textContent = hgCurrent.tahun;
 
         const juaraEl = document.getElementById('hg-juara');
-        if (juara) { juaraEl.textContent = '🏆 Juara ' + juara; juaraEl.style.display = 'inline-block'; }
-        else { juaraEl.style.display = 'none'; }
+        const juara   = hgCurrent.juara;
+        if (juara) {
+            const medals = { 1: ['🥇', 'medal-1'], 2: ['🥈', 'medal-2'], 3: ['🥉', 'medal-3'] };
+            const [icon, cls] = medals[juara] || ['🏅', 'medal-other'];
+            juaraEl.textContent = icon + ' Juara ' + juara;
+            juaraEl.className = 'hg-juara-badge ' + cls;
+            juaraEl.style.display = 'inline-block';
+        } else { juaraEl.style.display = 'none'; }
+    }
 
-        const ketEl = document.getElementById('hg-keterangan');
-        if (keterangan) { ketEl.textContent = keterangan; ketEl.style.display = 'block'; }
-        else { ketEl.style.display = 'none'; }
+    function downloadHomeGaleri() {
+        const src = document.getElementById('hg-img').src;
+        const name = src.split('/').pop() || 'foto-galeri.jpg';
+        fetch(src).then(r => r.blob()).then(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = name;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        }).catch(() => window.open(src, '_blank'));
     }
 
     function closeHomeGaleri() {
-        document.getElementById('home-lightbox').style.display = 'none';
+        document.getElementById('home-lightbox').classList.remove('hg-active');
         document.body.style.overflow = '';
         hgCurrent = null; hgFotoIdx = 0;
     }
@@ -417,11 +665,24 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     }
 
     document.addEventListener('keydown', function(e) {
-        if (document.getElementById('home-lightbox').style.display !== 'flex') return;
+        if (!document.getElementById('home-lightbox').classList.contains('hg-active')) return;
         if (e.key === 'ArrowLeft')  homeGaleriPrev();
         if (e.key === 'ArrowRight') homeGaleriNext();
         if (e.key === 'Escape')     closeHomeGaleri();
     });
+
+    // Touch swipe
+    let hgTouchStartX = 0;
+    document.getElementById('home-lightbox').addEventListener('touchstart', function(e) {
+        hgTouchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    document.getElementById('home-lightbox').addEventListener('touchend', function(e) {
+        const diff = hgTouchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) homeGaleriNext();
+            else          homeGaleriPrev();
+        }
+    }, { passive: true });
 </script>
 <script>
     // ===== COUNT UP ANIMATION =====
