@@ -12,7 +12,7 @@
 <section class="gd-header-section">
     <div class="container">
         {{-- Breadcrumb Nav & Back Button --}}
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px;">
             <nav style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600;">
                 <a href="{{ route('gallery') }}" style="color: #d63384; text-decoration: none;">Galeri</a>
                 <span style="color: #94a3b8;">/</span>
@@ -22,8 +22,8 @@
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
-        <div class="gd-header-inner">
-            <div class="gd-header-meta">
+        <div class="gd-header-inner" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+            <div class="gd-header-meta" style="justify-content: center;">
                 <span class="gd-badge-kategori">
                     {{ match($galeri->kategori) {
                         'latihan'      => 'Latihan',
@@ -46,7 +46,7 @@
             </div>
             <h1 class="gd-header-title">{{ $galeri->judul }}</h1>
             @if($galeri->event)
-                <p class="gd-header-event">
+                <p class="gd-header-event" style="justify-content: center;">
                     <i class="fas fa-calendar-alt"></i>
                     {{ $galeri->event->judul }}
                     @if($galeri->event->tanggal_mulai)

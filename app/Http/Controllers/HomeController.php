@@ -17,42 +17,30 @@ class HomeController extends Controller
 
         $galeris = Galeri::orderBy('updated_at', 'desc')
             ->orderBy('tahun', 'desc')
-            ->limit(8)
             ->get();
 
-        // Data untuk modal lightbox di beranda (foto + video)
         $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
-        $galeriData = $galeris->map(function ($item) use ($videoExts) {
+
+        // Filter galeri foto (ambil yang punya minimal 1 foto/bukan video)
+        $galeriList = $galeris->filter(function ($item) use ($videoExts) {
             $files = is_array($item->foto) ? $item->foto : [];
-            if (count($files) === 0) {
-                $files = [''];
+            if (empty($files)) return true; // anggap galeri kosong tetap galeri
+            foreach ($files as $file) {
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                if (!in_array($ext, $videoExts)) return true;
             }
-            $items = array_map(function ($f) use ($videoExts) {
-                $ext     = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-                $isVideo = in_array($ext, $videoExts);
-                $url     = $f ? foto_url($f) : asset('assets/logo/logo.jpg');
-                return [
-                    'url'     => $url,
-                    'isVideo' => $isVideo,
-                ];
-            }, $files);
+            return false;
+        })->take(6)->values();
 
-            // Cover = file pertama (foto lebih diutamakan, kalau semua video pakai video pertama)
-            $coverItem = collect($items)->firstWhere('isVideo', false) ?? $items[0];
-
-            return [
-                'items'           => array_values($items),
-                'cover'           => $coverItem['url'],
-                'coverVideo'      => $coverItem['isVideo'],
-                'judul'           => $item->judul,
-                'tahun'           => $item->tahun,
-                'juara'           => $item->juara,           // string "1,1,3,3"
-                'juara_umum'      => (bool) $item->juara_umum,
-                'petinju_terbaik' => (bool) $item->petinju_terbaik,
-                'kategori'        => $item->kategori,
-                'keterangan'      => $item->keterangan,
-            ];
-        })->values();
+        // Filter video (ambil yang punya minimal 1 video)
+        $videoList = $galeris->filter(function ($item) use ($videoExts) {
+            $files = is_array($item->foto) ? $item->foto : [];
+            foreach ($files as $file) {
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                if (in_array($ext, $videoExts)) return true;
+            }
+            return false;
+        })->take(4)->values();
 
         $urutanHari = ['Senin' => 1, 'Selasa' => 2, 'Rabu' => 3, 'Kamis' => 4, 'Jumat' => 5, 'Sabtu' => 6, 'Minggu' => 7];
 
@@ -60,6 +48,6 @@ class HomeController extends Controller
             ->get()
             ->sortBy(fn($j) => $urutanHari[$j->hari] ?? 8);
 
-        return view('home', compact('events', 'galeris', 'jadwals', 'galeriData'));
+        return view('home', compact('events', 'galeriList', 'videoList', 'jadwals'));
     }
 }

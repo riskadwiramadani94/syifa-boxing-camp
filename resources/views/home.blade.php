@@ -194,36 +194,31 @@
     </div>
 </section>
 
-{{-- ===== GALERI & VIDEO ===== --}}
+{{-- ===== GALERI ===== --}}
 <section id="galeri">
     <div class="container">
         <div class="d-flex justify-content-between align-items-start mb-4">
             <div>
-                <span class="section-label">Galeri &amp; Video</span>
+                <span class="section-label">Galeri</span>
                 <h2 class="event-section-title">
-                    <span class="event-emoji">🎬</span>
+                    <span class="event-emoji">📸</span>
                     <span class="event-bullet">●</span>
-                    Galeri &amp; Video Kami
+                    Galeri Kami
                 </h2>
             </div>
             <div class="d-flex gap-2 align-items-center">
                 <a href="/gallery" class="event-lihat-semua">
-                    Galeri <i class="fas fa-arrow-right ms-1"></i>
-                </a>
-                <a href="/video" class="event-lihat-semua" style="margin-left:4px;">
-                    Video <i class="fas fa-arrow-right ms-1"></i>
+                    Lihat Semua <i class="fas fa-arrow-right ms-1"></i>
                 </a>
             </div>
         </div>
 
         {{-- Grid Galeri --}}
         <div class="gallery-list">
-
-            @forelse($galeris->take(8) as $i => $item)
+            @forelse($galeriList as $i => $item)
             @php
                 $files      = is_array($item->foto) ? $item->foto : [];
                 $videoExts  = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
-                // Cover: foto pertama diutamakan, fallback video pertama
                 $coverFile  = null;
                 $coverIsVid = false;
                 foreach ($files as $f) {
@@ -235,36 +230,67 @@
                     $coverIsVid = true;
                 }
                 $coverUrl = $coverFile ? foto_url($coverFile) : asset('assets/logo/logo.jpg');
-                // Kalau cover adalah video, ambil thumbnail frame pertama dari Cloudinary
                 if ($coverIsVid && $coverFile) {
                     $coverUrl = video_thumb_url($coverFile);
                 }
-
-                // Cek apakah koleksi ini punya video
-                $hasVideo = collect($files)->contains(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
             @endphp
-            <div class="gallery-list-card" style="cursor:pointer;position:relative;" onclick="openHomeGaleri({{ $i }})">
-                @if($coverIsVid)
-                    {{-- Cover dari video: pakai video poster frame via Cloudinary --}}
-                    <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
-                @else
-                    <img src="{{ $coverUrl }}" alt="{{ $item->judul }}">
-                @endif
+            <a href="{{ route('gallery.show', $item->uuid) }}" class="gallery-list-card" style="text-decoration:none;position:relative;display:block;">
+                <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
                 <div class="gallery-list-overlay"></div>
-                @if($hasVideo)
-                <div style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);color:#fff;border-radius:20px;padding:3px 9px;font-size:0.72rem;font-weight:700;display:flex;align-items:center;gap:5px;z-index:2;">
-                    <i class="fas fa-play" style="font-size:0.6rem;"></i> Video
-                </div>
-                @endif
                 <div class="gallery-list-content">
                     <span class="gallery-list-badge">● {{ $item->tahun }}</span>
-                    <h5 class="gallery-list-title">{{ $item->judul }}</h5>
+                    <h5 class="gallery-list-title" style="color:#fff;">{{ $item->judul }}</h5>
                 </div>
-            </div>
+            </a>
             @empty
             <p class="text-muted">Belum ada galeri tersedia.</p>
             @endforelse
+        </div>
+    </div>
+</section>
 
+{{-- ===== VIDEO ===== --}}
+<section id="video" style="padding-top: 2rem;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <span class="section-label">Video</span>
+                <h2 class="event-section-title">
+                    <span class="event-emoji">🎬</span>
+                    <span class="event-bullet">●</span>
+                    Video Kami
+                </h2>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="/video" class="event-lihat-semua">
+                    Lihat Semua <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        {{-- Grid Video --}}
+        <div class="gallery-list">
+            @forelse($videoList as $i => $item)
+            @php
+                $files      = is_array($item->foto) ? $item->foto : [];
+                $videoExts  = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                $coverFile  = collect($files)->first(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
+                $coverUrl   = $coverFile ? video_thumb_url($coverFile) : asset('assets/logo/logo.jpg');
+            @endphp
+            <a href="/video" class="gallery-list-card" style="text-decoration:none;position:relative;display:block;">
+                <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
+                <div class="gallery-list-overlay"></div>
+                <div style="position:absolute;top:10px;right:10px;background:rgba(214, 51, 132, 0.9);color:#fff;border-radius:20px;padding:4px 10px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:6px;z-index:2;">
+                    <i class="fas fa-play" style="font-size:0.7rem;"></i> Video
+                </div>
+                <div class="gallery-list-content">
+                    <span class="gallery-list-badge">● {{ $item->tahun }}</span>
+                    <h5 class="gallery-list-title" style="color:#fff;">{{ $item->judul }}</h5>
+                </div>
+            </a>
+            @empty
+            <p class="text-muted">Belum ada video tersedia.</p>
+            @endforelse
         </div>
     </div>
 </section>
@@ -358,53 +384,7 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
     </div>
 </section>
 
-{{-- ===== MODAL GALERI & VIDEO BERANDA ===== --}}
-<div id="home-lightbox" onclick="if(event.target===this) closeHomeGaleri()">
 
-    {{-- Tombol nav LUAR card --}}
-    <button class="hg-nav-outer hg-nav-outer-prev" id="hg-prev" onclick="homeGaleriPrev()">
-        <i class="fas fa-chevron-left"></i>
-    </button>
-
-    <div class="hg-modal">
-
-        {{-- Area foto/video --}}
-        <div class="hg-foto-wrap">
-            <div class="hg-foto-bg" id="hg-foto-bg"></div>
-            <img id="hg-img" src="" alt="Galeri" style="display:block;">
-            <video id="hg-video" controls style="display:none;position:relative;z-index:1;max-width:100%;max-height:52vh;object-fit:contain;display:none;border-radius:2px;background:#000;"></video>
-            <span id="hg-counter" class="hg-counter-overlay"></span>
-        </div>
-
-        {{-- Thumbnail strip --}}
-        <div class="hg-thumb-strip" id="hg-thumb-strip"></div>
-
-        {{-- Info + tombol bawah --}}
-        <div class="hg-info">
-            <div class="hg-info-left">
-                <h5 id="hg-judul" class="hg-judul"></h5>
-                <div class="hg-info-meta">
-                    <span id="hg-tahun" class="hg-tahun"></span>
-                    <span id="hg-juara-badges"></span>
-                </div>
-            </div>
-            <div class="hg-info-actions">
-                <button class="hg-btn hg-btn-unduh" id="hg-unduh-btn" onclick="downloadHomeGaleri()">
-                    <i class="fas fa-download"></i> Unduh
-                </button>
-                <button class="hg-btn hg-btn-batal" onclick="closeHomeGaleri()">
-                    Batal
-                </button>
-            </div>
-        </div>
-
-    </div>
-
-    <button class="hg-nav-outer hg-nav-outer-next" id="hg-next" onclick="homeGaleriNext()">
-        <i class="fas fa-chevron-right"></i>
-    </button>
-
-</div>
 
 @push('styles')
 <style>
