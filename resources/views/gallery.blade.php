@@ -79,44 +79,55 @@
 
 {{-- ===== LIGHTBOX MODAL ===== --}}
 <div id="lightbox" onclick="if(event.target===this) closeLightbox()">
+
+    {{-- Tombol nav di LUAR card --}}
+    <button class="lb-nav-outer lb-nav-outer-prev" id="lb-prev" onclick="lightboxPrev()">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
     <div class="lb-modal">
 
-        {{-- Header modal --}}
-        <div class="lb-header">
-            <span id="lb-counter" class="lb-counter"></span>
-            <div class="lb-header-actions">
-                <a id="lb-download" href="#" class="lb-btn-download" title="Unduh foto" onclick="downloadFoto(event)">
-                    <i class="fas fa-download"></i> Unduh
-                </a>
-                <button class="lb-close" onclick="closeLightbox()">&times;</button>
-            </div>
-        </div>
-
-        {{-- Area foto --}}
+        {{-- Area foto + thumbnail strip --}}
         <div class="lb-foto-wrap">
+            {{-- blur background --}}
             <div class="lb-foto-bg" id="lb-foto-bg"></div>
-            <button class="lb-nav lb-nav-prev" id="lb-prev" onclick="lightboxPrev()">
-                <i class="fas fa-chevron-left"></i>
-            </button>
+
+            {{-- foto utama --}}
             <img id="lb-img" src="" alt="Galeri">
-            <button class="lb-nav lb-nav-next" id="lb-next" onclick="lightboxNext()">
-                <i class="fas fa-chevron-right"></i>
-            </button>
+
+            {{-- counter overlay pojok kiri bawah --}}
+            <span id="lb-counter" class="lb-counter-overlay"></span>
         </div>
 
-        {{-- Card info bawah --}}
+        {{-- Thumbnail strip --}}
+        <div class="lb-thumb-strip" id="lb-thumb-strip"></div>
+
+        {{-- Info + tombol bawah card --}}
         <div class="lb-info">
-            <div class="lb-info-top">
-                <div>
-                    <h5 id="lb-judul" class="lb-judul"></h5>
+            <div class="lb-info-left">
+                <h5 id="lb-judul" class="lb-judul"></h5>
+                <div class="lb-info-meta">
                     <span id="lb-tahun" class="lb-tahun"></span>
+                    <span id="lb-juara" class="lb-juara-badge" style="display:none;"></span>
                 </div>
-                <span id="lb-juara" class="lb-juara-badge" style="display:none;"></span>
             </div>
-            <p id="lb-keterangan" class="lb-keterangan" style="display:none;"></p>
+            <div class="lb-info-actions">
+                <button class="lb-btn lb-btn-unduh" onclick="downloadFoto(event)">
+                    <i class="fas fa-download"></i> Unduh
+                </button>
+                <button class="lb-btn lb-btn-batal" onclick="closeLightbox()">
+                    Batal
+                </button>
+            </div>
         </div>
 
     </div>
+
+    {{-- Tombol nav di LUAR card --}}
+    <button class="lb-nav-outer lb-nav-outer-next" id="lb-next" onclick="lightboxNext()">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
 </div>
 
 @endsection
@@ -129,190 +140,217 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.82);
             z-index: 9999;
             align-items: center;
             justify-content: center;
-            padding: 16px;
+            gap: 12px;
+            padding: 20px 8px;
         }
         #lightbox.active { display: flex; }
 
-        .lb-modal {
-            background: #fff;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 520px;
-            max-height: 92vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        }
-
-        /* header */
-        .lb-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px 8px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .lb-counter {
-            font-size: 0.82rem;
-            color: #888;
-            font-weight: 500;
-        }
-        .lb-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .lb-btn-download {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: #f1f5f9;
+        /* ===== TOMBOL NAV LUAR CARD ===== */
+        .lb-nav-outer {
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.12);
             border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: #334155;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .lb-btn-download:hover {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-        .lb-close {
-            background: #f1f1f1;
-            border: none;
-            width: 32px;
-            height: 32px;
+            color: #fff;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            font-size: 1.2rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #555;
+            font-size: 1rem;
             transition: background 0.2s;
+            z-index: 2;
         }
-        .lb-close:hover { background: #e0e0e0; }
+        .lb-nav-outer:hover { background: rgba(255,255,255,0.28); }
 
-        /* area foto */
+        /* ===== MODAL CARD ===== */
+        .lb-modal {
+            background: #2a2a2a;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        }
+
+        /* ===== AREA FOTO ===== */
         .lb-foto-wrap {
             position: relative;
             background: #111;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 55vh;
+            min-height: 280px;
+            max-height: 52vh;
             overflow: hidden;
         }
-        /* blur background dari foto yang sama */
         .lb-foto-bg {
             position: absolute;
             inset: 0;
             background-size: cover;
             background-position: center;
-            filter: blur(20px) brightness(0.45);
-            transform: scale(1.1);
+            filter: blur(24px) brightness(0.35);
+            transform: scale(1.12);
             z-index: 0;
         }
         #lb-img {
             position: relative;
             z-index: 1;
             max-width: 100%;
-            max-height: 55vh;
+            max-height: 52vh;
             object-fit: contain;
             display: block;
+            border-radius: 2px;
         }
-        .lb-nav {
+
+        /* counter overlay pojok kiri bawah foto */
+        .lb-counter-overlay {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.35);
-            border: none;
+            bottom: 10px;
+            left: 12px;
+            z-index: 2;
+            background: rgba(0,0,0,0.55);
             color: #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== THUMBNAIL STRIP ===== */
+        .lb-thumb-strip {
+            display: flex;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #222;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            min-height: 0;
+        }
+        .lb-thumb-strip::-webkit-scrollbar { display: none; }
+        .lb-thumb-strip.hidden { display: none; }
+
+        .lb-thumb {
+            flex-shrink: 0;
+            width: 52px;
+            height: 40px;
+            border-radius: 6px;
+            overflow: hidden;
             cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.18s, opacity 0.18s;
+            opacity: 0.55;
+        }
+        .lb-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .lb-thumb.active {
+            border-color: #fff;
+            opacity: 1;
+        }
+        .lb-thumb:hover { opacity: 0.85; }
+
+        /* ===== INFO + TOMBOL BAWAH ===== */
+        .lb-info {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            transition: background 0.2s;
-            z-index: 2;
-        }
-        .lb-nav:hover { background: rgba(0,0,0,0.6); }
-        .lb-nav-prev { left: 10px; }
-        .lb-nav-next { right: 10px; }
-
-        /* card info bawah */
-        .lb-info {
-            padding: 16px 20px 20px;
-            border-top: 1px solid #f0f0f0;
-            background: #fff;
-            overflow-y: auto;
-            max-height: 180px;
-        }
-        .lb-info-top {
-            display: flex;
             justify-content: space-between;
-            align-items: flex-start;
             gap: 12px;
+            padding: 14px 16px 16px;
+            background: #2a2a2a;
         }
+        .lb-info-left { flex: 1; min-width: 0; }
         .lb-judul {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #f1f5f9;
             margin: 0 0 4px;
-            line-height: 1.4;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lb-info-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .lb-tahun {
             font-size: 0.78rem;
             color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .lb-juara-badge {
-            font-size: 0.78rem;
+            font-size: 0.72rem;
             font-weight: 700;
-            padding: 4px 12px;
+            padding: 2px 9px;
             border-radius: 20px;
             white-space: nowrap;
+        }
+        .lb-juara-badge.medal-1 { background: #fef3c7; color: #92400e; }
+        .lb-juara-badge.medal-2 { background: #e2e8f0; color: #334155; }
+        .lb-juara-badge.medal-3 { background: #fde8d8; color: #7c3a1a; }
+        .lb-juara-badge.medal-other { background: #f1f5f9; color: #475569; }
+
+        .lb-info-actions {
+            display: flex;
+            gap: 8px;
             flex-shrink: 0;
         }
-        .lb-juara-badge.medal-1 {
-            background: #fef3c7;
-            color: #92400e;
+        .lb-btn {
+            border: none;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s;
         }
-        .lb-juara-badge.medal-2 {
-            background: #e2e8f0;
-            color: #334155;
+        .lb-btn-unduh {
+            background: #3f3f3f;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .lb-juara-badge.medal-3 {
-            background: #fde8d8;
-            color: #7c3a1a;
+        .lb-btn-unduh:hover { background: #555; }
+        .lb-btn-batal {
+            background: #3f3f3f;
+            color: #94a3b8;
         }
-        .lb-juara-badge.medal-other {
-            background: #f1f5f9;
-            color: #475569;
-        }
-        .lb-keterangan {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin: 10px 0 0;
-            line-height: 1.6;
-        }
+        .lb-btn-batal:hover { background: #555; color: #f1f5f9; }
 
-        @media (max-width: 480px) {
-            .lb-modal { max-width: 100%; border-radius: 12px; }
-            #lb-img { max-height: 40vh; }
+        /* ===== MOBILE ===== */
+        @media (max-width: 600px) {
+            #lightbox {
+                padding: 12px 4px;
+                gap: 6px;
+            }
+            .lb-nav-outer {
+                width: 36px;
+                height: 36px;
+                font-size: 0.85rem;
+            }
+            .lb-modal { border-radius: 12px; }
+            .lb-foto-wrap { max-height: 44vh; min-height: 220px; }
+            #lb-img { max-height: 44vh; }
+            .lb-thumb { width: 44px; height: 34px; }
+            .lb-judul { font-size: 0.88rem; }
+            .lb-btn { padding: 6px 12px; font-size: 0.78rem; }
         }
     </style>
 @endpush
@@ -323,8 +361,6 @@
         e.preventDefault();
         const fotoSrc = document.getElementById('lb-img').src;
         const namaFile = fotoSrc.split('/').pop() || 'foto-galeri.jpg';
-
-        // fetch as blob lalu force download
         fetch(fotoSrc)
             .then(res => res.blob())
             .then(blob => {
@@ -337,56 +373,98 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             })
-            .catch(() => {
-                // fallback: buka di tab baru kalau fetch gagal
-                window.open(fotoSrc, '_blank');
-            });
+            .catch(() => window.open(fotoSrc, '_blank'));
     }
 
     // ===== DATA GALERI =====
     const galeriData = @json($galeriData);
 
-    // State lightbox
     let currentGaleri = null;
     let currentFotoIdx = 0;
 
     function openLightbox(galeriIndex) {
         currentGaleri  = galeriData[galeriIndex];
         currentFotoIdx = 0;
+        renderThumbnails();
         showLightbox();
         document.getElementById('lightbox').classList.add('active');
         document.body.style.overflow = 'hidden';
     }
 
-    function showLightbox() {
-        const fotos      = currentGaleri.fotos;
-        const juara      = currentGaleri.juara;
-        const judul      = currentGaleri.judul;
-        const tahun      = currentGaleri.tahun;
-        const total      = fotos.length;
-        const fotoSrc    = fotos[currentFotoIdx];
+    function renderThumbnails() {
+        const strip = document.getElementById('lb-thumb-strip');
+        const fotos = currentGaleri.fotos;
+        strip.innerHTML = '';
 
-        // foto + blur background
+        if (fotos.length <= 1) {
+            strip.classList.add('hidden');
+            return;
+        }
+        strip.classList.remove('hidden');
+
+        fotos.forEach((src, i) => {
+            const div = document.createElement('div');
+            div.className = 'lb-thumb' + (i === currentFotoIdx ? ' active' : '');
+            div.onclick = () => { currentFotoIdx = i; showLightbox(); };
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = '';
+            div.appendChild(img);
+            strip.appendChild(div);
+        });
+    }
+
+    function updateThumbnailActive() {
+        const thumbs = document.querySelectorAll('.lb-thumb');
+        thumbs.forEach((t, i) => {
+            t.classList.toggle('active', i === currentFotoIdx);
+        });
+        // scroll thumbnail aktif ke tengah strip
+        const strip = document.getElementById('lb-thumb-strip');
+        const active = strip.querySelector('.lb-thumb.active');
+        if (active) {
+            const stripLeft   = strip.getBoundingClientRect().left;
+            const activeLeft  = active.getBoundingClientRect().left;
+            const activeWidth = active.offsetWidth;
+            const stripWidth  = strip.offsetWidth;
+            strip.scrollLeft += (activeLeft - stripLeft) - (stripWidth / 2) + (activeWidth / 2);
+        }
+    }
+
+    function showLightbox() {
+        const fotos   = currentGaleri.fotos;
+        const juara   = currentGaleri.juara;
+        const judul   = currentGaleri.judul;
+        const tahun   = currentGaleri.tahun;
+        const total   = fotos.length;
+        const fotoSrc = fotos[currentFotoIdx];
+
+        // foto + blur bg
         document.getElementById('lb-img').src = fotoSrc;
         document.getElementById('lb-foto-bg').style.backgroundImage = `url('${fotoSrc}')`;
 
-        // tombol unduh — href tidak dipakai, foto diambil dari lb-img.src saat klik
-        document.getElementById('lb-download').dataset.src = fotoSrc;
+        // counter overlay
+        const counter = document.getElementById('lb-counter');
+        if (total > 1) {
+            counter.textContent = (currentFotoIdx + 1) + ' dari ' + total + ' foto';
+            counter.style.display = 'inline-block';
+        } else {
+            counter.style.display = 'none';
+        }
 
-        // counter
-        document.getElementById('lb-counter').textContent =
-            total > 1 ? (currentFotoIdx + 1) + ' / ' + total + ' foto' : '';
-
-        // nav tombol
+        // tombol nav luar
         const showNav = total > 1;
-        document.getElementById('lb-prev').style.display = showNav ? 'flex' : 'none';
-        document.getElementById('lb-next').style.display = showNav ? 'flex' : 'none';
+        document.getElementById('lb-prev').style.visibility = showNav ? 'visible' : 'hidden';
+        document.getElementById('lb-next').style.visibility = showNav ? 'visible' : 'hidden';
 
-        // info card
+        // update thumbnail active
+        updateThumbnailActive();
+
+        // info
         document.getElementById('lb-judul').textContent = judul;
         document.getElementById('lb-tahun').textContent = tahun;
 
-        // badge juara — warna medali
+        // badge juara
         const juaraEl = document.getElementById('lb-juara');
         if (juara) {
             const medals = { 1: ['🥇', 'medal-1'], 2: ['🥈', 'medal-2'], 3: ['🥉', 'medal-3'] };
@@ -397,9 +475,6 @@
         } else {
             juaraEl.style.display = 'none';
         }
-
-        // keterangan — hidden (field dihapus)
-        document.getElementById('lb-keterangan').style.display = 'none';
     }
 
     function closeLightbox() {
@@ -429,20 +504,16 @@
         if (e.key === 'Escape')     closeLightbox();
     });
 
-    // ===== TOUCH SWIPE — galeri lightbox =====
+    // Touch swipe
     let touchStartX = 0;
-    let touchEndX   = 0;
-
     document.getElementById('lightbox').addEventListener('touchstart', function(e) {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
-
     document.getElementById('lightbox').addEventListener('touchend', function(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) { // minimal 50px swipe
-            if (diff > 0) lightboxNext(); // swipe kiri → next
-            else          lightboxPrev(); // swipe kanan → prev
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) lightboxNext();
+            else          lightboxPrev();
         }
     }, { passive: true });
 
@@ -455,28 +526,20 @@
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             const filter = btn.dataset.filter;
             let visible = 0;
-            visibleIndices = [];
-
-            gridItems.forEach((item, i) => {
+            gridItems.forEach((item) => {
                 let match = false;
                 if (filter === 'all') {
                     match = true;
                 } else if (filter === 'prestasi') {
-                    // Prestasi = pertandingan yang punya juara
                     match = item.dataset.kategori === 'pertandingan' && item.dataset.juara === '1';
                 } else {
                     match = item.dataset.kategori === filter;
                 }
                 item.style.display = match ? '' : 'none';
-                if (match) {
-                    visibleIndices.push(i);
-                    visible++;
-                }
+                if (match) visible++;
             });
-
             emptyEl.style.display = visible === 0 ? 'flex' : 'none';
         });
     });
@@ -491,7 +554,6 @@
             }
         });
     }, { threshold: 0.12 });
-
     revealEls.forEach(el => revealObserver.observe(el));
 </script>
 @endpush
