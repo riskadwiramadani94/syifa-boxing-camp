@@ -106,16 +106,21 @@ class GaleriResource extends Resource
             Section::make('Foto & Media')
                 ->schema([
                     Forms\Components\FileUpload::make('foto')
-                        ->label('Foto & Video Galeri')
+                        ->label('Upload Foto')
+                        ->helperText('Untuk foto saja. Video upload di bagian bawah.')
                         ->multiple()
                         ->reorderable()
                         ->appendFiles()
-                        ->acceptedFileTypes(['image/*', 'video/*'])
+                        ->acceptedFileTypes(['image/*'])
                         ->disk('cloudinary')
                         ->directory('media/galeri')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
                         ->nullable(),
+
+                    \App\Filament\Forms\Components\CloudinaryVideoUpload::make('video_cloudinary')
+                        ->label('Upload Video')
+                        ->helperText('Video langsung ke Cloudinary — tidak ada batas ukuran dari server.'),
                 ]),
         ]);
     }
