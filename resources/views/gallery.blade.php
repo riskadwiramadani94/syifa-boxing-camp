@@ -70,7 +70,7 @@
                 };
             @endphp
             <div class="gallery-grid-item g-reveal {{ $anim }}" data-kategori="{{ $item->kategori }}" data-juara="{{ $item->juara ? '1' : '0' }}" style="--gd:{{ $delay }}">
-                <div class="gallery-grid-card" style="cursor:pointer;position:relative;" onclick="openLightbox({{ $i }})">
+                <a href="{{ route('gallery.show', $item->uuid) }}" class="gallery-grid-card" style="cursor:pointer;position:relative;display:block;text-decoration:none;">
                     @if($coverIsVid)
                         <img src="{{ $fotoUrl }}" alt="{{ $item->judul }}"
                              style="object-fit:cover; width:100%;"
@@ -88,7 +88,7 @@
                         <h6 class="gallery-grid-title">{{ $item->judul }}</h6>
                         <span class="gallery-grid-cat">{{ $labelKategori }}</span>
                     </div>
-                </div>
+                </a>
             </div>
             @empty
             @endforelse

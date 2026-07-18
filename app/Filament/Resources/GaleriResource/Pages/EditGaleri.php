@@ -18,4 +18,25 @@ class EditGaleri extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    /**
+     * Gabungkan URL video dari widget Cloudinary ke field foto yang sudah ada.
+     */
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $fotos = $data['foto'] ?? [];
+        if (! is_array($fotos)) $fotos = [];
+
+        $videosJson = request()->input('cloudinary_videos', '[]');
+        $videos = json_decode($videosJson, true) ?: [];
+
+        foreach ($videos as $v) {
+            if (! empty($v['url'])) {
+                $fotos[] = $v['url'];
+            }
+        }
+
+        $data['foto'] = array_values($fotos);
+        return $data;
+    }
 }

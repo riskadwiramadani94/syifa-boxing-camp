@@ -103,19 +103,27 @@ class GaleriResource extends Resource
                         ->default(false),
                 ])->columns(2),
 
-            Section::make('Foto & Media')
+            Section::make('Foto Galeri')
+                ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
                 ->schema([
                     Forms\Components\FileUpload::make('foto')
-                        ->label('Foto & Video Galeri')
+                        ->label('Upload Foto')
                         ->multiple()
                         ->reorderable()
                         ->appendFiles()
-                        ->acceptedFileTypes(['image/*', 'video/*'])
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                         ->disk('cloudinary')
                         ->directory('media/galeri')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
                         ->nullable(),
+                ]),
+
+            Section::make('Video Galeri')
+                ->description('Upload video langsung ke Cloudinary — tidak lewat server, tidak ada batasan ukuran PHP. Format: MP4, MOV, AVI, WEBM.')
+                ->schema([
+                    Forms\Components\View::make('filament.cloudinary-video-upload')
+                        ->viewData(['directory' => 'media/galeri']),
                 ]),
         ]);
     }
