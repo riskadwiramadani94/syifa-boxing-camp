@@ -116,6 +116,7 @@ class VideoResource extends Resource
                     Forms\Components\FileUpload::make('foto')
                         ->label('Upload Video')
                         ->multiple()
+                        ->panelLayout('grid')
                         ->reorderable()
                         ->appendFiles()
                         ->acceptedFileTypes(['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/*'])

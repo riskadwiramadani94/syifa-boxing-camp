@@ -11,9 +11,17 @@
 {{-- ===== HEADER ===== --}}
 <section class="gd-header-section">
     <div class="container">
-        <a href="{{ route('gallery') }}" class="gd-back-link">
-            <i class="fas fa-arrow-left"></i> Kembali ke Galeri
-        </a>
+        {{-- Breadcrumb Nav & Back Button --}}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
+            <nav style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600;">
+                <a href="{{ route('gallery') }}" style="color: #d63384; text-decoration: none;">Galeri</a>
+                <span style="color: #94a3b8;">/</span>
+                <span style="color: #475569;">{{ \Illuminate\Support\Str::limit($galeri->judul, 40) }}</span>
+            </nav>
+            <a href="{{ route('gallery') }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid #cbd5e1; border-radius: 6px; color: #475569; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s; background: #fff;" onmouseover="this.style.background='#f8fafc'; this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#fff'; this.style.borderColor='#cbd5e1';">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
         <div class="gd-header-inner">
             <div class="gd-header-meta">
                 <span class="gd-badge-kategori">
