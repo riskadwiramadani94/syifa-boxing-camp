@@ -4,7 +4,7 @@
         <a class="navbar-brand d-flex align-items-center gap-2" href="/">
             <img src="{{ asset('assets/images/polosan_logo_syifa.png') }}" alt="Logo Syifa Boxing Camp" height="100" style="width:auto;">
             <div class="navbar-brand-text">
-                <span class="navbar-brand-sub">Sasana Tinju Profesional</span>
+                <span class="navbar-brand-sub">Sasana Tinju</span>
                 <span class="navbar-brand-main">SYIFA<br>BOXING CAMP</span>
             </div>
         </a>
