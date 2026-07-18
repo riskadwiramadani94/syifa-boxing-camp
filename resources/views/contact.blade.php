@@ -65,9 +65,6 @@
                 </div>
                 <h5 class="contact-info-title">Instagram Resmi</h5>
                 <p class="contact-info-desc">Ikuti Instagram kami untuk update terbaru event, prestasi atlet, dan kegiatan sasana</p>
-                <a href="{{ $settings['instagram'] }}" target="_blank" class="contact-info-link" style="color:#4f46e5;">
-                    <i class="fab fa-instagram me-1"></i> {{ $settings['instagram'] }}
-                </a>
                 <a href="{{ $settings['instagram'] }}" target="_blank" class="contact-info-btn" style="background:#e0e7ff; color:#4f46e5;">Follow Instagram</a>
             </div>
             @endif
