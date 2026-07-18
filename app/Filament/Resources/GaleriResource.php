@@ -28,7 +28,7 @@ class GaleriResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Galeri & Video';
+        return 'Galeri Foto';
     }
 
     public static function getNavigationGroup(): ?string
@@ -41,9 +41,9 @@ class GaleriResource extends Resource
         return 2;
     }
 
-    protected static ?string $pluralModelLabel = 'Galeri';
+    protected static ?string $pluralModelLabel = 'Galeri Foto';
 
-    protected static ?string $modelLabel = 'Galeri';
+    protected static ?string $modelLabel = 'Galeri Foto';
 
     public static function form(Schema $schema): Schema
     {
@@ -117,13 +117,6 @@ class GaleriResource extends Resource
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
                         ->nullable(),
-                ]),
-
-            Section::make('Video Galeri')
-                ->description('Upload video langsung ke Cloudinary — tidak lewat server, tidak ada batasan ukuran PHP. Format: MP4, MOV, AVI, WEBM.')
-                ->schema([
-                    Forms\Components\View::make('filament.cloudinary-video-upload')
-                        ->viewData(['directory' => 'media/galeri']),
                 ]),
         ]);
     }
