@@ -212,15 +212,15 @@
 <style>
 /* ===== HEADER ===== */
 .gd-header-section {
-    background: #0f172a;
+    background: #ffffff;
     padding: 48px 0 36px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid #f1f5f9;
 }
 .gd-back-link {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #94a3b8;
+    color: #64748b;
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
@@ -228,7 +228,7 @@
     transition: color 0.2s;
     letter-spacing: 0.3px;
 }
-.gd-back-link:hover { color: #f1f5f9; }
+.gd-back-link:hover { color: #1a2a4a; }
 .gd-back-link i { font-size: 0.78rem; }
 .gd-header-inner { padding-top: 4px; }
 .gd-header-meta {
@@ -246,8 +246,8 @@
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
-.gd-badge-kategori { background: rgba(204,41,41,0.18); color: #f87171; border: 1px solid rgba(204,41,41,0.35); }
-.gd-badge-tahun { background: rgba(255,255,255,0.08); color: #94a3b8; border: 1px solid rgba(255,255,255,0.12); }
+.gd-badge-kategori { background: #fff1f2; color: #cc2929; border: 1px solid #fecdd3; }
+.gd-badge-tahun { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
 .gd-badge-special {
     font-size: 0.75rem;
     font-weight: 700;
@@ -258,12 +258,12 @@
     gap: 5px;
     letter-spacing: 0.3px;
 }
-.gd-badge-special.gold  { background: rgba(212,175,55,0.18); color: #D4AF37; border: 1px solid rgba(212,175,55,0.35); }
-.gd-badge-special.silver{ background: rgba(168,169,173,0.18); color: #A8A9AD; border: 1px solid rgba(168,169,173,0.35); }
+.gd-badge-special.gold  { background: #fefce8; color: #a16207; border: 1px solid #fde68a; }
+.gd-badge-special.silver{ background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
 .gd-header-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(1.8rem, 4vw, 2.8rem);
-    color: #f1f5f9;
+    color: #1a2a4a;
     letter-spacing: 1px;
     margin: 0 0 10px;
     line-height: 1.15;
@@ -282,15 +282,15 @@
 /* ===== SECTION TITLES ===== */
 .gd-foto-section, .gd-video-section, .gd-info-section {
     padding: 48px 0;
-    background: #0f172a;
+    background: #ffffff;
 }
-.gd-foto-section { background: #111827; }
-.gd-video-section { background: #0f172a; border-top: 1px solid rgba(255,255,255,0.05); }
-.gd-info-section { background: #111827; border-top: 1px solid rgba(255,255,255,0.05); }
+.gd-foto-section { background: #ffffff; border-top: 1px solid #f1f5f9; }
+.gd-video-section { background: #f8fafc; border-top: 1px solid #f1f5f9; }
+.gd-info-section { background: #ffffff; border-top: 1px solid #f1f5f9; }
 .gd-section-title {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    color: #64748b;
+    color: #94a3b8;
     letter-spacing: 1.5px;
     text-transform: uppercase;
     margin-bottom: 24px;
@@ -300,8 +300,8 @@
 }
 .gd-section-title i { color: #cc2929; font-size: 0.85rem; }
 .gd-section-count {
-    background: rgba(204,41,41,0.15);
-    color: #f87171;
+    background: #fff1f2;
+    color: #cc2929;
     font-size: 0.7rem;
     padding: 2px 8px;
     border-radius: 20px;
@@ -322,7 +322,8 @@
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
-    background: #1e293b;
+    background: #f1f5f9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .gd-foto-item img {
     width: 100%;
@@ -349,7 +350,7 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
 .gd-foto-item:hover img { transform: scale(1.04); }
-.gd-foto-item:hover .gd-foto-overlay { background: rgba(0,0,0,0.42); }
+.gd-foto-item:hover .gd-foto-overlay { background: rgba(0,0,0,0.38); }
 .gd-foto-item:hover .gd-foto-overlay i { opacity: 1; transform: scale(1); }
 
 /* ===== GRID VIDEO ===== */
@@ -359,10 +360,11 @@
     gap: 18px;
 }
 .gd-video-item {
-    background: #1e293b;
+    background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .gd-video-item video {
     width: 100%;
@@ -384,7 +386,7 @@
 /* ===== KETERANGAN ===== */
 .gd-keterangan { margin-bottom: 40px; }
 .gd-keterangan-text {
-    color: #94a3b8;
+    color: #475569;
     font-size: 0.95rem;
     line-height: 1.75;
     max-width: 720px;
@@ -404,6 +406,7 @@
     border-radius: 14px;
     min-width: 180px;
     border: 1px solid transparent;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
 }
 .gd-medali-icon { font-size: 1.8rem; flex-shrink: 0; }
 .gd-medali-info { display: flex; flex-direction: column; gap: 2px; }
@@ -411,32 +414,32 @@
 .gd-medali-count { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; letter-spacing: 1px; }
 
 .gd-medali-emas {
-    background: rgba(212,175,55,0.1);
-    border-color: rgba(212,175,55,0.3);
+    background: #fefce8;
+    border-color: #fde68a;
 }
-.gd-medali-emas .gd-medali-icon, .gd-medali-emas .gd-medali-count { color: #D4AF37; }
-.gd-medali-emas .gd-medali-label { color: #D4AF37; }
+.gd-medali-emas .gd-medali-icon, .gd-medali-emas .gd-medali-count { color: #a16207; }
+.gd-medali-emas .gd-medali-label { color: #a16207; }
 
 .gd-medali-perak {
-    background: rgba(168,169,173,0.1);
-    border-color: rgba(168,169,173,0.3);
+    background: #f8fafc;
+    border-color: #e2e8f0;
 }
-.gd-medali-perak .gd-medali-icon, .gd-medali-perak .gd-medali-count { color: #A8A9AD; }
-.gd-medali-perak .gd-medali-label { color: #A8A9AD; }
+.gd-medali-perak .gd-medali-icon, .gd-medali-perak .gd-medali-count { color: #475569; }
+.gd-medali-perak .gd-medali-label { color: #475569; }
 
 .gd-medali-perunggu {
-    background: rgba(205,127,50,0.1);
-    border-color: rgba(205,127,50,0.3);
+    background: #fff7ed;
+    border-color: #fed7aa;
 }
-.gd-medali-perunggu .gd-medali-icon, .gd-medali-perunggu .gd-medali-count { color: #CD7F32; }
-.gd-medali-perunggu .gd-medali-label { color: #CD7F32; }
+.gd-medali-perunggu .gd-medali-icon, .gd-medali-perunggu .gd-medali-count { color: #c2410c; }
+.gd-medali-perunggu .gd-medali-label { color: #c2410c; }
 
 .gd-medali-special {
-    background: rgba(204,41,41,0.1);
-    border-color: rgba(204,41,41,0.25);
+    background: #fff1f2;
+    border-color: #fecdd3;
 }
-.gd-medali-special .gd-medali-icon { color: #f87171; }
-.gd-medali-special .gd-medali-label { color: #f87171; }
+.gd-medali-special .gd-medali-icon { color: #cc2929; }
+.gd-medali-special .gd-medali-label { color: #cc2929; }
 
 /* ===== LIGHTBOX FOTO ===== */
 #gdLightbox {
@@ -453,7 +456,7 @@
 #gdLightbox.active { display: flex; }
 .gd-lb-nav {
     flex-shrink: 0;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
     border: none;
     color: #fff;
     width: 46px;
@@ -466,7 +469,7 @@
     font-size: 1rem;
     transition: background 0.2s;
 }
-.gd-lb-nav:hover { background: rgba(255,255,255,0.25); }
+.gd-lb-nav:hover { background: rgba(255,255,255,0.3); }
 .gd-lb-main {
     position: relative;
     max-width: min(90vw, 900px);
@@ -504,7 +507,7 @@
 .gd-lb-counter {
     margin-top: 12px;
     font-size: 0.78rem;
-    color: #64748b;
+    color: #94a3b8;
     letter-spacing: 0.3px;
 }
 @media (max-width: 600px) {
