@@ -130,7 +130,7 @@ return [
 
     'temporary_file_upload' => [
         'disk' => 'local', // Selalu local untuk temp upload, Cloudinary dipakai saat final save
-        'rules' => ['required', 'file', 'max:102400', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg,mp4,mov,avi,wmv,mkv,webm,m4v'], // 100MB max
+        'rules' => ['required', 'file', 'max:102400'], // 100MB max, semua tipe file diizinkan
         'directory' => null,                                  // Example: 'tmp'                     | Default: 'livewire-tmp'
         'middleware' => null,                                 // Example: 'throttle:5,1'            | Default: 'throttle:60,1'
         'preview_mimes' => [                                  // Supported file types for temporary pre-signed file URLs...
