@@ -386,6 +386,8 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 
 
 
+@endsection
+
 @push('styles')
 <style>
 /* ===== MODAL GALERI BERANDA ===== */
@@ -571,13 +573,11 @@ Mohon info lebih lanjut mengenai pendaftaran dan biayanya. Terima kasih 🙏') }
 </style>
 @endpush
 
-@endsection
-
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/home.css') }}">
 @endpush
 
-
+@push('scripts')
 <script>
     // ===== COUNT UP ANIMATION =====
     function countUp(el, target, duration = 1500) {
