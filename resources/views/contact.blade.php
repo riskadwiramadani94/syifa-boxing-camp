@@ -94,7 +94,7 @@
                     <div class="contact-form-group">
                         <label>Email</label>
                         <input type="email" name="email" placeholder="Masukan email anda"
-                               value="{{ old('email') }}" required>
+                               value="{{ old('email') }}">
                     </div>
                 </div>
                 <div class="contact-form-group">
