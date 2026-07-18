@@ -113,8 +113,66 @@
 @endif
 
 
+{{-- ===== DAFTAR ATLET JUARA ===== --}}
+@php
+    $daftarJuara = is_array($galeri->daftar_juara) ? $galeri->daftar_juara : [];
+    // Hitung medali gabungan (dari koma + dari repeater)
+    $totalEmas     = $medaliEmas;
+    $totalPerak    = $medaliPerak;
+    $totalPerunggu = $medaliPerunggu;
+    foreach ($daftarJuara as $atlet) {
+        $juaraKe = intval($atlet['juara_ke'] ?? 0);
+        if ($juaraKe === 1) $totalEmas++;
+        elseif ($juaraKe === 2) $totalPerak++;
+        elseif ($juaraKe === 3) $totalPerunggu++;
+    }
+@endphp
+
+@if(count($daftarJuara) > 0)
+<section class="gd-atlet-section">
+    <div class="container">
+        <h2 class="gd-section-title">
+            <i class="fas fa-user-shield"></i> Atlet Pencetak Prestasi
+            <span class="gd-section-count">{{ count($daftarJuara) }}</span>
+        </h2>
+
+        <div class="gd-atlet-grid">
+            @foreach($daftarJuara as $atlet)
+            @php
+                $juaraKe  = intval($atlet['juara_ke'] ?? 0);
+                $fotoAtlet = $atlet['foto_atlet'] ?? null;
+                $fotoUrl   = $fotoAtlet ? foto_url($fotoAtlet) : asset('assets/logo/logo.jpg');
+                $medalColor = match($juaraKe) {
+                    1 => ['bg' => 'linear-gradient(135deg,#b8860b,#ffd700)', 'label' => '🥇 Juara 1', 'badge' => '#ffd700'],
+                    2 => ['bg' => 'linear-gradient(135deg,#6b7280,#c0c0c0)', 'label' => '🥈 Juara 2', 'badge' => '#c0c0c0'],
+                    3 => ['bg' => 'linear-gradient(135deg,#92400e,#cd7f32)', 'label' => '🥉 Juara 3', 'badge' => '#cd7f32'],
+                    default => ['bg' => 'linear-gradient(135deg,#be123c,#f43f5e)', 'label' => '🏅 Juara', 'badge' => '#f43f5e'],
+                };
+            @endphp
+            <div class="gd-atlet-card">
+                <div class="gd-atlet-foto-wrap">
+                    <img src="{{ $fotoUrl }}" alt="{{ $atlet['nama'] ?? 'Atlet' }}"
+                         onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
+                    <div class="gd-atlet-medal-badge" style="background: {{ $medalColor['badge'] }};">
+                        {{ $medalColor['label'] }}
+                    </div>
+                </div>
+                <div class="gd-atlet-info" style="background: {{ $medalColor['bg'] }};">
+                    <h4 class="gd-atlet-nama">{{ $atlet['nama'] ?? '-' }}</h4>
+                    @if(!empty($atlet['kelas']))
+                    <p class="gd-atlet-kelas">{{ $atlet['kelas'] }}</p>
+                    @endif
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+
 {{-- ===== KETERANGAN & PRESTASI ===== --}}
-@if($galeri->keterangan || $galeri->juara || $galeri->juara_umum || $galeri->petinju_terbaik)
+@if($galeri->keterangan || $totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
 <section class="gd-info-section">
     <div class="container">
 
@@ -125,43 +183,43 @@
         </div>
         @endif
 
-        @if($galeri->juara || $galeri->juara_umum || $galeri->petinju_terbaik)
+        @if($totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
         <div class="gd-prestasi">
-            <h2 class="gd-section-title"><i class="fas fa-medal"></i> Prestasi</h2>
+            <h2 class="gd-section-title"><i class="fas fa-medal"></i> Total Perolehan Medali</h2>
             <div class="gd-medali-grid">
 
-                @if($medaliEmas > 0)
+                @if($totalEmas > 0)
                 <div class="gd-medali-card gd-medali-emas">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
                     <div class="gd-medali-info">
                         <span class="gd-medali-label">Medali Emas</span>
-                        <span class="gd-medali-count">{{ $medaliEmas }}</span>
+                        <span class="gd-medali-count">{{ $totalEmas }}</span>
                     </div>
                 </div>
                 @endif
 
-                @if($medaliPerak > 0)
+                @if($totalPerak > 0)
                 <div class="gd-medali-card gd-medali-perak">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
                     <div class="gd-medali-info">
                         <span class="gd-medali-label">Medali Perak</span>
-                        <span class="gd-medali-count">{{ $medaliPerak }}</span>
+                        <span class="gd-medali-count">{{ $totalPerak }}</span>
                     </div>
                 </div>
                 @endif
 
-                @if($medaliPerunggu > 0)
+                @if($totalPerunggu > 0)
                 <div class="gd-medali-card gd-medali-perunggu">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
                     <div class="gd-medali-info">
                         <span class="gd-medali-label">Medali Perunggu</span>
-                        <span class="gd-medali-count">{{ $medaliPerunggu }}</span>
+                        <span class="gd-medali-count">{{ $totalPerunggu }}</span>
                     </div>
                 </div>
                 @endif
@@ -523,6 +581,76 @@
     .gd-lb-nav { width: 38px; height: 38px; }
     .gd-medali-card { min-width: 150px; padding: 14px 18px; }
     .gd-medali-count { font-size: 1.6rem; }
+}
+
+/* ===== ATLET JUARA ===== */
+.gd-atlet-section {
+    padding: 48px 0 32px;
+}
+.gd-atlet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+.gd-atlet-card {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.gd-atlet-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.gd-atlet-foto-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: #1a1a2e;
+}
+.gd-atlet-foto-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.gd-atlet-card:hover .gd-atlet-foto-wrap img {
+    transform: scale(1.05);
+}
+.gd-atlet-medal-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.gd-atlet-info {
+    padding: 14px 16px;
+    color: #fff;
+}
+.gd-atlet-nama {
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0 0 4px;
+    color: #fff;
+    line-height: 1.3;
+}
+.gd-atlet-kelas {
+    font-size: 0.78rem;
+    margin: 0;
+    opacity: 0.88;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+}
+@media (max-width: 600px) {
+    .gd-atlet-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 }
 </style>
 @endpush

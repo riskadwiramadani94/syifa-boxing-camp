@@ -20,6 +20,7 @@ class Galeri extends Model
         'juara',
         'juara_umum',
         'petinju_terbaik',
+        'daftar_juara',
         'foto',
         'tahun',
         'keterangan',
@@ -32,6 +33,7 @@ class Galeri extends Model
         'juara_umum'      => 'boolean',
         'petinju_terbaik' => 'boolean',
         'foto'            => 'array',
+        'daftar_juara'    => 'array',
     ];
 
     /**

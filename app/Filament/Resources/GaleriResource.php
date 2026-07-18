@@ -86,22 +86,70 @@ class GaleriResource extends Resource
                         ->maxValue(now()->year),
 
                     Forms\Components\TextInput::make('juara')
-                        ->label('Medali (pisah koma)')
-                        ->placeholder('Contoh: 1,1,3,3,3  →  2 emas + 3 perunggu')
+                        ->label('Rekap Medali Cepat (pisah koma)')
+                        ->placeholder('Contoh: 1,1,3  →  2 Emas + 1 Perunggu (untuk medali tanpa foto atlet)')
+                        ->helperText('Isi angka juara dipisah koma. Gunakan ini untuk sisa medali yang tidak diinput detail atletnya.')
                         ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
-                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
-                        ->nullable(),
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                        ->nullable()
+                        ->columnSpanFull(),
 
                     Forms\Components\Toggle::make('juara_umum')
                         ->label('Juara Umum')
-                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->default(false),
 
                     Forms\Components\Toggle::make('petinju_terbaik')
                         ->label('Petinju Terbaik')
-                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => $get('kategori') === 'pertandingan')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->default(false),
                 ])->columns(2),
+
+            Section::make('Detail Atlet Juara')
+                ->description('Opsional: Tambahkan detail atlet yang meraih juara beserta foto dan kelasnya. Akan tampil sebagai kartu di halaman galeri.')
+                ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                ->schema([
+                    Forms\Components\Repeater::make('daftar_juara')
+                        ->label('')
+                        ->addActionLabel('+ Tambah Atlet')
+                        ->schema([
+                            Forms\Components\FileUpload::make('foto_atlet')
+                                ->label('Foto Atlet (Opsional)')
+                                ->image()
+                                ->disk('cloudinary')
+                                ->directory('media/atlet')
+                                ->imagePreviewHeight('120')
+                                ->nullable()
+                                ->columnSpanFull(),
+
+                            Forms\Components\TextInput::make('nama')
+                                ->label('Nama Atlet')
+                                ->placeholder('Contoh: Muhammad Rizky')
+                                ->required()
+                                ->maxLength(255),
+
+                            Forms\Components\TextInput::make('kelas')
+                                ->label('Kelas / Kategori')
+                                ->placeholder('Contoh: 45-48 kg Schoolboy')
+                                ->maxLength(100),
+
+                            Forms\Components\Select::make('juara_ke')
+                                ->label('Juara Ke-')
+                                ->options([
+                                    '1' => '🥇 Juara 1 (Emas)',
+                                    '2' => '🥈 Juara 2 (Perak)',
+                                    '3' => '🥉 Juara 3 (Perunggu)',
+                                ])
+                                ->required(),
+                        ])
+                        ->columns(3)
+                        ->collapsible()
+                        ->itemLabel(fn (array $state): ?string =>
+                            ($state['nama'] ?? 'Atlet') . ($state['juara_ke'] ? ' — Juara ' . $state['juara_ke'] : '')
+                        )
+                        ->defaultItems(0)
+                        ->nullable(),
+                ]),
 
             Section::make('Foto Galeri')
                 ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
