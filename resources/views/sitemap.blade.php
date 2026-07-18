@@ -39,12 +39,6 @@
         <priority>0.7</priority>
     </url>
 
-    <url>
-        <loc>{{ url('/register') }}</loc>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-
     {{-- Halaman Detail Event --}}
     @foreach($events as $event)
     <url>

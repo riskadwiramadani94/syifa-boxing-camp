@@ -20,13 +20,7 @@ Route::view('/schedule', 'schedule')->name('schedule');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');
 
-Route::get('/register', function () {
-    return view('register');
-})->name('register');
 
-Route::post('/register', function (Request $request) {
-    return back()->with('success', 'Pendaftaran berhasil! Kami akan segera menghubungi Anda.');
-})->name('register.store');
 
 Route::get('/sitemap.xml', function () {
     $urls = [
@@ -36,7 +30,6 @@ Route::get('/sitemap.xml', function () {
         ['loc' => url('/gallery'),   'priority' => '0.8', 'changefreq' => 'weekly'],
         ['loc' => url('/schedule'),  'priority' => '0.7', 'changefreq' => 'monthly'],
         ['loc' => url('/contact'),   'priority' => '0.7', 'changefreq' => 'monthly'],
-        ['loc' => url('/register'),  'priority' => '0.6', 'changefreq' => 'monthly'],
     ];
 
     try {
