@@ -124,7 +124,6 @@
             font-size: 0.95rem;
             text-decoration: none;
             transition: all 0.2s;
-            margin-left: 12px;
             animation: fadeUp 0.6s ease 0.4s both;
         }
         .btn-contact:hover {
@@ -165,7 +164,7 @@
             Kembali ke beranda dan terus semangat berlatih!
         </p>
 
-        <div>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
             <a href="/" class="btn-home">
                 <i class="fas fa-home"></i> Ke Beranda
             </a>
