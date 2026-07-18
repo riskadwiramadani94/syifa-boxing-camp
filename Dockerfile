@@ -69,6 +69,8 @@ RUN a2dismod mpm_event && a2enmod mpm_prefork rewrite
 
 EXPOSE 80
 
+# Increase PHP Upload Limits
+RUN echo "upload_max_filesize = 100M\npost_max_size = 100M\nmemory_limit = 256M" > /usr/local/etc/php/conf.d/uploads.ini
 COPY docker-start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
 
