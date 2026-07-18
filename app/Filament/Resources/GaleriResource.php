@@ -142,7 +142,7 @@ class GaleriResource extends Resource
                                 ])
                                 ->required(),
                         ])
-                        ->columns(3)
+                        ->columns(1)
                         ->collapsible()
                         ->itemLabel(fn (array $state): ?string =>
                             ($state['nama'] ?? 'Atlet') . ($state['juara_ke'] ? ' — Juara ' . $state['juara_ke'] : '')
