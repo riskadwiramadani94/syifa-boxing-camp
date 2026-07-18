@@ -39,9 +39,21 @@
             @forelse($galeris as $i => $item)
             @php
                 $fotos = is_array($item->foto) ? $item->foto : [];
-                $fotoUrl = count($fotos) > 0
-                    ? foto_url($fotos[0])
-                    : asset('assets/logo/logo.jpg');
+                $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                // Ambil foto pertama (bukan video) sebagai cover
+                $coverFile = null;
+                $coverIsVid = false;
+                foreach ($fotos as $f) {
+                    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                    if (!in_array($ext, $videoExts)) { $coverFile = $f; break; }
+                }
+                // Fallback: kalau semua video, pakai video pertama
+                if (!$coverFile && count($fotos) > 0) {
+                    $coverFile  = $fotos[0];
+                    $coverIsVid = true;
+                }
+                $fotoUrl = $coverFile ? foto_url($coverFile) : asset('assets/logo/logo.jpg');
+                $hasVideo = collect($fotos)->contains(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
                 $animTypes = ['g-fadeleft', 'g-fadeup', 'g-faderight'];
                 $anim  = $animTypes[$i % 3];
                 $delay = round(($i % 3) * 0.1, 2) . 's';
@@ -54,10 +66,19 @@
                 };
             @endphp
             <div class="gallery-grid-item g-reveal {{ $anim }}" data-kategori="{{ $item->kategori }}" data-juara="{{ $item->juara ? '1' : '0' }}" style="--gd:{{ $delay }}">
-                <div class="gallery-grid-card" style="cursor:pointer;" onclick="openLightbox({{ $i }})">
-                    <img src="{{ $fotoUrl }}"
-                         alt="{{ $item->judul }}"
-                         style="object-fit: cover; width:100%;">
+                <div class="gallery-grid-card" style="cursor:pointer;position:relative;" onclick="openLightbox({{ $i }})">
+                    @if($coverIsVid)
+                        <video src="{{ $fotoUrl }}" muted playsinline preload="metadata"
+                               style="object-fit:cover; width:100%; height:100%; pointer-events:none;"
+                               onerror="this.style.display='none'"></video>
+                    @else
+                        <img src="{{ $fotoUrl }}" alt="{{ $item->judul }}" style="object-fit: cover; width:100%;">
+                    @endif
+                    @if($hasVideo)
+                        <div style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.6);color:#fff;border-radius:20px;padding:3px 9px;font-size:0.72rem;font-weight:700;display:flex;align-items:center;gap:5px;z-index:2;">
+                            <i class="fas fa-play" style="font-size:0.6rem;"></i> Video
+                        </div>
+                    @endif
                     <div class="gallery-grid-overlay">
                         <span class="gallery-grid-badge">{{ $item->tahun }}</span>
                         <h6 class="gallery-grid-title">{{ $item->judul }}</h6>
