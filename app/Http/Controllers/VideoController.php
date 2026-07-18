@@ -43,8 +43,16 @@ class VideoController extends Controller
                 }
             }
 
-            // Gunakan foto pertama sebagai cover, atau null kalau tidak ada
-            $cover = count($thumbs) > 0 ? $thumbs[0] : null;
+            // Gunakan foto pertama sebagai cover
+            // Kalau tidak ada foto (semua video), generate thumbnail dari frame pertama video via Cloudinary
+            if (count($thumbs) > 0) {
+                $cover = $thumbs[0];
+            } elseif (count($videos) > 0) {
+                $firstVideoFile = collect($files)->first(fn($f) => self::isVideo($f));
+                $cover = video_thumb_url($firstVideoFile);
+            } else {
+                $cover = null;
+            }
 
             return [
                 'videos'   => array_values($videos),
