@@ -28,7 +28,7 @@ class GaleriResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Galeri';
+        return 'Galeri & Video';
     }
 
     public static function getNavigationGroup(): ?string
@@ -137,7 +137,21 @@ class GaleriResource extends Resource
                     ->label('Judul')
                     ->searchable()
                     ->sortable()
-                    ->description(fn ($record) => is_array($record->foto) ? count($record->foto) . ' file' : '0 file'),
+                    ->description(function ($record) {
+                        $files = is_array($record->foto) ? $record->foto : [];
+                        $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                        $videoCount = 0;
+                        $fotoCount  = 0;
+                        foreach ($files as $file) {
+                            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                            if (in_array($ext, $videoExts)) $videoCount++;
+                            else $fotoCount++;
+                        }
+                        if ($fotoCount > 0 && $videoCount > 0) return $fotoCount . ' foto | ' . $videoCount . ' video';
+                        if ($fotoCount > 0)  return $fotoCount . ' foto';
+                        if ($videoCount > 0) return $videoCount . ' video';
+                        return '0 file';
+                    }),
 
                 Tables\Columns\TextColumn::make('kategori')
                     ->label('Kategori')

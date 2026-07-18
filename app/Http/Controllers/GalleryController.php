@@ -6,19 +6,42 @@ use App\Models\Galeri;
 
 class GalleryController extends Controller
 {
+    private static array $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+
+    public static function isVideo(string $file): bool
+    {
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        return in_array($ext, self::$videoExts);
+    }
+
     public function index()
     {
-        $galeris = Galeri::orderBy('updated_at', 'desc')->get();
+        $allGaleris = Galeri::orderBy('updated_at', 'desc')->get();
+
+        // Hanya tampilkan item yang punya minimal 1 file foto
+        $galeris = $allGaleris->filter(function ($item) {
+            $files = is_array($item->foto) ? $item->foto : [];
+            foreach ($files as $file) {
+                if (!self::isVideo($file)) return true;
+            }
+            return false;
+        })->values();
 
         $galeriData = $galeris->map(function ($item) {
-            $fotos = is_array($item->foto) ? $item->foto : [];
-            // kirim semua foto dalam galeri ini
-            $fotoUrls = count($fotos) > 0
-                ? array_map(fn($f) => foto_url($f), $fotos)
-                : [asset('assets/logo/logo.jpg')];
+            $files = is_array($item->foto) ? $item->foto : [];
+
+            // Hanya kirim file foto ke lightbox
+            $fotoUrls = array_values(array_map(
+                fn($f) => foto_url($f),
+                array_filter($files, fn($f) => !self::isVideo($f))
+            ));
+
+            if (empty($fotoUrls)) {
+                $fotoUrls = [asset('assets/logo/logo.jpg')];
+            }
 
             return [
-                'fotos'      => array_values($fotoUrls),
+                'fotos'      => $fotoUrls,
                 'judul'      => $item->judul,
                 'tahun'      => $item->tahun,
                 'juara'      => $item->juara,

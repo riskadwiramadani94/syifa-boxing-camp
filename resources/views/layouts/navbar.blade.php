@@ -30,6 +30,9 @@
                     <a class="nav-link {{ request()->is('gallery') ? 'active' : '' }}" href="/gallery">Galeri</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->is('video') ? 'active' : '' }}" href="/video">Video</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->is('event') ? 'active' : '' }}" href="/event">Event</a>
                 </li>
                 <li class="nav-item">

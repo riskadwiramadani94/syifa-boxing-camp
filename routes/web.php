@@ -8,12 +8,14 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\VideoController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/event', [EventController::class, 'index'])->name('event');
 Route::get('/event/{slug}', [EventController::class, 'show'])->name('event.show');
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
+Route::get('/video', [VideoController::class, 'index'])->name('video');
 Route::view('/schedule', 'schedule')->name('schedule');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');
