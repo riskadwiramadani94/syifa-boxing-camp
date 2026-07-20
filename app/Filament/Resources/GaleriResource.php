@@ -47,18 +47,19 @@ class GaleriResource extends Resource
 
     /**
      * Hanya tampilkan record yang punya foto (exclude record video-only)
+     * Menggunakan CAST ke TEXT agar kompatibel dengan PostgreSQL JSON column
      */
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()
             ->where(function ($q) {
-                $q->where('foto', 'like', '%.jpg%')
-                  ->orWhere('foto', 'like', '%.jpeg%')
-                  ->orWhere('foto', 'like', '%.png%')
-                  ->orWhere('foto', 'like', '%.webp%')
-                  ->orWhere('foto', 'like', '%.gif%')
-                  ->orWhereNull('foto')
-                  ->orWhere('foto', '[]');
+                $q->whereNull('foto')
+                  ->orWhereRaw("CAST(foto AS TEXT) = '[]'")
+                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.jpg%'")
+                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.jpeg%'")
+                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.png%'")
+                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.webp%'")
+                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.gif%'");
             });
     }
 
