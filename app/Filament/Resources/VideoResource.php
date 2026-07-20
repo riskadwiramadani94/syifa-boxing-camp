@@ -48,27 +48,25 @@ class VideoResource extends Resource
 
     /**
      * Hanya tampilkan record yang mengandung minimal 1 file video di field foto
+     * Menggunakan CAST ke TEXT agar kompatibel dengan PostgreSQL JSON column
      */
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        // Cari semua galeri yang punya video berdasarkan ekstensi file di JSON foto
-        // SQLite: gunakan LIKE, karena JSON_CONTAINS tidak tersedia
         return parent::getEloquentQuery()
             ->where(function ($q) {
                 $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
                 foreach ($videoExts as $ext) {
-                    $q->orWhere('foto', 'like', '%.' . $ext . '%');
+                    $q->orWhereRaw("CAST(foto AS TEXT) LIKE '%." . $ext . "%'");
                 }
-                // Link YouTube/video
-                $q->orWhere('foto', 'like', '%youtube%');
-                $q->orWhere('foto', 'like', '%youtu.be%');
+                $q->orWhereRaw("CAST(foto AS TEXT) LIKE '%youtube%'");
+                $q->orWhereRaw("CAST(foto AS TEXT) LIKE '%youtu.be%'");
             });
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            // Kolom kiri: Informasi + Link Video
+            // Kolom kiri: Informasi + Prestasi + Link Video
             Section::make('Informasi Video')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
@@ -85,7 +83,8 @@ class VideoResource extends Resource
                             'pertandingan' => 'Pertandingan',
                         ])
                         ->required()
-                        ->default('latihan'),
+                        ->default('latihan')
+                        ->live(),
 
                     Forms\Components\Select::make('event_id')
                         ->label('Tautkan ke Event')
@@ -108,6 +107,60 @@ class VideoResource extends Resource
                     Forms\Components\Textarea::make('keterangan')
                         ->label('Keterangan')
                         ->nullable()
+                        ->columnSpanFull(),
+
+                    // Field prestasi — hanya tampil saat kategori pertandingan/event
+                    Forms\Components\TextInput::make('juara')
+                        ->label('Rekap Medali Cepat (pisah koma)')
+                        ->placeholder('Contoh: 1,1,3  →  2 Emas + 1 Perunggu')
+                        ->helperText('Isi angka juara dipisah koma. Gunakan ini untuk sisa medali yang tidak diinput detail atletnya.')
+                        ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                        ->nullable()
+                        ->columnSpanFull(),
+
+                    Forms\Components\Toggle::make('juara_umum')
+                        ->label('Juara Umum')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                        ->default(false),
+
+                    Forms\Components\Toggle::make('petinju_terbaik')
+                        ->label('Petinju Terbaik')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                        ->default(false),
+
+                    // Daftar Atlet Juara
+                    Section::make('Daftar Atlet Juara')
+                        ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih.')
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                        ->schema([
+                            Forms\Components\Repeater::make('daftar_juara')
+                                ->label('')
+                                ->addActionLabel('+ Tambah Atlet')
+                                ->schema([
+                                    Forms\Components\TextInput::make('nama')
+                                        ->label('Nama Atlet')
+                                        ->placeholder('Contoh: Muhammad Rizky')
+                                        ->required()
+                                        ->maxLength(255),
+
+                                    Forms\Components\Select::make('juara_ke')
+                                        ->label('Juara Ke-')
+                                        ->options([
+                                            '1' => '🥇 Juara 1 (Emas)',
+                                            '2' => '🥈 Juara 2 (Perak)',
+                                            '3' => '🥉 Juara 3 (Perunggu)',
+                                        ])
+                                        ->required(),
+                                ])
+                                ->columns(2)
+                                ->collapsible()
+                                ->itemLabel(fn (array $state): ?string =>
+                                    ($state['nama'] ?? 'Atlet') . (isset($state['juara_ke']) ? ' — Juara ' . $state['juara_ke'] : '')
+                                )
+                                ->defaultItems(0)
+                                ->nullable(),
+                        ])
                         ->columnSpanFull(),
 
                     // Link Video di dalam kolom kiri agar tidak ikut turun

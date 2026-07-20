@@ -167,16 +167,19 @@ class GaleriResource extends Resource
                 ->columns(2)
                 ->columnSpan(1),
 
-            // Kolom kanan: Foto Galeri (foto saja, tidak bisa video)
-            Section::make('Foto Galeri')
-                ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
+            // Kolom kanan: Foto & Video Galeri
+            Section::make('Foto & Video Galeri')
+                ->description('Upload foto dan/atau video dokumentasi galeri. Foto tampil di halaman Galeri, video otomatis masuk ke halaman Video.')
                 ->schema([
                     Forms\Components\FileUpload::make('foto')
-                        ->label('Upload Foto')
+                        ->label('Upload Foto / Video')
                         ->multiple()
                         ->reorderable()
                         ->appendFiles()
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                        ->acceptedFileTypes([
+                            'image/jpeg', 'image/png', 'image/webp', 'image/gif',
+                            'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/*',
+                        ])
                         ->disk('cloudinary')
                         ->directory('media/galeri')
                         ->panelLayout('grid')
