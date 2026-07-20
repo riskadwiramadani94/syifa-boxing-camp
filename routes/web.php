@@ -23,6 +23,12 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.send
 
 
 
+// ROUTE SEMENTARA - HAPUS SETELAH DIPAKAI
+Route::get('/clear-galeri-syifa2026', function () {
+    \App\Models\Galeri::truncate();
+    return 'Semua data galeri & video berhasil dihapus.';
+});
+
 Route::get('/sitemap.xml', function () {
     $urls = [
         ['loc' => url('/'),          'priority' => '1.0', 'changefreq' => 'weekly'],
