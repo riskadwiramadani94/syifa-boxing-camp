@@ -50,7 +50,7 @@
                 $videoCount = count($galeriData[$i]['videos'] ?? []);
             @endphp
             <div class="gallery-grid-item g-reveal {{ $anim }}" data-kategori="{{ $item->kategori }}" style="--gd:{{ $delay }}">
-                <div class="gallery-grid-card video-card" style="cursor:pointer;" onclick="openVideoModal({{ $i }})">
+                <a href="{{ route('video.show', $item->uuid) }}" class="gallery-grid-card video-card" style="display:block; text-decoration:none;">
                     <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" style="object-fit: cover; width:100%;">
                     {{-- Overlay play button --}}
                     <div class="video-play-overlay">
@@ -66,7 +66,7 @@
                         <h6 class="gallery-grid-title">{{ $item->judul }}</h6>
                         <span class="gallery-grid-cat">{{ $labelKategori }}</span>
                     </div>
-                </div>
+                </a>
             </div>
             @empty
             @endforelse

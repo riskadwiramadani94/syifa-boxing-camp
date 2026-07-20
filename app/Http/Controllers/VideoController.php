@@ -15,46 +15,73 @@ class VideoController extends Controller
         return in_array($ext, self::$videoExts);
     }
 
+    public function show(string $uuid)
+    {
+        $galeri = Galeri::where('uuid', $uuid)->firstOrFail();
+
+        $files  = is_array($galeri->foto) ? $galeri->foto : [];
+        $videos = [];
+
+        foreach ($files as $file) {
+            if (self::isVideo($file)) {
+                $videos[] = [
+                    'url'   => foto_url($file),
+                    'thumb' => video_thumb_url($file),
+                    'nama'  => basename($file),
+                ];
+            } elseif (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
+                // YouTube / link eksternal
+                $ytId = null;
+                preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
+                if (!empty($m[1])) $ytId = $m[1];
+                $videos[] = [
+                    'url'   => $file,
+                    'thumb' => $ytId ? 'https://img.youtube.com/vi/' . $ytId . '/mqdefault.jpg' : null,
+                    'nama'  => $galeri->judul,
+                    'type'  => 'youtube',
+                    'yt_id' => $ytId,
+                ];
+            }
+        }
+
+        return view('video-detail', compact('galeri', 'videos'));
+    }
+
     public function index()
     {
         $allGaleris = Galeri::orderBy('updated_at', 'desc')->get();
 
-        // Hanya tampilkan item yang punya minimal 1 file video
+        // Hanya tampilkan item yang punya minimal 1 file video atau link YT
         $galeris = $allGaleris->filter(function ($item) {
             $files = is_array($item->foto) ? $item->foto : [];
             foreach ($files as $file) {
                 if (self::isVideo($file)) return true;
+                if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be')) return true;
             }
             return false;
         })->values();
 
-        // Siapkan data untuk modal video player
+        // Siapkan data untuk grid
         $galeriData = $galeris->map(function ($item) {
             $files  = is_array($item->foto) ? $item->foto : [];
             $videos = [];
-            $thumbs = [];
+            $cover  = null;
 
             foreach ($files as $file) {
-                $url = foto_url($file);
                 if (self::isVideo($file)) {
-                    $videos[] = $url;
-                } else {
-                    $thumbs[] = $url;
+                    $videos[] = foto_url($file);
+                    if (!$cover) $cover = video_thumb_url($file);
+                } elseif (str_contains($file, 'youtube') || str_contains($file, 'youtu.be')) {
+                    $videos[] = $file;
+                    if (!$cover) {
+                        preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
+                        if (!empty($m[1])) $cover = 'https://img.youtube.com/vi/' . $m[1] . '/mqdefault.jpg';
+                    }
                 }
             }
 
-            // Gunakan foto pertama sebagai cover
-            // Kalau tidak ada foto (semua video), generate thumbnail dari frame pertama video via Cloudinary
-            if (count($thumbs) > 0) {
-                $cover = $thumbs[0];
-            } elseif (count($videos) > 0) {
-                $firstVideoFile = collect($files)->first(fn($f) => self::isVideo($f));
-                $cover = video_thumb_url($firstVideoFile);
-            } else {
-                $cover = null;
-            }
-
             return [
+                'uuid'     => $item->uuid,
                 'videos'   => array_values($videos),
                 'cover'    => $cover,
                 'judul'    => $item->judul,

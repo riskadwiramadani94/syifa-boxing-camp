@@ -152,12 +152,10 @@ class VideoResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Preview')
-                    ->disk('cloudinary')
                     ->getStateUsing(function ($record) {
                         $files = is_array($record->foto) ? $record->foto : [];
-                        $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
 
-                        // Coba ambil thumbnail dari YouTube jika ada link
+                        // Ambil thumbnail YouTube
                         foreach ($files as $file) {
                             if (str_contains($file, 'youtube.com') || str_contains($file, 'youtu.be')) {
                                 preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
@@ -167,17 +165,9 @@ class VideoResource extends Resource
                             }
                         }
 
-                        // Ambil file video pertama (Cloudinary bisa generate thumbnail)
-                        foreach ($files as $file) {
-                            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                            if (in_array($ext, $videoExts)) {
-                                return $file;
-                            }
-                        }
-
                         return null;
                     })
-                    ->defaultImageUrl(url('assets/logo/logo.jpg'))
+                    ->defaultImageUrl('https://placehold.co/80x50/1f2937/6b7280?text=VIDEO')
                     ->width(80)
                     ->height(50),
 

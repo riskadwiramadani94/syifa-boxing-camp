@@ -17,6 +17,7 @@ Route::get('/event/{slug}', [EventController::class, 'show'])->name('event.show'
 Route::get('/gallery', [GalleryController::class, 'index'])->name('gallery');
 Route::get('/gallery/{uuid}', [GalleryController::class, 'show'])->name('gallery.show');
 Route::get('/video', [VideoController::class, 'index'])->name('video');
+Route::get('/video/{uuid}', [VideoController::class, 'show'])->name('video.show');
 Route::view('/schedule', 'schedule')->name('schedule');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');

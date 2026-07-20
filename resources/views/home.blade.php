@@ -272,12 +272,24 @@
         <div class="gallery-list">
             @forelse($videoList as $i => $item)
             @php
-                $files      = is_array($item->foto) ? $item->foto : [];
-                $videoExts  = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
-                $coverFile  = collect($files)->first(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
-                $coverUrl   = $coverFile ? video_thumb_url($coverFile) : asset('assets/logo/logo.jpg');
+                $files     = is_array($item->foto) ? $item->foto : [];
+                $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+                $coverUrl  = asset('assets/logo/logo.jpg');
+
+                // Coba YouTube thumbnail dulu
+                foreach ($files as $f) {
+                    if (str_contains($f, 'youtube') || str_contains($f, 'youtu.be')) {
+                        preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $f, $ym);
+                        if (!empty($ym[1])) { $coverUrl = 'https://img.youtube.com/vi/' . $ym[1] . '/mqdefault.jpg'; break; }
+                    }
+                }
+                // Kalau tidak ada YT, coba video file
+                if ($coverUrl === asset('assets/logo/logo.jpg')) {
+                    $coverFile = collect($files)->first(fn($f) => in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), $videoExts));
+                    if ($coverFile) $coverUrl = video_thumb_url($coverFile);
+                }
             @endphp
-            <a href="/video" class="gallery-list-card" style="text-decoration:none;position:relative;display:block;">
+            <a href="{{ route('video.show', $item->uuid) }}" class="gallery-list-card" style="text-decoration:none;position:relative;display:block;">
                 <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
                 <div class="gallery-list-overlay"></div>
                 <div style="position:absolute;top:10px;right:10px;background:rgba(214, 51, 132, 0.9);color:#fff;border-radius:20px;padding:4px 10px;font-size:0.75rem;font-weight:700;display:flex;align-items:center;gap:6px;z-index:2;">
