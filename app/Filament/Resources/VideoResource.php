@@ -68,6 +68,7 @@ class VideoResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            // Kolom kiri: Informasi + Link Video
             Section::make('Informasi Video')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
@@ -108,8 +109,32 @@ class VideoResource extends Resource
                         ->label('Keterangan')
                         ->nullable()
                         ->columnSpanFull(),
-                ])->columns(2),
 
+                    // Link Video di dalam kolom kiri agar tidak ikut turun
+                    Section::make('Link Video (YouTube / Instagram / lainnya)')
+                        ->description('Tambahkan link video dari YouTube, Instagram, atau platform lain. Bisa lebih dari 1.')
+                        ->schema([
+                            Forms\Components\Repeater::make('video_links')
+                                ->label(false)
+                                ->addActionLabel('+ Tambah Link Video')
+                                ->schema([
+                                    Forms\Components\TextInput::make('url')
+                                        ->label('URL Video')
+                                        ->placeholder('https://youtube.com/watch?v=...')
+                                        ->url()
+                                        ->nullable(),
+                                ])
+                                ->default([])
+                                ->reorderable(false)
+                                ->collapsible()
+                                ->nullable(),
+                        ])
+                        ->columnSpanFull(),
+                ])
+                ->columns(2)
+                ->columnSpan(1),
+
+            // Kolom kanan: Upload File Video
             Section::make('Upload File Video')
                 ->description('Upload file video. Format: MP4, MOV, AVI, WEBM.')
                 ->schema([
@@ -123,27 +148,9 @@ class VideoResource extends Resource
                         ->disk('cloudinary')
                         ->directory('media/video')
                         ->nullable(),
-                ]),
-
-            Section::make('Link Video (YouTube / Instagram / lainnya)')
-                ->description('Tambahkan link video dari YouTube, Instagram, atau platform lain. Bisa lebih dari 1.')
-                ->schema([
-                    Forms\Components\Repeater::make('video_links')
-                        ->label(false)
-                        ->addActionLabel('+ Tambah Link Video')
-                        ->schema([
-                            Forms\Components\TextInput::make('url')
-                                ->label('URL Video')
-                                ->placeholder('https://youtube.com/watch?v=...')
-                                ->url()
-                                ->nullable(),
-                        ])
-                        ->default([])
-                        ->reorderable(false)
-                        ->collapsible()
-                        ->nullable(),
-                ]),
-        ]);
+                ])
+                ->columnSpan(1),
+        ])->columns(2);
     }
 
     public static function table(Table $table): Table
