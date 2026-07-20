@@ -105,6 +105,22 @@ class GaleriResource extends Resource
                         ->default(false),
                 ])->columns(2),
 
+            Section::make('Foto Galeri')
+                ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
+                ->schema([
+                    Forms\Components\FileUpload::make('foto')
+                        ->label('Upload Foto')
+                        ->multiple()
+                        ->reorderable()
+                        ->appendFiles()
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                        ->disk('cloudinary')
+                        ->directory('media/galeri')
+                        ->panelLayout('grid')
+                        ->imagePreviewHeight('150')
+                        ->nullable(),
+                ]),
+
             Section::make('Daftar Atlet Juara')
                 ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih. Kosongkan jika tidak ingin menampilkan nama atlet.')
                 ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
@@ -134,22 +150,6 @@ class GaleriResource extends Resource
                             ($state['nama'] ?? 'Atlet') . (isset($state['juara_ke']) ? ' — Juara ' . $state['juara_ke'] : '')
                         )
                         ->defaultItems(0)
-                        ->nullable(),
-                ]),
-
-            Section::make('Foto Galeri')
-                ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
-                ->schema([
-                    Forms\Components\FileUpload::make('foto')
-                        ->label('Upload Foto')
-                        ->multiple()
-                        ->reorderable()
-                        ->appendFiles()
-                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
-                        ->disk('cloudinary')
-                        ->directory('media/galeri')
-                        ->panelLayout('grid')
-                        ->imagePreviewHeight('150')
                         ->nullable(),
                 ]),
         ]);
