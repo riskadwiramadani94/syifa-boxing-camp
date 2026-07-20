@@ -48,7 +48,7 @@ class GaleriResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            // Baris 1 kiri: Informasi Galeri
+            // Kolom kiri: Informasi Galeri + Daftar Atlet Juara
             Section::make('Informasi Galeri')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
@@ -111,11 +111,43 @@ class GaleriResource extends Resource
                         ->label('Petinju Terbaik')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->default(false),
+
+                    // Daftar Atlet Juara tetap di kolom kiri
+                    Forms\Components\Group::make([
+                        Forms\Components\Repeater::make('daftar_juara')
+                            ->label('Daftar Atlet Juara')
+                            ->addActionLabel('+ Tambah Atlet')
+                            ->schema([
+                                Forms\Components\TextInput::make('nama')
+                                    ->label('Nama Atlet')
+                                    ->placeholder('Contoh: Muhammad Rizky')
+                                    ->required()
+                                    ->maxLength(255),
+
+                                Forms\Components\Select::make('juara_ke')
+                                    ->label('Juara Ke-')
+                                    ->options([
+                                        '1' => '🥇 Juara 1 (Emas)',
+                                        '2' => '🥈 Juara 2 (Perak)',
+                                        '3' => '🥉 Juara 3 (Perunggu)',
+                                    ])
+                                    ->required(),
+                            ])
+                            ->columns(2)
+                            ->collapsible()
+                            ->itemLabel(fn (array $state): ?string =>
+                                ($state['nama'] ?? 'Atlet') . (isset($state['juara_ke']) ? ' — Juara ' . $state['juara_ke'] : '')
+                            )
+                            ->defaultItems(0)
+                            ->nullable(),
+                    ])
+                    ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
+                    ->columnSpanFull(),
                 ])
                 ->columns(2)
                 ->columnSpan(1),
 
-            // Baris 1 kanan: Foto Galeri
+            // Kolom kanan: Foto Galeri
             Section::make('Foto Galeri')
                 ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
                 ->schema([
@@ -132,40 +164,6 @@ class GaleriResource extends Resource
                         ->nullable(),
                 ])
                 ->columnSpan(1),
-
-            // Baris 2: Daftar Atlet Juara (full width, selalu mulai dari baris baru)
-            Section::make('Daftar Atlet Juara')
-                ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih. Kosongkan jika tidak ingin menampilkan nama atlet.')
-                ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
-                ->schema([
-                    Forms\Components\Repeater::make('daftar_juara')
-                        ->label('')
-                        ->addActionLabel('+ Tambah Atlet')
-                        ->schema([
-                            Forms\Components\TextInput::make('nama')
-                                ->label('Nama Atlet')
-                                ->placeholder('Contoh: Muhammad Rizky')
-                                ->required()
-                                ->maxLength(255),
-
-                            Forms\Components\Select::make('juara_ke')
-                                ->label('Juara Ke-')
-                                ->options([
-                                    '1' => '🥇 Juara 1 (Emas)',
-                                    '2' => '🥈 Juara 2 (Perak)',
-                                    '3' => '🥉 Juara 3 (Perunggu)',
-                                ])
-                                ->required(),
-                        ])
-                        ->columns(2)
-                        ->collapsible()
-                        ->itemLabel(fn (array $state): ?string =>
-                            ($state['nama'] ?? 'Atlet') . (isset($state['juara_ke']) ? ' — Juara ' . $state['juara_ke'] : '')
-                        )
-                        ->defaultItems(0)
-                        ->nullable(),
-                ])
-                ->columnSpanFull(),
         ])->columns(2);
     }
 

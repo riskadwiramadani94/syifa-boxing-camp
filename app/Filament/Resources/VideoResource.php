@@ -8,8 +8,12 @@ use App\Models\Galeri;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\ActionGroup;
 use Filament\Forms;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -68,6 +72,7 @@ class VideoResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            // Kolom kiri: Informasi Video + Link YT
             Section::make('Informasi Video')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
@@ -107,9 +112,36 @@ class VideoResource extends Resource
                     Forms\Components\Textarea::make('keterangan')
                         ->label('Keterangan')
                         ->nullable()
-                        ->columnSpanFull(),
-                ])->columns(2),
+                        ->columnSpanFull()
+                        ->rows(3),
 
+                    // Link YT tetap di kolom kiri (section dalam section)
+                    Forms\Components\Group::make([
+                        Forms\Components\Placeholder::make('link_label')
+                            ->label('')
+                            ->content('Link Video (YouTube / Instagram / lainnya)')
+                            ->extraAttributes(['class' => 'font-semibold text-sm']),
+
+                        Forms\Components\Repeater::make('video_links')
+                            ->label('')
+                            ->addActionLabel('+ Tambah Link Video')
+                            ->schema([
+                                Forms\Components\TextInput::make('url')
+                                    ->label('URL Video')
+                                    ->placeholder('https://youtube.com/watch?v=...')
+                                    ->url()
+                                    ->nullable(),
+                            ])
+                            ->default([])
+                            ->reorderable(false)
+                            ->collapsible()
+                            ->nullable(),
+                    ])->columnSpanFull(),
+                ])
+                ->columns(2)
+                ->columnSpan(1),
+
+            // Kolom kanan: Upload Video
             Section::make('Upload File Video')
                 ->description('Upload file video. Format: MP4, MOV, AVI, WEBM.')
                 ->schema([
@@ -123,27 +155,9 @@ class VideoResource extends Resource
                         ->disk('cloudinary')
                         ->directory('media/video')
                         ->nullable(),
-                ]),
-
-            Section::make('Link Video (YouTube / Instagram / lainnya)')
-                ->description('Tambahkan link video dari YouTube, Instagram, atau platform lain. Bisa lebih dari 1.')
-                ->schema([
-                    Forms\Components\Repeater::make('video_links')
-                        ->label(false)
-                        ->addActionLabel('+ Tambah Link Video')
-                        ->schema([
-                            Forms\Components\TextInput::make('url')
-                                ->label('URL Video')
-                                ->placeholder('https://youtube.com/watch?v=...')
-                                ->url()
-                                ->nullable(),
-                        ])
-                        ->default([])
-                        ->reorderable(false)
-                        ->collapsible()
-                        ->nullable(),
-                ]),
-        ]);
+                ])
+                ->columnSpan(1),
+        ])->columns(2);
     }
 
     public static function table(Table $table): Table
@@ -152,26 +166,17 @@ class VideoResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('foto')
                     ->label('Preview')
-                    ->disk('cloudinary')
                     ->getStateUsing(function ($record) {
                         $files = is_array($record->foto) ? $record->foto : [];
                         $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
 
-                        // Coba ambil thumbnail dari YouTube jika ada link
+                        // Ambil thumbnail YouTube
                         foreach ($files as $file) {
                             if (str_contains($file, 'youtube.com') || str_contains($file, 'youtu.be')) {
                                 preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
                                 if (!empty($m[1])) {
                                     return 'https://img.youtube.com/vi/' . $m[1] . '/mqdefault.jpg';
                                 }
-                            }
-                        }
-
-                        // Ambil file video pertama (Cloudinary bisa generate thumbnail)
-                        foreach ($files as $file) {
-                            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                            if (in_array($ext, $videoExts)) {
-                                return $file;
                             }
                         }
 
@@ -219,6 +224,7 @@ class VideoResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
+                    ViewAction::make(),
                     EditAction::make(),
                     DeleteAction::make(),
                 ]),
@@ -229,12 +235,96 @@ class VideoResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                // Kolom kiri: Informasi + Link Video
+                \Filament\Infolists\Components\Section::make('Informasi Video')
+                    ->schema([
+                        TextEntry::make('judul')
+                            ->label('Judul')
+                            ->weight(\Filament\Support\Enums\FontWeight::Bold)
+                            ->columnSpanFull(),
+
+                        TextEntry::make('kategori')
+                            ->label('Kategori')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'latihan'      => 'info',
+                                'event'        => 'warning',
+                                'pertandingan' => 'success',
+                                default        => 'gray',
+                            })
+                            ->formatStateUsing(fn (string $state): string => match ($state) {
+                                'latihan'      => 'Latihan',
+                                'event'        => 'Event',
+                                'pertandingan' => 'Pertandingan',
+                                default        => $state,
+                            }),
+
+                        TextEntry::make('tahun')
+                            ->label('Tahun'),
+
+                        TextEntry::make('keterangan')
+                            ->label('Keterangan')
+                            ->placeholder('—')
+                            ->columnSpanFull(),
+
+                        // Link video YouTube
+                        \Filament\Infolists\Components\RepeatableEntry::make('foto')
+                            ->label('Link Video')
+                            ->schema([
+                                TextEntry::make('url')
+                                    ->label('')
+                                    ->url(fn ($state) => $state)
+                                    ->openUrlInNewTab()
+                                    ->formatStateUsing(fn ($state) => $state),
+                            ])
+                            ->getStateUsing(function ($record) {
+                                $files = is_array($record->foto) ? $record->foto : [];
+                                $links = [];
+                                foreach ($files as $file) {
+                                    if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
+                                        $links[] = ['url' => $file];
+                                    }
+                                }
+                                return $links;
+                            })
+                            ->columnSpanFull()
+                            ->hidden(function ($record) {
+                                $files = is_array($record->foto) ? $record->foto : [];
+                                foreach ($files as $file) {
+                                    if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            }),
+                    ])
+                    ->columns(2)
+                    ->columnSpan(1),
+
+                // Kolom kanan: Preview thumbnail
+                \Filament\Infolists\Components\Section::make('Preview Video')
+                    ->schema([
+                        \Filament\Infolists\Components\ViewEntry::make('foto')
+                            ->label('')
+                            ->view('filament.infolists.video-preview')
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpan(1),
+            ])
+            ->columns(2);
+    }
+
     public static function getPages(): array
     {
         return [
             'index'  => Pages\ListVideos::route('/'),
             'create' => Pages\CreateVideo::route('/create'),
             'edit'   => Pages\EditVideo::route('/{record}/edit'),
+            'view'   => Pages\ViewVideo::route('/{record}'),
         ];
     }
 }
