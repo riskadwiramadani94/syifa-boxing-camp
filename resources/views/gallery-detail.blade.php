@@ -63,6 +63,15 @@
 </section>
 
 
+{{-- ===== KETERANGAN (di atas foto) ===== --}}
+@if($galeri->keterangan)
+<section style="padding: 32px 0 0;">
+    <div class="container">
+        <p style="color: #475569; font-size: 0.97rem; line-height: 1.8; margin: 0; text-align: left;">{{ $galeri->keterangan }}</p>
+    </div>
+</section>
+@endif
+
 {{-- ===== GRID FOTO ===== --}}
 @if(count($fotos) > 0)
 <section class="gd-foto-section">
@@ -130,16 +139,9 @@
 
 
 {{-- ===== KETERANGAN & PRESTASI ===== --}}
-@if($galeri->keterangan || $totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
+@if($totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
 <section class="gd-info-section">
     <div class="container">
-
-        @if($galeri->keterangan)
-        <div class="gd-keterangan">
-            <h2 class="gd-section-title"><i class="fas fa-align-left"></i> Keterangan</h2>
-            <p class="gd-keterangan-text">{{ $galeri->keterangan }}</p>
-        </div>
-        @endif
 
         @if($totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
         <div class="gd-prestasi">

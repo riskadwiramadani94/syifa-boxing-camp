@@ -48,6 +48,7 @@ class GaleriResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            // Baris 1 kiri: Informasi Galeri
             Section::make('Informasi Galeri')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
@@ -85,9 +86,16 @@ class GaleriResource extends Resource
                         ->minValue(1900)
                         ->maxValue(now()->year),
 
+                    Forms\Components\Textarea::make('keterangan')
+                        ->label('Keterangan')
+                        ->placeholder('Tulis deskripsi atau penjelasan singkat tentang galeri ini...')
+                        ->rows(3)
+                        ->nullable()
+                        ->columnSpanFull(),
+
                     Forms\Components\TextInput::make('juara')
                         ->label('Rekap Medali Cepat (pisah koma)')
-                        ->placeholder('Contoh: 1,1,3  →  2 Emas + 1 Perunggu (untuk medali tanpa foto atlet)')
+                        ->placeholder('Contoh: 1,1,3  →  2 Emas + 1 Perunggu')
                         ->helperText('Isi angka juara dipisah koma. Gunakan ini untuk sisa medali yang tidak diinput detail atletnya.')
                         ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
@@ -103,8 +111,11 @@ class GaleriResource extends Resource
                         ->label('Petinju Terbaik')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->default(false),
-                ])->columns(2),
+                ])
+                ->columns(2)
+                ->columnSpan(1),
 
+            // Baris 1 kanan: Foto Galeri
             Section::make('Foto Galeri')
                 ->description('Upload foto dokumentasi galeri. Format: JPG, PNG, WEBP. Bisa pilih banyak sekaligus.')
                 ->schema([
@@ -119,8 +130,10 @@ class GaleriResource extends Resource
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
                         ->nullable(),
-                ]),
+                ])
+                ->columnSpan(1),
 
+            // Baris 2: Daftar Atlet Juara (full width, selalu mulai dari baris baru)
             Section::make('Daftar Atlet Juara')
                 ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih. Kosongkan jika tidak ingin menampilkan nama atlet.')
                 ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
@@ -151,8 +164,9 @@ class GaleriResource extends Resource
                         )
                         ->defaultItems(0)
                         ->nullable(),
-                ]),
-        ]);
+                ])
+                ->columnSpanFull(),
+        ])->columns(2);
     }
 
     public static function table(Table $table): Table
