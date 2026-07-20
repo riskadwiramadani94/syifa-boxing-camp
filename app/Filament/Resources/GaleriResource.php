@@ -105,33 +105,19 @@ class GaleriResource extends Resource
                         ->default(false),
                 ])->columns(2),
 
-            Section::make('Detail Atlet Juara')
-                ->description('Opsional: Tambahkan detail atlet yang meraih juara beserta foto dan kelasnya. Akan tampil sebagai kartu di halaman galeri.')
+            Section::make('Daftar Atlet Juara')
+                ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih. Kosongkan jika tidak ingin menampilkan nama atlet.')
                 ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                 ->schema([
                     Forms\Components\Repeater::make('daftar_juara')
                         ->label('')
                         ->addActionLabel('+ Tambah Atlet')
                         ->schema([
-                            Forms\Components\FileUpload::make('foto_atlet')
-                                ->label('Foto Atlet (Opsional)')
-                                ->image()
-                                ->disk('cloudinary')
-                                ->directory('media/atlet')
-                                ->imagePreviewHeight('120')
-                                ->nullable()
-                                ->columnSpanFull(),
-
                             Forms\Components\TextInput::make('nama')
                                 ->label('Nama Atlet')
                                 ->placeholder('Contoh: Muhammad Rizky')
                                 ->required()
                                 ->maxLength(255),
-
-                            Forms\Components\TextInput::make('kelas')
-                                ->label('Kelas / Kategori')
-                                ->placeholder('Contoh: 45-48 kg Schoolboy')
-                                ->maxLength(100),
 
                             Forms\Components\Select::make('juara_ke')
                                 ->label('Juara Ke-')
@@ -142,10 +128,10 @@ class GaleriResource extends Resource
                                 ])
                                 ->required(),
                         ])
-                        ->columns(1)
+                        ->columns(2)
                         ->collapsible()
                         ->itemLabel(fn (array $state): ?string =>
-                            ($state['nama'] ?? 'Atlet') . ($state['juara_ke'] ? ' — Juara ' . $state['juara_ke'] : '')
+                            ($state['nama'] ?? 'Atlet') . (isset($state['juara_ke']) ? ' — Juara ' . $state['juara_ke'] : '')
                         )
                         ->defaultItems(0)
                         ->nullable(),
