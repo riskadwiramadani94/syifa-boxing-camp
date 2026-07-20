@@ -11,9 +11,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Actions\ActionGroup;
 use Filament\Forms;
-use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
+use Filament\Infolists;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -235,87 +233,71 @@ class VideoResource extends Resource
             ->defaultSort('created_at', 'desc');
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist
-            ->schema([
-                // Kolom kiri: Informasi + Link Video
-                \Filament\Infolists\Components\Section::make('Informasi Video')
-                    ->schema([
-                        TextEntry::make('judul')
-                            ->label('Judul')
-                            ->weight(\Filament\Support\Enums\FontWeight::Bold)
-                            ->columnSpanFull(),
+        return $schema->components([
+            // Kolom kiri: Informasi + Link Video
+            Section::make('Informasi Video')
+                ->schema([
+                    Infolists\Components\TextEntry::make('judul')
+                        ->label('Judul')
+                        ->weight(\Filament\Support\Enums\FontWeight::Bold)
+                        ->columnSpanFull(),
 
-                        TextEntry::make('kategori')
-                            ->label('Kategori')
-                            ->badge()
-                            ->color(fn (string $state): string => match ($state) {
-                                'latihan'      => 'info',
-                                'event'        => 'warning',
-                                'pertandingan' => 'success',
-                                default        => 'gray',
-                            })
-                            ->formatStateUsing(fn (string $state): string => match ($state) {
-                                'latihan'      => 'Latihan',
-                                'event'        => 'Event',
-                                'pertandingan' => 'Pertandingan',
-                                default        => $state,
-                            }),
+                    Infolists\Components\TextEntry::make('kategori')
+                        ->label('Kategori')
+                        ->badge()
+                        ->color(fn (string $state): string => match ($state) {
+                            'latihan'      => 'info',
+                            'event'        => 'warning',
+                            'pertandingan' => 'success',
+                            default        => 'gray',
+                        })
+                        ->formatStateUsing(fn (string $state): string => match ($state) {
+                            'latihan'      => 'Latihan',
+                            'event'        => 'Event',
+                            'pertandingan' => 'Pertandingan',
+                            default        => $state,
+                        }),
 
-                        TextEntry::make('tahun')
-                            ->label('Tahun'),
+                    Infolists\Components\TextEntry::make('tahun')
+                        ->label('Tahun'),
 
-                        TextEntry::make('keterangan')
-                            ->label('Keterangan')
-                            ->placeholder('—')
-                            ->columnSpanFull(),
+                    Infolists\Components\TextEntry::make('keterangan')
+                        ->label('Keterangan')
+                        ->placeholder('—')
+                        ->columnSpanFull(),
 
-                        // Link video YouTube
-                        \Filament\Infolists\Components\RepeatableEntry::make('foto')
-                            ->label('Link Video')
-                            ->schema([
-                                TextEntry::make('url')
-                                    ->label('')
-                                    ->url(fn ($state) => $state)
-                                    ->openUrlInNewTab()
-                                    ->formatStateUsing(fn ($state) => $state),
-                            ])
-                            ->getStateUsing(function ($record) {
-                                $files = is_array($record->foto) ? $record->foto : [];
-                                $links = [];
-                                foreach ($files as $file) {
-                                    if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
-                                        $links[] = ['url' => $file];
-                                    }
+                    // Link video YouTube
+                    Infolists\Components\TextEntry::make('foto')
+                        ->label('Link Video')
+                        ->getStateUsing(function ($record) {
+                            $files = is_array($record->foto) ? $record->foto : [];
+                            $links = [];
+                            foreach ($files as $file) {
+                                if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
+                                    $links[] = $file;
                                 }
-                                return $links;
-                            })
-                            ->columnSpanFull()
-                            ->hidden(function ($record) {
-                                $files = is_array($record->foto) ? $record->foto : [];
-                                foreach ($files as $file) {
-                                    if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be') || str_contains($file, 'instagram')) {
-                                        return false;
-                                    }
-                                }
-                                return true;
-                            }),
-                    ])
-                    ->columns(2)
-                    ->columnSpan(1),
+                            }
+                            return implode("\n", $links) ?: null;
+                        })
+                        ->placeholder('Tidak ada link video')
+                        ->columnSpanFull()
+                        ->listWithLineBreaks(),
+                ])
+                ->columns(2)
+                ->columnSpan(1),
 
-                // Kolom kanan: Preview thumbnail
-                \Filament\Infolists\Components\Section::make('Preview Video')
-                    ->schema([
-                        \Filament\Infolists\Components\ViewEntry::make('foto')
-                            ->label('')
-                            ->view('filament.infolists.video-preview')
-                            ->columnSpanFull(),
-                    ])
-                    ->columnSpan(1),
-            ])
-            ->columns(2);
+            // Kolom kanan: Preview video
+            Section::make('Preview Video')
+                ->schema([
+                    Infolists\Components\ViewEntry::make('foto')
+                        ->label('')
+                        ->view('filament.infolists.video-preview')
+                        ->columnSpanFull(),
+                ])
+                ->columnSpan(1),
+        ])->columns(2);
     }
 
     public static function getPages(): array
