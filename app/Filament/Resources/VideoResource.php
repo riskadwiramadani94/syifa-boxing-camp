@@ -150,6 +150,37 @@ class VideoResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('foto')
+                    ->label('Preview')
+                    ->disk('cloudinary')
+                    ->getStateUsing(function ($record) {
+                        $files = is_array($record->foto) ? $record->foto : [];
+                        $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
+
+                        // Coba ambil thumbnail dari YouTube jika ada link
+                        foreach ($files as $file) {
+                            if (str_contains($file, 'youtube.com') || str_contains($file, 'youtu.be')) {
+                                preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
+                                if (!empty($m[1])) {
+                                    return 'https://img.youtube.com/vi/' . $m[1] . '/mqdefault.jpg';
+                                }
+                            }
+                        }
+
+                        // Ambil file video pertama (Cloudinary bisa generate thumbnail)
+                        foreach ($files as $file) {
+                            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                            if (in_array($ext, $videoExts)) {
+                                return $file;
+                            }
+                        }
+
+                        return null;
+                    })
+                    ->defaultImageUrl(url('assets/logo/logo.jpg'))
+                    ->width(80)
+                    ->height(50),
+
                 Tables\Columns\TextColumn::make('judul')
                     ->label('Judul')
                     ->searchable()

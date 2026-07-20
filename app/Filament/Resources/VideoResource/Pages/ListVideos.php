@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\VideoResource\Pages;
 
 use App\Filament\Resources\VideoResource;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListVideos extends ListRecords
@@ -12,7 +13,10 @@ class ListVideos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\CreateAction::make(),
+            CreateAction::make()
+                ->label('Tambah Video')
+                ->icon('heroicon-o-plus')
+                ->color('info'),
         ];
     }
 }
