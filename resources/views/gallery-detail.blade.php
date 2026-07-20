@@ -125,16 +125,10 @@
 {{-- ===== DAFTAR ATLET JUARA ===== --}}
 @php
     $daftarJuara = is_array($galeri->daftar_juara) ? $galeri->daftar_juara : [];
-    // Hitung medali gabungan (dari koma + dari repeater)
+    // Total medali HANYA dari field juara (rekap koma) — repeater hanya detail nama
     $totalEmas     = $medaliEmas;
     $totalPerak    = $medaliPerak;
     $totalPerunggu = $medaliPerunggu;
-    foreach ($daftarJuara as $atlet) {
-        $juaraKe = intval($atlet['juara_ke'] ?? 0);
-        if ($juaraKe === 1) $totalEmas++;
-        elseif ($juaraKe === 2) $totalPerak++;
-        elseif ($juaraKe === 3) $totalPerunggu++;
-    }
 @endphp
 
 

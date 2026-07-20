@@ -128,9 +128,10 @@
 
 {{-- ===== PRESTASI / MEDALI ===== --}}
 @php
-    $daftarJuara   = is_array($galeri->daftar_juara) ? $galeri->daftar_juara : [];
-    $medaliEmas    = 0;
-    $medaliPerak   = 0;
+    $daftarJuara    = is_array($galeri->daftar_juara) ? $galeri->daftar_juara : [];
+    // Total medali HANYA dari field juara (rekap koma) — repeater hanya detail nama
+    $medaliEmas     = 0;
+    $medaliPerak    = 0;
     $medaliPerunggu = 0;
 
     if ($galeri->juara) {
@@ -139,12 +140,6 @@
             elseif ($angka === 2) $medaliPerak++;
             elseif ($angka === 3) $medaliPerunggu++;
         }
-    }
-    foreach ($daftarJuara as $atlet) {
-        $juaraKe = intval($atlet['juara_ke'] ?? 0);
-        if ($juaraKe === 1)     $medaliEmas++;
-        elseif ($juaraKe === 2) $medaliPerak++;
-        elseif ($juaraKe === 3) $medaliPerunggu++;
     }
     $adaPrestasi = $medaliEmas > 0 || $medaliPerak > 0 || $medaliPerunggu > 0
                    || $galeri->juara_umum || $galeri->petinju_terbaik;
