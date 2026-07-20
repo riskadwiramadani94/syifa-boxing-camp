@@ -266,6 +266,19 @@ class VideoResource extends Resource
                 Tables\Columns\TextColumn::make('tahun')
                     ->label('Tahun')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('juara')
+                    ->label('Prestasi')
+                    ->getStateUsing(function ($record) {
+                        $parts = [];
+                        $medali = $record->jumlahMedali();
+                        if ($medali > 0) $parts[] = $medali . ' medali';
+                        if ($record->juara_umum)      $parts[] = 'Juara Umum';
+                        if ($record->petinju_terbaik) $parts[] = 'Petinju Terbaik';
+                        return count($parts) ? implode(' | ', $parts) : '-';
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state === '-' ? 'gray' : 'success'),
             ])
             ->actions([
                 ActionGroup::make([
