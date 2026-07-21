@@ -164,3 +164,145 @@ section { padding: 80px 0; }
     section { padding: 60px 0; }
     .section-title { font-size: 1.8rem; }
 }
+
+
+/* ===========================
+   ANIMASI GLOBAL — AOS + HOVER EFFECTS
+   Konsisten di semua halaman
+=========================== */
+
+/* ===== HOVER CARD UMUM (foto, video, event card) ===== */
+.ed-doc-item,
+.gd-foto-item,
+.gallery-grid-item,
+.ed-price-card,
+.gd-medali-card,
+.gd-video-item,
+.gd-atlet-row {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== HOVER LIFT EFFECT ===== */
+.ed-price-card:hover,
+.gd-medali-card:hover,
+.gd-video-item:hover,
+.gd-atlet-row:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== VIDEO CARD HOVER — skala + glow ===== */
+.video-card:hover .video-play-btn {
+    transform: scale(1.15);
+    background: #ffffff;
+    box-shadow: 0 0 0 6px rgba(255,255,255,0.25);
+}
+
+/* ===== PANITIA CARD — hover lift ===== */
+.ed-panitia-card {
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.ed-panitia-card:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== BTN DAFTAR — pulse saat status dibuka ===== */
+.ed-btn-daftar {
+    animation: btnPulse 2.5s ease-in-out infinite;
+}
+@keyframes btnPulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(37,211,102,0.3); }
+    50%       { box-shadow: 0 6px 24px rgba(37,211,102,0.55); }
+}
+.ed-btn-daftar:hover {
+    animation: none;
+}
+
+/* ===== LIGHTBOX — fade in animation ===== */
+#doc-lightbox.dlb-active,
+#vid-modal.vml-active,
+#gdLightbox.active,
+#video-lightbox.vl-active {
+    animation: lightboxFadeIn 0.25s ease-out forwards;
+}
+@keyframes lightboxFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ===== LIGHTBOX IMAGE — scale in ===== */
+#dlb-img,
+#gdLbImg {
+    animation: imgScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes imgScaleIn {
+    from { transform: scale(0.92); opacity: 0.6; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ===== VIDEO MODAL — slide up ===== */
+.vl-modal {
+    animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes modalSlideUp {
+    from { transform: translateY(24px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+/* ===== BADGE ANIMATE ===== */
+.ed-status-badge {
+    animation: badgeFadeIn 0.5s ease-out 0.3s both;
+}
+@keyframes badgeFadeIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== AOS CUSTOM OVERRIDES ===== */
+/* Pastikan AOS transition lebih smooth */
+[data-aos] {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ===== FILTER BUTTON HOVER ===== */
+.gallery-filter-btn {
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.gallery-filter-btn:hover:not(.active) {
+    transform: translateY(-1px);
+}
+
+/* ===== MEDALI COUNT — number pop ===== */
+[data-aos="fade-up"].gd-medali-card.aos-animate .gd-medali-count {
+    animation: countPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+@keyframes countPop {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ===== SECTION TITLE — underline animate ===== */
+.ed-section-title,
+.gd-header-title {
+    position: relative;
+}
+
+/* ===== POSTER WRAP — hover tilt ===== */
+.ed-poster-wrap {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s;
+}
+.ed-poster-wrap:hover {
+    transform: rotate(-1deg) scale(1.02);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.14);
+}
+
+/* ===== LAZY LOAD — fade in saat gambar loaded ===== */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+img[loading="lazy"].loaded,
+img[loading="lazy"]:not([src=""]) {
+    opacity: 1;
+}

@@ -13,7 +13,7 @@
         <div class="ed-hero-inner">
 
             {{-- Breadcrumb --}}
-            <div class="ed-breadcrumb-row">
+            <div class="ed-breadcrumb-row" data-aos="fade-down" data-aos-duration="400">
                 <nav class="ed-breadcrumb">
                     <a href="{{ route('event') }}">Event</a>
                     <span>/</span>
@@ -27,7 +27,7 @@
             <div class="row align-items-center g-4">
 
                 {{-- Kiri: Poster --}}
-                <div class="col-md-4 col-lg-3 text-center">
+                <div class="col-md-4 col-lg-3 text-center" data-aos="fade-right" data-aos-duration="600">
                     <div class="ed-poster-wrap">
                         <img src="{{ foto_url($event->foto, asset('assets/logo/logo.jpg')) }}"
                              alt="{{ $event->judul }}" class="ed-poster-img">
@@ -35,7 +35,7 @@
                 </div>
 
                 {{-- Kanan: Info Event --}}
-                <div class="col-md-8 col-lg-9">
+                <div class="col-md-8 col-lg-9" data-aos="fade-left" data-aos-duration="600" data-aos-delay="100">
 
                     {{-- Status Badge --}}
                     <span class="ed-status-badge ed-status-{{ $event->status }}">
@@ -51,6 +51,7 @@
                     <h1 class="ed-title">{{ $event->judul }}</h1>
 
                     <div class="ed-meta-row">
+                        @if($event->tanggal_mulai)
                         <div class="ed-meta-item">
                             <i class="far fa-calendar-alt"></i>
                             @if($event->tanggal_mulai?->format('d M Y') === $event->tanggal_selesai?->format('d M Y'))
@@ -59,6 +60,8 @@
                                 {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
                             @endif
                         </div>
+                        @endif
+                        @if($event->lokasi)
                         <div class="ed-meta-item">
                             <i class="fas fa-map-marker-alt"></i>
                             @if($event->maps_link)
@@ -70,6 +73,7 @@
                                 {{ $event->lokasi }}
                             @endif
                         </div>
+                        @endif
                     </div>
 
                     @if($event->deskripsi)
@@ -109,7 +113,7 @@
 
                     {{-- Card Tiket Penonton --}}
                     @if($event->harga_tiket)
-                    <div class="ed-price-card ed-price-card--tiket">
+                    <div class="ed-price-card ed-price-card--tiket" data-aos="fade-up" data-aos-delay="0">
                         <div class="ed-price-card-icon">
                             <i class="fas fa-ticket-alt"></i>
                         </div>
@@ -129,7 +133,7 @@
 
                     {{-- Card Pendaftaran Atlet --}}
                     @if($event->harga_atlet)
-                    <div class="ed-price-card ed-price-card--atlet">
+                    <div class="ed-price-card ed-price-card--atlet" data-aos="fade-up" data-aos-delay="100">
                         <div class="ed-price-card-icon">
                             <i class="fas fa-fist-raised"></i>
                         </div>
@@ -156,7 +160,7 @@
             </div>
 
             {{-- KANAN: Hubungi Panitia --}}
-            <div class="ed-pricing-right">
+            <div class="ed-pricing-right" data-aos="fade-left" data-aos-delay="150">
                 @php
                     $waList = $event->wa_pendaftaran ?? [];
                     $pesanDaftar = urlencode('Halo, saya ingin bertanya tentang event ' . $event->judul . '. Mohon informasi lebih lanjut. Terima kasih 🙏');
@@ -220,13 +224,16 @@
 @if($allFotos->count() > 0)
 <section class="ed-gallery-section">
     <div class="container">
-        <div class="ed-section-header">
+        <div class="ed-section-header" data-aos="fade-up">
             <span class="ed-section-label">{{ strtoupper($event->judul) }}</span>
             <h2 class="ed-section-title">Foto Event</h2>
         </div>
         <div class="ed-doc-grid">
             @foreach($allFotos as $i => $foto)
-            <div class="ed-doc-item" onclick="openDocLightbox({{ $i }})">
+            <div class="ed-doc-item" onclick="openDocLightbox({{ $i }})"
+                 data-aos="zoom-in"
+                 data-aos-delay="{{ min($i * 50, 400) }}"
+                 data-aos-duration="400">
                 <img src="{{ $foto['url'] }}" alt="Foto event" loading="lazy">
                 <div class="ed-doc-overlay"><i class="fas fa-expand-alt"></i></div>
             </div>
@@ -240,13 +247,16 @@
 @if($allVideos->count() > 0)
 <section class="ed-gallery-section" style="padding-top:0;">
     <div class="container">
-        <div class="ed-section-header">
+        <div class="ed-section-header" data-aos="fade-up">
             <span class="ed-section-label">{{ strtoupper($event->judul) }}</span>
             <h2 class="ed-section-title">Video Event</h2>
         </div>
         <div class="ed-doc-grid">
             @foreach($allVideos as $i => $vid)
-            <div class="ed-doc-item ed-vid-item" onclick="openVideoModal({{ $i }})">
+            <div class="ed-doc-item ed-vid-item" onclick="openVideoModal({{ $i }})"
+                 data-aos="zoom-in"
+                 data-aos-delay="{{ min($i * 50, 400) }}"
+                 data-aos-duration="400">
                 <img src="{{ $vid['thumb'] }}" alt="Video event" loading="lazy"
                      onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
                 <div class="ed-doc-overlay ed-vid-overlay">

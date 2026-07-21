@@ -228,3 +228,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
     allElements.forEach(el => observer.observe(el));
 });
+
+
+
+// ===== LAZY LOAD IMAGES =====
+// Tambahkan class 'loaded' saat gambar selesai dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    
+    lazyImages.forEach(img => {
+        if (img.complete) {
+            img.classList.add('loaded');
+        } else {
+            img.addEventListener('load', function() {
+                img.classList.add('loaded');
+            });
+        }
+    });
+    
+    // IntersectionObserver untuk browser yang belum support loading="lazy"
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    img.classList.add('loaded');
+                    imageObserver.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '100px'
+        });
+        
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
+});

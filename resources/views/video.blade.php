@@ -12,14 +12,14 @@
 <section class="gallery-hero-section">
     <div class="container">
         <div class="gallery-hero-inner">
-            <h1 class="gallery-hero-title g-reveal g-fadeup" style="--gd:0s">
+            <h1 class="gallery-hero-title g-reveal g-fadeup" style="--gd:0s" data-aos="fade-up" data-aos-duration="600">
                 Video Syifa –
                 <span class="gallery-hero-accent">Aksi &<br>Momen Terbaik.</span>
             </h1>
-            <p class="gallery-hero-desc g-reveal g-fade" style="--gd:0.18s">
+            <p class="gallery-hero-desc g-reveal g-fade" style="--gd:0.18s" data-aos="fade-up" data-aos-delay="100" data-aos-duration="600">
                 Tonton dokumentasi latihan, pertandingan, dan pencapaian atlet Syifa Boxing Camp.
             </p>
-            <div class="gallery-filter-wrap g-reveal g-fadeup" style="--gd:0.32s">
+            <div class="gallery-filter-wrap g-reveal g-fadeup" style="--gd:0.32s" data-aos="fade-up" data-aos-delay="200" data-aos-duration="600">
                 <button class="gallery-filter-btn active" data-filter="all">Semua</button>
                 <button class="gallery-filter-btn" data-filter="latihan">Latihan</button>
                 <button class="gallery-filter-btn" data-filter="event">Event</button>
@@ -38,9 +38,9 @@
             @php
                 $cover = $galeriData[$i]['cover'] ?? null;
                 $coverUrl = $cover ?: asset('assets/logo/logo.jpg');
-                $animTypes = ['g-fadeleft', 'g-fadeup', 'g-faderight'];
-                $anim  = $animTypes[$i % 3];
-                $delay = round(($i % 3) * 0.1, 2) . 's';
+                $animTypes = ['fade-left', 'fade-up', 'fade-right'];
+                $aosAnim  = $animTypes[$i % 3];
+                $aosDelay = min(($i % 4) * 80, 300);
                 $labelKategori = match($item->kategori) {
                     'latihan'      => 'Latihan',
                     'event'        => 'Event',
@@ -49,7 +49,10 @@
                 };
                 $videoCount = count($galeriData[$i]['videos'] ?? []);
             @endphp
-            <div class="gallery-grid-item g-reveal {{ $anim }}" data-kategori="{{ $item->kategori }}" style="--gd:{{ $delay }}">
+            <div class="gallery-grid-item" data-kategori="{{ $item->kategori }}"
+                 data-aos="{{ $aosAnim }}"
+                 data-aos-delay="{{ $aosDelay }}"
+                 data-aos-duration="500">
                 <a href="{{ route('video.show', $item->uuid) }}" class="gallery-grid-card video-card" style="display:block; text-decoration:none;">
                     <img src="{{ $coverUrl }}" alt="{{ $item->judul }}" style="object-fit: cover; width:100%;">
                     {{-- Overlay play button --}}
@@ -468,13 +471,6 @@
         });
     });
 
-    // ===== SCROLL REVEAL =====
-    const revealEls = document.querySelectorAll('.g-reveal');
-    const revealObs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) { e.target.classList.add('g-visible'); revealObs.unobserve(e.target); }
-        });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => revealObs.observe(el));
+    // ===== SCROLL REVEAL — digantikan oleh AOS =====
 </script>
 @endpush

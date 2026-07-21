@@ -12,7 +12,7 @@
 <section class="gd-header-section">
     <div class="container">
         {{-- Breadcrumb Nav & Back Button --}}
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px;" data-aos="fade-down" data-aos-duration="400">
             <nav style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; font-weight: 600;">
                 <a href="{{ route('gallery') }}" style="color: #d63384; text-decoration: none;">Galeri</a>
                 <span style="color: #94a3b8;">/</span>
@@ -23,7 +23,7 @@
             </a>
         </div>
         <div class="gd-header-inner" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
-            <div class="gd-header-meta" style="justify-content: center;">
+            <div class="gd-header-meta" style="justify-content: center;" data-aos="fade-up" data-aos-delay="100">
                 <span class="gd-badge-kategori">
                     {{ match($galeri->kategori) {
                         'latihan'      => 'Latihan',
@@ -44,9 +44,9 @@
                     </span>
                 @endif
             </div>
-            <h1 class="gd-header-title">{{ $galeri->judul }}</h1>
+            <h1 class="gd-header-title" data-aos="fade-up" data-aos-delay="150">{{ $galeri->judul }}</h1>
             @if($galeri->event)
-                <p class="gd-header-event" style="justify-content: center;">
+                <p class="gd-header-event" style="justify-content: center;" data-aos="fade-up" data-aos-delay="200">
                     <i class="fas fa-calendar-alt"></i>
                     {{ $galeri->event->judul }}
                     @if($galeri->event->tanggal_mulai)
@@ -67,7 +67,7 @@
 @if($galeri->keterangan)
 <section style="padding: 32px 0 0;">
     <div class="container">
-        <p style="color: #475569; font-size: 0.97rem; line-height: 1.8; margin: 0; text-align: left;">{{ $galeri->keterangan }}</p>
+        <p style="color: #475569; font-size: 0.97rem; line-height: 1.8; margin: 0; text-align: left;" data-aos="fade-up">{{ $galeri->keterangan }}</p>
     </div>
 </section>
 @endif
@@ -76,13 +76,16 @@
 @if(count($fotos) > 0)
 <section class="gd-foto-section">
     <div class="container">
-        <h2 class="gd-section-title">
+        <h2 class="gd-section-title" data-aos="fade-up">
             <i class="fas fa-images"></i> Foto
             <span class="gd-section-count">{{ count($fotos) }}</span>
         </h2>
         <div class="gd-foto-grid" id="gdFotoGrid">
             @foreach($fotos as $i => $url)
-            <div class="gd-foto-item" onclick="openFotoLightbox({{ $i }})">
+            <div class="gd-foto-item" onclick="openFotoLightbox({{ $i }})"
+                 data-aos="zoom-in"
+                 data-aos-delay="{{ min($i * 40, 400) }}"
+                 data-aos-duration="400">
                 <img src="{{ $url }}" alt="{{ $galeri->judul }} foto {{ $i + 1 }}"
                      loading="lazy"
                      onerror="this.src='{{ asset('assets/logo/logo.jpg') }}'">
@@ -100,13 +103,13 @@
 @if(count($videos) > 0)
 <section class="gd-video-section">
     <div class="container">
-        <h2 class="gd-section-title">
+        <h2 class="gd-section-title" data-aos="fade-up">
             <i class="fas fa-film"></i> Video
             <span class="gd-section-count">{{ count($videos) }}</span>
         </h2>
         <div class="gd-video-grid">
             @foreach($videos as $v)
-            <div class="gd-video-item">
+            <div class="gd-video-item" data-aos="fade-up" data-aos-delay="{{ min($loop->index * 50, 300) }}">
                 <video controls preload="none"
                        poster="{{ $v['thumb'] }}"
                        onerror="this.parentElement.classList.add('gd-video-error')">
@@ -139,11 +142,11 @@
 
         @if($totalEmas > 0 || $totalPerak > 0 || $totalPerunggu > 0 || $galeri->juara_umum || $galeri->petinju_terbaik)
         <div class="gd-prestasi">
-            <h2 class="gd-section-title"><i class="fas fa-medal"></i> Total Perolehan Medali</h2>
+            <h2 class="gd-section-title" data-aos="fade-up"><i class="fas fa-medal"></i> Total Perolehan Medali</h2>
             <div class="gd-medali-grid">
 
                 @if($totalEmas > 0)
-                <div class="gd-medali-card gd-medali-emas">
+                <div class="gd-medali-card gd-medali-emas" data-aos="fade-up" data-aos-delay="0">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
@@ -155,7 +158,7 @@
                 @endif
 
                 @if($totalPerak > 0)
-                <div class="gd-medali-card gd-medali-perak">
+                <div class="gd-medali-card gd-medali-perak" data-aos="fade-up" data-aos-delay="80">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
@@ -167,7 +170,7 @@
                 @endif
 
                 @if($totalPerunggu > 0)
-                <div class="gd-medali-card gd-medali-perunggu">
+                <div class="gd-medali-card gd-medali-perunggu" data-aos="fade-up" data-aos-delay="160">
                     <div class="gd-medali-icon">
                         <i class="fas fa-medal"></i>
                     </div>
@@ -179,7 +182,7 @@
                 @endif
 
                 @if($galeri->juara_umum)
-                <div class="gd-medali-card gd-medali-special">
+                <div class="gd-medali-card gd-medali-special" data-aos="fade-up" data-aos-delay="240">
                     <div class="gd-medali-icon">
                         <i class="fas fa-trophy"></i>
                     </div>
@@ -190,7 +193,7 @@
                 @endif
 
                 @if($galeri->petinju_terbaik)
-                <div class="gd-medali-card gd-medali-special">
+                <div class="gd-medali-card gd-medali-special" data-aos="fade-up" data-aos-delay="320">
                     <div class="gd-medali-icon">
                         <i class="fas fa-star"></i>
                     </div>
@@ -205,12 +208,12 @@
             {{-- List nama atlet jika ada --}}
             @if(count($daftarJuara) > 0)
             <div class="gd-atlet-list">
-                <h3 class="gd-section-title" style="margin-top: 32px;">
+                <h3 class="gd-section-title" style="margin-top: 32px;" data-aos="fade-up">
                     <i class="fas fa-users"></i> Perolehan Medali
                     <span class="gd-section-count">{{ count($daftarJuara) }} atlet</span>
                 </h3>
                 <div class="gd-atlet-list-grid">
-                    @foreach($daftarJuara as $atlet)
+                    @foreach($daftarJuara as $idx => $atlet)
                     @php
                         $juaraKe = intval($atlet['juara_ke'] ?? 0);
                         $icon = match($juaraKe) {
@@ -232,7 +235,9 @@
                             default => 'gd-atlet-row--default',
                         };
                     @endphp
-                    <div class="gd-atlet-row {{ $colorClass }}">
+                    <div class="gd-atlet-row {{ $colorClass }}"
+                         data-aos="fade-up"
+                         data-aos-delay="{{ min($idx * 50, 400) }}">
                         <span class="gd-atlet-row-icon">{{ $icon }}</span>
                         <span class="gd-atlet-row-nama">{{ $atlet['nama'] ?? '-' }}</span>
                         <span class="gd-atlet-row-label">{{ $label }}</span>
@@ -673,22 +678,6 @@ document.getElementById('gdLightbox').addEventListener('touchend', function(e) {
     if (Math.abs(diff) > 50) { diff > 0 ? gdLbNext() : gdLbPrev(); }
 }, { passive: true });
 
-// Scroll reveal
-const gdReveal = document.querySelectorAll('.gd-foto-item, .gd-video-item, .gd-medali-card');
-const gdObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
-            e.target.style.opacity = '1';
-            e.target.style.transform = 'translateY(0)';
-            gdObs.unobserve(e.target);
-        }
-    });
-}, { threshold: 0.08 });
-gdReveal.forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.4s ease ' + (i * 0.04) + 's, transform 0.4s ease ' + (i * 0.04) + 's';
-    gdObs.observe(el);
-});
+// Scroll reveal — sudah ditangani AOS, tidak perlu IntersectionObserver manual lagi
 </script>
 @endpush
