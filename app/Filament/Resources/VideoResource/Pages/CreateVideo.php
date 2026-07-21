@@ -26,6 +26,10 @@ class CreateVideo extends CreateRecord
 
         unset($data['video_links']);
         $data['foto'] = array_values($fotos);
+        
+        // Set is_video_only = true agar hanya tampil di halaman Video, tidak di Galeri
+        $data['is_video_only'] = true;
+        
         return $data;
     }
 }

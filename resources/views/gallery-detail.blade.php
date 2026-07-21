@@ -351,7 +351,7 @@
     background: #ffffff;
 }
 .gd-foto-section { background: #ffffff; border-top: 1px solid #f1f5f9; }
-.gd-video-section { background: #f8fafc; border-top: 1px solid #f1f5f9; }
+.gd-video-section { background: #ffffff; border-top: 1px solid #f1f5f9; }
 .gd-info-section { background: #ffffff; border-top: 1px solid #f1f5f9; }
 .gd-section-title {
     font-size: 0.75rem;

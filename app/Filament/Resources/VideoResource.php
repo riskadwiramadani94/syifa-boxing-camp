@@ -47,12 +47,13 @@ class VideoResource extends Resource
     protected static ?string $modelLabel       = 'Video';
 
     /**
-     * Hanya tampilkan record yang mengandung minimal 1 file video di field foto
-     * Menggunakan CAST ke TEXT agar kompatibel dengan PostgreSQL JSON column
+     * Hanya tampilkan record yang diupload via menu Video (is_video_only = true)
+     * dan mengandung minimal 1 file video
      */
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()
+            ->where('is_video_only', true)
             ->where(function ($q) {
                 $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
                 foreach ($videoExts as $ext) {

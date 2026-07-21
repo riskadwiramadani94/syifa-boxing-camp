@@ -49,7 +49,10 @@ class VideoController extends Controller
 
     public function index()
     {
-        $allGaleris = Galeri::orderBy('updated_at', 'desc')->get();
+        // Hanya ambil yang diupload via menu Video (is_video_only = true)
+        $allGaleris = Galeri::where('is_video_only', true)
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         // Hanya tampilkan item yang punya minimal 1 file video atau link YT
         $galeris = $allGaleris->filter(function ($item) {

@@ -33,6 +33,10 @@ class EditVideo extends EditRecord
 
         unset($data['video_links']);
         $data['foto'] = array_values($fotos);
+        
+        // Pastikan is_video_only tetap true
+        $data['is_video_only'] = true;
+        
         return $data;
     }
 }
