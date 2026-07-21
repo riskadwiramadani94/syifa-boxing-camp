@@ -66,15 +66,15 @@ class EventResource extends Resource
 
                     Forms\Components\DatePicker::make('tanggal_mulai')
                         ->label('Tanggal Mulai')
-                        ->required(),
+                        ->nullable(),
 
                     Forms\Components\DatePicker::make('tanggal_selesai')
                         ->label('Tanggal Selesai')
-                        ->required(),
+                        ->nullable(),
 
                     Forms\Components\TextInput::make('lokasi')
                         ->label('Lokasi')
-                        ->required()
+                        ->nullable()
                         ->maxLength(255),
 
                     Forms\Components\TextInput::make('maps_link')
