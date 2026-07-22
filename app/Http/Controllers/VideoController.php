@@ -49,20 +49,10 @@ class VideoController extends Controller
 
     public function index()
     {
-        // Hanya ambil yang diupload via menu Video (is_video_only = true)
-        $allGaleris = Galeri::where('is_video_only', true)
+        // Tampilkan galeri yang punya video: tipe video atau foto_video
+        $galeris = Galeri::whereIn('tipe_konten', ['video', 'foto_video'])
             ->orderBy('updated_at', 'desc')
             ->get();
-
-        // Hanya tampilkan item yang punya minimal 1 file video atau link YT
-        $galeris = $allGaleris->filter(function ($item) {
-            $files = is_array($item->foto) ? $item->foto : [];
-            foreach ($files as $file) {
-                if (self::isVideo($file)) return true;
-                if (str_contains($file, 'youtube') || str_contains($file, 'youtu.be')) return true;
-            }
-            return false;
-        })->values();
 
         // Siapkan data untuk grid
         $galeriData = $galeris->map(function ($item) {

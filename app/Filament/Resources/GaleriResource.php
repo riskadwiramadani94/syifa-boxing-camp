@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\GaleriResource\Pages;
 use App\Models\Event;
 use App\Models\Galeri;
-use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -28,7 +27,7 @@ class GaleriResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Galeri Foto';
+        return 'Galeri Foto & Video';
     }
 
     public static function getNavigationGroup(): ?string
@@ -41,38 +40,42 @@ class GaleriResource extends Resource
         return 2;
     }
 
-    protected static ?string $pluralModelLabel = 'Galeri Foto';
-
-    protected static ?string $modelLabel = 'Galeri Foto';
+    protected static ?string $pluralModelLabel = 'Galeri Foto & Video';
+    protected static ?string $modelLabel       = 'Galeri';
 
     /**
-     * Hanya tampilkan record yang punya foto (exclude record video-only)
-     * Menggunakan CAST ke TEXT agar kompatibel dengan PostgreSQL JSON column
+     * Tampilkan semua record — tidak filter lagi berdasarkan is_video_only.
+     * Semua galeri (foto, video, foto+video) dikelola dari sini.
      */
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()
-            ->where(function ($q) {
-                $q->whereNull('foto')
-                  ->orWhereRaw("CAST(foto AS TEXT) = '[]'")
-                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.jpg%'")
-                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.jpeg%'")
-                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.png%'")
-                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.webp%'")
-                  ->orWhereRaw("CAST(foto AS TEXT) LIKE '%.gif%'");
-            });
+        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            // Kolom kiri: Informasi Galeri + Daftar Atlet Juara
+
+            // ── Kolom kiri: Informasi + Prestasi ─────────────────────────────
             Section::make('Informasi Galeri')
                 ->schema([
                     Forms\Components\TextInput::make('judul')
-                        ->label('Judul Galeri')
+                        ->label('Judul')
                         ->required()
                         ->maxLength(255)
+                        ->columnSpanFull(),
+
+                    // Dropdown tipe konten — menentukan field upload yang muncul
+                    Forms\Components\Select::make('tipe_konten')
+                        ->label('Tipe Konten')
+                        ->options([
+                            'foto'       => '🖼️  Foto saja',
+                            'video'      => '🎬  Video saja',
+                            'foto_video' => '🖼️🎬  Foto & Video',
+                        ])
+                        ->required()
+                        ->default('foto')
+                        ->live()
                         ->columnSpanFull(),
 
                     Forms\Components\Select::make('kategori')
@@ -106,15 +109,16 @@ class GaleriResource extends Resource
 
                     Forms\Components\Textarea::make('keterangan')
                         ->label('Keterangan')
-                        ->placeholder('Tulis deskripsi atau penjelasan singkat tentang galeri ini...')
+                        ->placeholder('Tulis deskripsi atau penjelasan singkat...')
                         ->rows(3)
                         ->nullable()
                         ->columnSpanFull(),
 
+                    // Prestasi — hanya tampil saat kategori pertandingan/event
                     Forms\Components\TextInput::make('juara')
                         ->label('Rekap Medali Cepat (pisah koma)')
                         ->placeholder('Contoh: 1,1,3  →  2 Emas + 1 Perunggu')
-                        ->helperText('Isi angka juara dipisah koma. Gunakan ini untuk sisa medali yang tidak diinput detail atletnya.')
+                        ->helperText('Isi angka juara dipisah koma.')
                         ->rules(['nullable', 'regex:/^[0-9,\s]*$/'])
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->nullable()
@@ -130,7 +134,7 @@ class GaleriResource extends Resource
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
                         ->default(false),
 
-                    // Daftar Atlet Juara di kolom kiri agar tidak ikut melorot
+                    // Daftar Atlet Juara
                     Section::make('Daftar Atlet Juara')
                         ->description('Opsional: Tambahkan nama atlet beserta juara yang diraih.')
                         ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('kategori'), ['pertandingan', 'event']))
@@ -144,7 +148,6 @@ class GaleriResource extends Resource
                                         ->placeholder('Contoh: Muhammad Rizky')
                                         ->required()
                                         ->maxLength(255),
-
                                     Forms\Components\Select::make('juara_ke')
                                         ->label('Juara Ke-')
                                         ->options([
@@ -167,26 +170,63 @@ class GaleriResource extends Resource
                 ->columns(2)
                 ->columnSpan(1),
 
-            // Kolom kanan: Foto & Video Galeri
-            Section::make('Foto & Video Galeri')
-                ->description('Upload foto dan/atau video dokumentasi galeri. Foto tampil di halaman Galeri, video otomatis masuk ke halaman Video.')
+            // ── Kolom kanan: Upload media (kondisional) ───────────────────────
+            Section::make('Media')
                 ->schema([
+
+                    // ── Upload FOTO (tampil saat tipe = foto atau foto_video) ──
                     Forms\Components\FileUpload::make('foto')
-                        ->label('Upload Foto / Video')
+                        ->label('Upload Foto')
+                        ->helperText('Format: JPG, PNG, WEBP, GIF')
                         ->multiple()
                         ->reorderable()
                         ->appendFiles()
-                        ->acceptedFileTypes([
-                            'image/jpeg', 'image/png', 'image/webp', 'image/gif',
-                            'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/*',
-                        ])
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                         ->disk('cloudinary')
                         ->directory('media/galeri')
                         ->panelLayout('grid')
                         ->imagePreviewHeight('150')
-                        ->nullable(),
+                        ->nullable()
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('tipe_konten'), ['foto', 'foto_video'])),
+
+                    // ── Upload VIDEO (tampil saat tipe = video atau foto_video) ──
+                    Forms\Components\FileUpload::make('video_files')
+                        ->label('Upload File Video')
+                        ->helperText('Format: MP4, MOV, AVI, WEBM')
+                        ->multiple()
+                        ->reorderable()
+                        ->appendFiles()
+                        ->acceptedFileTypes(['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/*'])
+                        ->disk('cloudinary')
+                        ->directory('media/video')
+                        ->panelLayout('grid')
+                        ->nullable()
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('tipe_konten'), ['video', 'foto_video'])),
+
+                    // ── Link YouTube (tampil saat tipe = video atau foto_video) ──
+                    Section::make('Link YouTube / Video Eksternal')
+                        ->description('Tambahkan link YouTube atau platform lain.')
+                        ->schema([
+                            Forms\Components\Repeater::make('video_links')
+                                ->label(false)
+                                ->addActionLabel('+ Tambah Link Video')
+                                ->schema([
+                                    Forms\Components\TextInput::make('url')
+                                        ->label('URL Video')
+                                        ->placeholder('https://youtube.com/watch?v=...')
+                                        ->url()
+                                        ->nullable(),
+                                ])
+                                ->default([])
+                                ->reorderable(false)
+                                ->collapsible()
+                                ->nullable(),
+                        ])
+                        ->visible(fn (\Filament\Schemas\Components\Utilities\Get $get) => in_array($get('tipe_konten'), ['video', 'foto_video'])),
+
                 ])
                 ->columnSpan(1),
+
         ])->columns(2);
     }
 
@@ -204,6 +244,13 @@ class GaleriResource extends Resource
                                     return $file;
                                 }
                             }
+                            // Kalau video YT, ambil thumbnail
+                            foreach ($record->foto as $file) {
+                                preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $file, $m);
+                                if (!empty($m[1])) {
+                                    return 'https://img.youtube.com/vi/' . $m[1] . '/mqdefault.jpg';
+                                }
+                            }
                             return null;
                         }
                         return $record->foto;
@@ -217,19 +264,36 @@ class GaleriResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->description(function ($record) {
-                        $files = is_array($record->foto) ? $record->foto : [];
+                        $files     = is_array($record->foto) ? $record->foto : [];
                         $videoExts = ['mp4', 'mov', 'avi', 'webm', 'mkv', 'wmv', 'flv'];
                         $videoCount = 0;
                         $fotoCount  = 0;
                         foreach ($files as $file) {
                             $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                             if (in_array($ext, $videoExts)) $videoCount++;
+                            elseif (str_contains($file, 'youtube') || str_contains($file, 'youtu.be')) $videoCount++;
                             else $fotoCount++;
                         }
                         if ($fotoCount > 0 && $videoCount > 0) return $fotoCount . ' foto | ' . $videoCount . ' video';
                         if ($fotoCount > 0)  return $fotoCount . ' foto';
                         if ($videoCount > 0) return $videoCount . ' video';
                         return '0 file';
+                    }),
+
+                Tables\Columns\TextColumn::make('tipe_konten')
+                    ->label('Tipe')
+                    ->badge()
+                    ->color(fn (?string $state): string => match ($state) {
+                        'foto'       => 'info',
+                        'video'      => 'warning',
+                        'foto_video' => 'success',
+                        default      => 'gray',
+                    })
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'foto'       => '🖼️ Foto',
+                        'video'      => '🎬 Video',
+                        'foto_video' => '🖼️🎬 Foto & Video',
+                        default      => $state ?? '-',
                     }),
 
                 Tables\Columns\TextColumn::make('kategori')
@@ -251,21 +315,15 @@ class GaleriResource extends Resource
                 Tables\Columns\TextColumn::make('tahun')
                     ->label('Tahun')
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('juara')
-                    ->label('Prestasi')
-                    ->getStateUsing(function ($record) {
-                        $parts = [];
-                        $medali = $record->jumlahMedali();
-                        if ($medali > 0) $parts[] = $medali . ' medali';
-                        if ($record->juara_umum)      $parts[] = 'Juara Umum';
-                        if ($record->petinju_terbaik) $parts[] = 'Petinju Terbaik';
-                        return count($parts) ? implode(' | ', $parts) : '-';
-                    })
-                    ->badge()
-                    ->color(fn ($state) => $state === '-' ? 'gray' : 'success'),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('tipe_konten')
+                    ->label('Tipe Konten')
+                    ->options([
+                        'foto'       => '🖼️ Foto',
+                        'video'      => '🎬 Video',
+                        'foto_video' => '🖼️🎬 Foto & Video',
+                    ]),
                 Tables\Filters\SelectFilter::make('kategori')
                     ->label('Kategori')
                     ->options([

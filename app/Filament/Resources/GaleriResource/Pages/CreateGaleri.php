@@ -11,25 +11,30 @@ class CreateGaleri extends CreateRecord
     use HasSimpanAction;
     protected static string $resource = GaleriResource::class;
 
-    /**
-     * Gabungkan URL video dari widget Cloudinary ke field foto sebelum disimpan.
-     */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $fotos = $data['foto'] ?? [];
-        if (! is_array($fotos)) $fotos = [];
+        // Foto dari FileUpload foto (gambar)
+        $fotos = is_array($data['foto'] ?? null) ? $data['foto'] : [];
 
-        // Ambil video dari hidden input cloudinary_videos (dikirim via request)
-        $videosJson = request()->input('cloudinary_videos', '[]');
-        $videos = json_decode($videosJson, true) ?: [];
-
-        foreach ($videos as $v) {
-            if (! empty($v['url'])) {
-                $fotos[] = $v['url'];
-            }
+        // File video dari FileUpload video_files — gabung ke array foto
+        $videoFiles = is_array($data['video_files'] ?? null) ? $data['video_files'] : [];
+        foreach ($videoFiles as $vf) {
+            if (!empty($vf)) $fotos[] = $vf;
         }
+        unset($data['video_files']);
+
+        // Link YouTube/eksternal dari repeater video_links — gabung ke array foto
+        $links = $data['video_links'] ?? [];
+        foreach ($links as $link) {
+            if (!empty($link['url'])) $fotos[] = $link['url'];
+        }
+        unset($data['video_links']);
 
         $data['foto'] = array_values($fotos);
+
+        // is_video_only tidak dipakai lagi, tapi tetap set false agar tidak ada konflik
+        $data['is_video_only'] = false;
+
         return $data;
     }
 }

@@ -55,21 +55,15 @@ class GalleryController extends Controller
 
     public function index()
     {
-        $allGaleris = Galeri::orderBy('updated_at', 'desc')->get();
-
-        // Hanya tampilkan item yang punya minimal 1 file foto
-        $galeris = $allGaleris->filter(function ($item) {
-            $files = is_array($item->foto) ? $item->foto : [];
-            foreach ($files as $file) {
-                if (!self::isVideo($file)) return true;
-            }
-            return false;
-        })->values();
+        // Tampilkan galeri yang punya foto: tipe foto atau foto_video
+        $galeris = Galeri::whereIn('tipe_konten', ['foto', 'foto_video'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         $galeriData = $galeris->map(function ($item) {
             $files = is_array($item->foto) ? $item->foto : [];
 
-            // Hanya kirim file foto ke lightbox
+            // Hanya kirim file foto ke lightbox (filter out video)
             $fotoUrls = array_values(array_map(
                 fn($f) => foto_url($f),
                 array_filter($files, fn($f) => !self::isVideo($f))

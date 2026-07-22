@@ -26,6 +26,7 @@ class Galeri extends Model
         'keterangan',
         'event_id',
         'is_video_only',
+        'tipe_konten',
     ];
 
     protected $casts = [
@@ -36,6 +37,7 @@ class Galeri extends Model
         'foto'            => 'array',
         'daftar_juara'    => 'array',
         'is_video_only'   => 'boolean',
+        'tipe_konten'     => 'string',
     ];
 
     /**
