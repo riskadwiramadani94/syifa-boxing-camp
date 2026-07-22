@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('hari'); // Senin, Selasa, dst
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->string('kelas'); // nama kelas/sesi latihan
-            $table->string('pelatih')->nullable();
+
             $table->text('keterangan')->nullable();
             $table->boolean('aktif')->default(true);
             $table->timestamps();

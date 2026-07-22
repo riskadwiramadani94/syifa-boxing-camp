@@ -15,8 +15,6 @@ class JadwalLatihan extends Model
         'hari',
         'jam_mulai',
         'jam_selesai',
-        'kelas',
-        'pelatih',
         'keterangan',
         'aktif',
     ];
