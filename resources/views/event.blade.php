@@ -48,10 +48,16 @@
 
                         <p class="event-koni-meta">
                             <i class="far fa-calendar-alt"></i>
-                            @if($event->tanggal_mulai?->format('d M Y') === $event->tanggal_selesai?->format('d M Y'))
-                                {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
+                            @if($event->tanggal_mulai)
+                                @if($event->tanggal_mulai->format('d M Y') === $event->tanggal_selesai?->format('d M Y'))
+                                    {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
+                                @elseif($event->tanggal_selesai)
+                                    {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
+                                @else
+                                    {{ $event->tanggal_mulai->translatedFormat('d F Y') }}
+                                @endif
                             @else
-                                {{ $event->tanggal_mulai->translatedFormat('d F Y') }} – {{ $event->tanggal_selesai->translatedFormat('d F Y') }}
+                                —
                             @endif
                         </p>
                         <p class="event-koni-meta">
