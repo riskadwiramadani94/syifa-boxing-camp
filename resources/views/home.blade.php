@@ -327,16 +327,17 @@
 
             @forelse($jadwals as $jadwal)
             @php
-                $kelasLower = strtolower($jadwal->kelas);
-                if (str_contains($kelasLower, 'sparring')) {
+                $keteranganText = $jadwal->keterangan ?? '';
+                $keteranganLower = strtolower($keteranganText);
+                if (str_contains($keteranganLower, 'sparring')) {
                     $badgeClass = 'badge-sparring';
                     $iconClass  = 'icon-sparring';
                     $cardClass  = '';
-                } elseif (str_contains($kelasLower, 'interval')) {
+                } elseif (str_contains($keteranganLower, 'interval')) {
                     $badgeClass = 'badge-interval';
                     $iconClass  = 'icon-interval';
                     $cardClass  = '';
-                } elseif (str_contains($kelasLower, 'rest') || str_contains($kelasLower, 'istirahat')) {
+                } elseif (str_contains($keteranganLower, 'rest') || str_contains($keteranganLower, 'istirahat')) {
                     $badgeClass = 'badge-rest';
                     $iconClass  = 'icon-rest';
                     $cardClass  = 'jadwal-card-rest';
@@ -351,18 +352,13 @@
             <div class="col-12 col-md-3">
                 <div class="jadwal-card-item {{ $cardClass }} h-100">
                     <div class="jadwal-card-header">
-                        <span class="jadwal-badge {{ $badgeClass }}">{{ $jadwal->kelas }}</span>
+                        @if($keteranganText)
+                            <span class="jadwal-badge {{ $badgeClass }}">{{ $keteranganText }}</span>
+                        @endif
                         <div class="jadwal-card-icon {{ $iconClass }}"><i class="far fa-calendar"></i></div>
                     </div>
                     <h5 class="jadwal-card-day">{{ $jadwal->hari }}</h5>
-                    @if($jadwal->pelatih)
-                        <p class="jadwal-card-time"><i class="far fa-clock"></i>{{ $jamMulai }} – {{ $jamSelesai }}</p>
-                        <p class="jadwal-card-level"><i class="far fa-user"></i>{{ $jadwal->pelatih }}</p>
-                    @elseif($jadwal->keterangan)
-                        <p class="jadwal-card-time"><i class="fas fa-bed"></i>{{ $jadwal->keterangan }}</p>
-                    @else
-                        <p class="jadwal-card-time"><i class="far fa-clock"></i>{{ $jamMulai }} – {{ $jamSelesai }}</p>
-                    @endif
+                    <p class="jadwal-card-time"><i class="far fa-clock"></i>{{ $jamMulai }} – {{ $jamSelesai }}</p>
                 </div>
             </div>
             @empty
