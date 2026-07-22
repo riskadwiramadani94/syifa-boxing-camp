@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Beranda - SYIFA Boxing Camp')
-@section('meta_description', 'Syifa Boxing Camp — sasana tinju profesional yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
-@section('og_title', 'Syifa Boxing Camp — Sasana Tinju Profesional')
-@section('og_description', 'Syifa Boxing Camp — sasana tinju profesional yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
+@section('meta_description', 'Syifa Boxing Camp — sasana tinju yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
+@section('og_title', 'Syifa Boxing Camp — Sasana Tinju')
+@section('og_description', 'Syifa Boxing Camp — sasana tinju yang mencetak atlet berprestasi. Bergabunglah dan wujudkan impianmu bersama kami!')
 @section('og_image', asset('assets/images/og-image.png'))
 
 @section('content')

@@ -6,13 +6,13 @@
     <title>@yield('title', $siteSettings['nama_sasana'] ?? 'SYIFA Boxing Camp')</title>
 
     @php
-        $metaDesc   = $siteSettings['deskripsi'] ?: ($siteSettings['tagline'] . ' — Sasana tinju profesional sejak ' . $siteSettings['tahun_berdiri'] . '.');
+        $metaDesc   = $siteSettings['deskripsi'] ?: ($siteSettings['tagline'] . ' — Sasana tinju sejak ' . $siteSettings['tahun_berdiri'] . '.');
         $fotoBeranda = \App\Models\SiteSettings::get('foto_beranda');
         $fotoProfil  = \App\Models\SiteSettings::get('foto_profil');
         $defaultImg  = $fotoProfil
             ? foto_url($fotoProfil)
             : ($fotoBeranda ? foto_url($fotoBeranda) : asset('assets/images/polosan_logo_syifa.png'));
-        $defaultOgTitle = ($siteSettings['nama_sasana'] ?? 'Syifa Boxing Camp') . ' — ' . ($siteSettings['tagline'] ?? 'Sasana Tinju Profesional');
+        $defaultOgTitle = ($siteSettings['nama_sasana'] ?? 'Syifa Boxing Camp') . ' — ' . ($siteSettings['tagline'] ?? 'Sasana Tinju');
     @endphp
 
     {{-- SEO Meta Tags --}}
