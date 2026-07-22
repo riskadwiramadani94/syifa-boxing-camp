@@ -11,6 +11,7 @@ php artisan db:seed --force || true
 php artisan storage:link || true
 
 # Clear & cache config untuk production (|| true agar tidak matikan server)
+php artisan optimize:clear || true
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
