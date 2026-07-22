@@ -69,9 +69,9 @@ class GaleriResource extends Resource
                     Forms\Components\Select::make('tipe_konten')
                         ->label('Tipe Konten')
                         ->options([
-                            'foto'       => '🖼️  Foto saja',
-                            'video'      => '🎬  Video saja',
-                            'foto_video' => '🖼️🎬  Foto & Video',
+                            'foto'       => 'Foto',
+                            'video'      => 'Video',
+                            'foto_video' => 'Foto & Video',
                         ])
                         ->required()
                         ->default('foto')
@@ -284,15 +284,15 @@ class GaleriResource extends Resource
                     ->label('Tipe')
                     ->badge()
                     ->color(fn (?string $state): string => match ($state) {
-                        'foto'       => 'info',
-                        'video'      => 'warning',
-                        'foto_video' => 'success',
+                        'foto'       => 'info',      // biru
+                        'video'      => 'warning',   // kuning
+                        'foto_video' => 'success',   // hijau
                         default      => 'gray',
                     })
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'foto'       => '🖼️ Foto',
-                        'video'      => '🎬 Video',
-                        'foto_video' => '🖼️🎬 Foto & Video',
+                        'foto'       => 'Foto',
+                        'video'      => 'Video',
+                        'foto_video' => 'Foto & Video',
                         default      => $state ?? '-',
                     }),
 
@@ -300,9 +300,9 @@ class GaleriResource extends Resource
                     ->label('Kategori')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'latihan'      => 'info',
+                        'latihan'      => 'gray',
                         'event'        => 'warning',
-                        'pertandingan' => 'success',
+                        'pertandingan' => 'danger',
                         default        => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -315,14 +315,27 @@ class GaleriResource extends Resource
                 Tables\Columns\TextColumn::make('tahun')
                     ->label('Tahun')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('prestasi')
+                    ->label('Prestasi')
+                    ->getStateUsing(function ($record) {
+                        $parts = [];
+                        $medali = $record->jumlahMedali();
+                        if ($medali > 0) $parts[] = $medali . ' Medali';
+                        if ($record->juara_umum)      $parts[] = 'Juara Umum';
+                        if ($record->petinju_terbaik) $parts[] = 'Petinju Terbaik';
+                        return count($parts) ? implode(' | ', $parts) : '-';
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state === '-' ? 'gray' : 'success'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('tipe_konten')
                     ->label('Tipe Konten')
                     ->options([
-                        'foto'       => '🖼️ Foto',
-                        'video'      => '🎬 Video',
-                        'foto_video' => '🖼️🎬 Foto & Video',
+                        'foto'       => 'Foto',
+                        'video'      => 'Video',
+                        'foto_video' => 'Foto & Video',
                     ]),
                 Tables\Filters\SelectFilter::make('kategori')
                     ->label('Kategori')
