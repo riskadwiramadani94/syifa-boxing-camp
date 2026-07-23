@@ -66,3 +66,6 @@ Route::get('/sitemap.xml', function () {
 
     return response($xml, 200)->header('Content-Type', 'application/xml');
 })->name('sitemap');
+
+
+
